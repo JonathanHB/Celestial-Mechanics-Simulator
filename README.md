@@ -1,1 +1,1 @@
-# Celestial-Mechanics-Simulator
+# Orbital-Mechanics-Simulator
