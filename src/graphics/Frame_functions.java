@@ -45,23 +45,28 @@ public class Frame_functions extends JPanel{
 	static int height = 800; 
 	static int width = 800;
 	
+	static int height2 = 100; 
+	static int width2 = 200;
+	
 	public static void frame_setup(){ //sets up jframe window
 		
 		displayframe.setSize(width, height);
 		displayframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 		Frame_functions panel = new Frame_functions();
-		user_interface.Key_control q = new user_interface.Key_control();
-		user_interface.Mouse_control m = new user_interface.Mouse_control();
+		
+		displayframe.addKeyListener(new user_interface.Key_control());
+		displayframe.addMouseMotionListener(new user_interface.Mouse_control());
+		
 		displayframe.getContentPane().add(panel, BorderLayout.CENTER);
+		
 		displayframe.setVisible(true);
-		panel.displayframe.addKeyListener(q);
-		panel.displayframe.addMouseMotionListener(m);
-	   // addMouseMotionListener(this);
-			 		
-		inputbox.add(inputfield, BorderLayout.SOUTH);
-		final JTextArea area = new JTextArea(900, 80); 
+					 		
+		inputbox.setSize(width2, height2);
 		inputbox.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		inputbox.pack(); 
+
+		inputbox.add(inputfield, BorderLayout.SOUTH);
+	
 		inputbox.setVisible(true); 
 		
 	}

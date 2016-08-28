@@ -9,14 +9,16 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import physics.Motion;
+import utility.Math_methods;
+import utility.V3;
 
 public class Key_control implements KeyListener{
 
 	static double tsensitivity; //translational	
 	static double rsensitivity=.05; //rotational
 
-//	static double phys_inc_inc=.1; //incbuff of physics engine incbuff adjustment
-	static int phys_rep_inc; //incbuff of physics engine repbuff adjustment
+//	static double phys_inc_inc=.1; //increment of physics engine incbuff adjustment
+	static int phys_rep_inc; //increment of physics engine repbuff adjustment
 
 	static double mx; //unused
 	static double my;
@@ -27,21 +29,26 @@ public class Key_control implements KeyListener{
 		char c = e.getKeyChar();
 		//System.out.println(e.getKeyCode());
 		//find a decent data structure to use for this method rather than elif chains
+		
 		if(c=='a'){
-			Graphics_engine.viewposition.y-=tsensitivity;
+			Graphics_engine.viewposition.x-=tsensitivity*Math.sin(Graphics_engine.orientation.z);
+			Graphics_engine.viewposition.y-=tsensitivity*Math.cos(Graphics_engine.orientation.z);//.sub(Math_methods.rotatepoint(new V3(tsensitivity,0,0), Graphics_engine.orientation));
 		}else if(c=='d'){
-			Graphics_engine.viewposition.y+=tsensitivity;
+			Graphics_engine.viewposition.x+=tsensitivity*Math.sin(Graphics_engine.orientation.z);
+			Graphics_engine.viewposition.y+=tsensitivity*Math.cos(Graphics_engine.orientation.z);//.add(Math_methods.rotatepoint(new V3(tsensitivity,0,0), Graphics_engine.orientation));
 		}else if(c=='s'){
-			Graphics_engine.viewposition.x-=tsensitivity;
+			Graphics_engine.viewposition.x-=tsensitivity*Math.cos(Graphics_engine.orientation.z);
+			Graphics_engine.viewposition.y+=tsensitivity*Math.sin(Graphics_engine.orientation.z);//.sub(Math_methods.rotatepoint(new V3(0,tsensitivity,0), Graphics_engine.orientation));
 		}else if(c=='w'){
-			Graphics_engine.viewposition.x+=tsensitivity;
+			Graphics_engine.viewposition.x+=tsensitivity*Math.cos(Graphics_engine.orientation.z);
+			Graphics_engine.viewposition.y-=tsensitivity*Math.sin(Graphics_engine.orientation.z);//.add(Math_methods.rotatepoint(new V3(0,tsensitivity,0), Graphics_engine.orientation));
 		}else if(c=='q'){
-			Graphics_engine.viewposition.z-=tsensitivity;
+			Graphics_engine.viewposition.z-=tsensitivity;//.sub(Math_methods.rotatepoint(new V3(0,0,tsensitivity), Graphics_engine.orientation));
 		}else if(c=='e'){
-			Graphics_engine.viewposition.z+=tsensitivity;
+			Graphics_engine.viewposition.z+=tsensitivity;//.add(Math_methods.rotatepoint(new V3(0,0,tsensitivity), Graphics_engine.orientation));
 		}
 
-/*		if(c=='z'){
+/*		if(c=='z'){ //code for altering physics increment, something which should be automatic or fixed
 			Motion.incbuff+=phys_inc_inc;
 		}else if(c=='x'){
 			if(Motion.incbuff>=phys_inc_inc){
@@ -66,16 +73,6 @@ public class Key_control implements KeyListener{
 			Motion.repbuff = 0;
 		}
 
-
-		/*	if(c=='4'){
-				Graphics_engine.orientation.x+=rsensitivity;
-			}else if(c=='6'){
-				Graphics_engine.orientation.x-=rsensitivity;
-			}else if(c=='5'){
-				Graphics_engine.orientation.y+=rsensitivity;
-			}else if(c=='8'){
-				Graphics_engine.orientation.y-=rsensitivity;
-			}*/
 	}
 
 	public static void reversal(int a, int b, int c){ //a = previous repetition rate, b = current rate, c = new rate

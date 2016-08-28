@@ -17,28 +17,28 @@ import utility.V3;
 
 public class Trajectory_optimizer {
 
-	public static boolean running = true;
+	public static boolean running = false;
 
 	public static int start = 0; 
 	public static int target = 1;
 
-	public static double altitude = 2.3E8; //distance above start entity surface to place test objects
+	public static double altitude = 400000; //distance above start entity surface to place test objects
 
-	public static int start_num = 1000;     // number of particles used for the first repetition //6000
+	public static int start_num = 6000;     // number of particles used for the first repetition //6000
 	public static int rep_num = 400;		 // number of particles used for each repetition     //400
 
 	public static int particle_num;     
 
-	public static int repetitions = 1;        // number of repetitions //16
+	public static int repetitions = 8;        //number of repetitions //16
 	public static double maxtime = 31557600;  //number of seconds to simulate for (1 year = 31557600 seconds) 
 	public static int ticknum;                //number of ticks to simulate for 
 
 	public static double basevelocity;        		   //velocity for a circular orbit
-	public static double maxdeltav = 1.05E2;           //maximum initial delta v in m/s
+	public static double maxdeltav = 3.01E3;           //maximum initial delta v in m/s
 	public static double deltavrange = maxdeltav; 	   //deltav range at current iteration
 	public static double deltavrangeshrinkfactor = .7; //factor by which to multiply deltav range
-	public static V3 orbitrangeshrinkfactor = new V3(.8,.8,.8);  //factor by which to multiply phase range
-	public static V3 orbitrange = new V3(1,1,1);
+//	public static V3 orbitrangeshrinkfactor = new V3(.8,.8,.8);  //factor by which to multiply phase range
+//	public static V3 orbitrange = new V3(1,1,1);
 	
 	public static int i = 0;
 	public static int ii = 0; //used to immediately quit optimizer once a good trajectory is found
@@ -55,7 +55,7 @@ public class Trajectory_optimizer {
 		basevelocity = Math.sqrt(Motion.G*Main_class.elist.get(start).mass/(Main_class.elist.get(start).radius+altitude));		
 		postable = new V3[Main_class.elist.size()][ticknum];
 		virtualents = new Test_mass[Main_class.elist.size()]; //avoids the need to modify and then reset entities
-				
+		//System.out.println(basevelocity);		
 		for(Entity e : Main_class.elist){
 
 			virtualents[Main_class.elist.indexOf(e)] = new Test_mass(e);
@@ -94,20 +94,24 @@ public class Trajectory_optimizer {
 		
 		for(i=i; i<repetitions; i++){ //i=i preserves i value, which is either 0 or repetitions(used to cause the loop to exit immediately)
 
-			orbitrange.dimscale(orbitrangeshrinkfactor);
+			V3[] traject_mod = shrinkrange();
+			
+			//orbitrange.dimscale(orbitrangeshrinkfactor);
 
-			Test_mass best_traject = closest(probes);
+		//	Test_mass best_traject = closest(probes);
 
-			System.out.println(Math.sqrt(best_traject.minsquaredistance));
+			System.out.println(traject_mod[1].tostring());
 
 			probes.clear();
 			
 			for(int x = 0; x<particle_num-1; x++){
-				probes.add(new Test_mass(best_traject, false));
-
+		//		probes.add(new Test_mass(best_traject, false));
+				
+				probes.add(new Test_mass(traject_mod));
+				
 			}
 
-			probes.add(new Test_mass(best_traject));
+		//	probes.add(new Test_mass(best_traject));
 			probes.trimToSize();
 			
 			for(ii = 0; ii<ticknum; ii++){
@@ -123,14 +127,14 @@ public class Trajectory_optimizer {
 		
 		System.out.println(Math.sqrt(best_traject.minsquaredistance));
 		System.out.println(best_traject.initorbit.scale2(180/Math.PI).tostring()+": longitude of [a/de]scending node, inclination, phase"); //orbital parameters in degrees
-
+		
 		Main_class.elist.add(
 			new Entity(
-				0,1E6,new V3(0,0,0),
-				Math_methods.rotatepoint(new V3(0, altitude+Main_class.elist.get(start).radius, 0), best_traject.initorbit.scale2(2*Math.PI)),
-				Math_methods.rotatepoint(new V3(basevelocity, 0, 0), best_traject.initorbit.scale2(2*Math.PI)).invert2(),
+				0,1,new V3(0,0,0),
+				Math_methods.rotatepoint(new V3(0, altitude+Main_class.elist.get(start).radius, 0), best_traject.initorbit).add2(Main_class.elist.get(start).position),
+				Math_methods.rotatepoint(new V3(0,0,basevelocity+maxdeltav), best_traject.initorbit).add2(Main_class.elist.get(start).velocity),
 				new V3(0,0,0),new V3(0,0,0),
-				new Color(0,0,0),Poly_library.standard_poly_bases[0],Poly_library.standard_poly_maps[0],new V3(1E6,1E6,1E6),new V3(0,0,0),
+				new Color(0,0,0),Poly_library.standard_poly_bases[0],Poly_library.standard_poly_maps[0],new V3(2E6,2E6,2E6),new V3(0,0,0),
 				new Color(0,0,0),2000,17000000
 			)
 		);
@@ -186,7 +190,7 @@ public class Trajectory_optimizer {
 
 		for(int x=0; x<Main_class.elist.size(); x++){
 			if(x!=target){
-				for(int y=x+1; y<particle_num; y++){
+				for(int y=x+1; y<probes.size(); y++){
 
 					//get rid of some of these variables to save memory
 
@@ -198,11 +202,18 @@ public class Trajectory_optimizer {
 
 					probes.get(y).velocity.sub(dpos.scale2(Main_class.elist.get(x).mass*g_invrad));
 
+					if(distance<=Main_class.elist.get(x).radius){
+
+						probes.remove(y);
+						probes.trimToSize();
+
+					}
+					
 				}
 
 			}else{
 
-				for(int y=x+1; y<particle_num; y++){
+				for(int y=x+1; y<probes.size(); y++){
 
 					//get rid of some of these variables to save memory
 
@@ -253,6 +264,33 @@ public class Trajectory_optimizer {
 		for(Test_mass m:t){		
 			m.move(Motion.increment);	
 		}
+	}
+	
+	public static V3[] shrinkrange(){
+		
+		V3 coscompsums = new V3(0,0,0);
+		V3 sincompsums = new V3(0,0,0);
+		
+		double invsum = 0;
+	
+		for(Test_mass t : probes){
+			
+			coscompsums.add(t.initorbit.cosines().invscale2(t.minsquaredistance));
+			sincompsums.add(t.initorbit.sines().invscale2(t.minsquaredistance));
+			invsum += 1.0/t.minsquaredistance;
+			
+		}
+		
+		sincompsums.invscale(probes.size()*invsum);
+		coscompsums.invscale(probes.size()*invsum);
+		
+		V3 best_angles = new V3(sincompsums, coscompsums);
+		V3 concentrations = new V3(sincompsums, coscompsums, false);
+		
+		V3[] v = {best_angles, concentrations}; //this line shouldn't be necessary
+		
+		return v;
+		
 	}
 	
 }

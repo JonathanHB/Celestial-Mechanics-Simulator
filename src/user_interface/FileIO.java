@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
+import objects.Cable;
 import objects.Entity;
 import objects.Poly_library;
 import utility.V3;
@@ -20,7 +21,7 @@ import physics.Trajectory_optimizer;
 
 public class FileIO {	
 
-	public static String inputfile = "/home/jonathan/Desktop/Earth_Moon.txt"; //file to read from
+	public static String inputfile = "/home/jonathan/Desktop/cabletest2.txt"; //file to read from
 	public static String outputfile = "/home/jonathan/Desktop/iotest2.txt"; //file to save to
 
 	static PrintWriter writer; //declared outside for fillfile and writefile
@@ -34,7 +35,6 @@ public class FileIO {
 			Motion.repbuff=0;
 			Motion.repetition=0;
 						
-			int entnum=Integer.parseInt(br.readLine());
 			Main_class.framewait=Integer.parseInt(br.readLine());
 			
 			Motion.increment=Double.parseDouble(br.readLine());
@@ -43,11 +43,27 @@ public class FileIO {
 			Key_control.phys_rep_inc=Integer.parseInt(br.readLine());
 			Key_control.tsensitivity=Integer.parseInt(br.readLine());
 										
+			boolean reading = true;
+			boolean ents = true;
+
 			
-			
-			for(int x = 0; x<entnum; x++){													
-					parseent(br.readLine()); 
-					//parseent generates entities as a side effect, this is a weird structure
+			while(reading){		
+				String s = br.readLine();
+				if (s!=null){
+					
+				//	System.out.println(s+ ents);
+					if(ents){	
+						if(s.equals("cables")){
+							ents = false;
+						}else{
+						parseent(s);
+						}
+					}else{
+						parsecable(s);
+					}										
+				}else{
+					reading = false;
+				}
 			}
 			
 			if(Graphics_engine.focus!=-1){
@@ -62,6 +78,37 @@ public class FileIO {
 
 		}		
 	}
+	
+	public static void parsecable(String s){
+		
+		String cableargs[] = s.split(",");
+		
+		Main_class.clist.add(
+				new Cable(
+						Double.parseDouble(cableargs[0]),
+						Double.parseDouble(cableargs[1]),
+						Double.parseDouble(cableargs[2]),
+						Integer.parseInt(cableargs[3]),
+						Integer.parseInt(cableargs[4]),
+						parsecolor(cableargs[5]),
+						parsecolor(cableargs[6]),
+						Integer.parseInt(cableargs[7]),
+						Double.parseDouble(cableargs[8])
+						));
+		
+	}
+	
+/*	public static Entity[] getents(String s){
+		
+		String[] indices = s.substring(1, s.length()-1).split(";");
+		Entity[] output = new Entity[indices.length];
+		for(int x = 0; x<indices.length; x++){
+			output[x] = Main_class.elist.get(Integer.parseInt(indices[x]));
+		}
+		
+		return output;
+		
+	}*/
 	
 	public static void parseent(String s){
 		

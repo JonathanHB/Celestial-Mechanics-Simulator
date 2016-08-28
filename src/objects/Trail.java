@@ -8,29 +8,29 @@ import utility.V3;
 public class Trail {
 	
 	public int refent = -1; //index of entity relative to which trails are drawn, -1 is system barycenter
-	public int length; //number of points, must be at least 3
-	public double resolution;
+	public int length; //number of points, equals the number of segments plus 1
+	public double resolution; //actually the resolution squared to save computing power
 	public Point[] nodes;
 	public Line[] links;
-	int nodepos=1;
-	int linkpos=1;
+	int nodepos=0;
+	int linkpos=0;
 	public Color c;
 		
 	public Trail(int l, double r, V3 v, Color col){
-						
+
 		c=col;
-		length = l;
-		resolution=r;
+		length = l+1;
+		resolution=r*r;
 		nodes = new Point[length];
 		links = new Line[length-1];
-			
+
 		for(int i=0; i<length-1; i++){
 			nodes[i] = new Point(v);
 			links[i] = new Line(nodes[0], nodes[0], col);
-			links[i].center=new V3(v);
+			links[i].center = new V3(v);
 		}
 		nodes[length-1] = new Point(v);
-		
+
 	}
 	
 	public void fixfrominit(V3 v){
@@ -51,7 +51,7 @@ public class Trail {
 
 	public void update(V3 v){
 		if(nodepos != 0){
-			if(v.sub2(nodes[nodepos-1].position).magnitude()>=resolution){
+			if(v.sub2(nodes[nodepos-1].position).squmagnitude()>=resolution){
 				
 				nodes[nodepos].position.set(v);								
 				links[linkpos].p1=nodes[nodepos];

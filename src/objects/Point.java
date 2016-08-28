@@ -10,7 +10,7 @@ public class Point {
 	public int projecty;
 	
 	public Point(V3 a) {
-		position=new V3(a);
+		position = new V3(a);
 	}
 
 }

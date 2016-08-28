@@ -4,12 +4,12 @@ public class Math_methods {
 
 	public static V3 rotatepoint(V3 v, V3 r){ //make this a utility method called by both this class and graphics
 		
-		double sinaz=Math.sin(r.x);
-		double cosaz=Math.cos(r.x);
+		double sinro=Math.sin(r.x);
+		double cosro=Math.cos(r.x);	
 		double sinpo=Math.sin(r.y);
-		double cospo=Math.cos(r.y);
-		double sinro=Math.sin(r.z);
-		double cosro=Math.cos(r.z);		
+		double cospo=Math.cos(r.y);		
+		double sinaz=Math.sin(r.z);
+		double cosaz=Math.cos(r.z);
 		
 		return new V3(
 				v.x*cosaz*cospo-v.y*sinaz*cospo+v.z*sinpo,				
@@ -25,7 +25,7 @@ public class Math_methods {
 			
 		//Investigate why only the z values need to be negated
 				
-		return new V3(rotationcomp(pv.x, pv.y, dp.x, dp.y), rotationcomp(pv.x, pv.z, dp.x, dp.z), -rotationcomp(pv.z, pv.y, dp.z, dp.y));
+		return new V3(rotationcomp(pv.z, pv.y, dp.z, dp.y), rotationcomp(pv.x, pv.z, dp.x, dp.z), rotationcomp(pv.y, pv.x, dp.y, dp.x)).invert2();
 		
 	}
 	
@@ -75,20 +75,16 @@ public class Math_methods {
 		return b.tolength2(cosdot(a, b)*a.magnitude());
 	}
 	
-/*	public static double arcsin(double x, double y){ //the two argument arcsin of x, which is a ratio (y just gives sign)  
-
-		if(y >= 0){			
-			return Math.asin(x);			
-		}else{
-			return Math.asin(-x) + Math.PI;
-		}
-
-	}*/
-	
 	public static double cosdot(V3 a, V3 b){ //cosine of the dot product of a and b
 		
 		return capcosine((a.x*b.x+a.y*b.y+a.z*b.z)/(a.magnitude()*b.magnitude()));
 		
+	}
+	
+	public static V3 randomangle(){ //each component is in the range of +-PI
+		
+		return new V3(Math.random(), Math.random(), Math.random()).sub2(.5, .5, .5).scale2(2*Math.PI);
+				
 	}
 		
 }

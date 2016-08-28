@@ -13,6 +13,8 @@ import javax.swing.JPanel;
 
 
 
+
+import objects.Cable;
 import objects.Entity;
 import objects.Poly_library;
 import objects.Test_mass;
@@ -35,6 +37,8 @@ public class Main_class extends JPanel{
 		
 	public static ArrayList<Entity> elist = new ArrayList<Entity>(0);
 
+	public static ArrayList<Cable> clist = new ArrayList<Cable>(0);
+	
 	public static int framewait;
 	
 	public static void main(String[] args) {
@@ -56,7 +60,8 @@ public class Main_class extends JPanel{
 			Trajectory_optimizer.optimize();
 		}	
 		
-	//	elist[2].t.refent=1;
+	//	elist.get(2).t.refent=0;
+	//	elist.get(1).t.refent=0;
 		
 		for(int i=0;i<600000000;i++){						
 			

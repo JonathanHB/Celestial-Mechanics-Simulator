@@ -6,11 +6,18 @@ import java.util.Collections;
 
 import objects.Render_obj;
 
-public class Misc_methods {
+public class Misc_methods { 
+	//make a general version of weighted_average that uses a pair of object and weight arrays
 
-	public static V3 weightedaverage(V3 v1, V3 v2, double w1, double w2){ //make a general version that uses a pair of object and weight arrays
+	public static V3 weighted_average(V3 v1, V3 v2, double w1, double w2){ //v1 and v2 are V3 objects, w1 and w2 are relative, addable weights
 		
 		return ((v1.scale2(w1)).add2(v2.scale2(w2))).invscale2(w1+w2);
+		
+	}
+	
+	public static V3 weighted_average(V3 v1, V3 v2, double w1, double w2, double w3){ //v1 and v2 are V3 objects, w1 and w2 are relative weights, w3 is their psuedo-sum for non addable weights
+		
+		return ((v1.scale2(w1)).add2(v2.scale2(w2))).invscale2(w3);
 		
 	}
 	

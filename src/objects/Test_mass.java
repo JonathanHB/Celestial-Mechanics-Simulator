@@ -46,13 +46,28 @@ public class Test_mass {
 	
 	public Test_mass(Test_mass best_test, boolean b){ //creates a test mass in a pseudorandom orbit; b is for constructor overloading
 
-		V3 orbit = new V3(Math.random(), Math.random(), Math.random()).sub2(new V3(.5,.5,.5)).dimscale2(Trajectory_optimizer.orbitrange).scale2(2*Math.PI).add2(best_test.initorbit); 
+		V3 orbit = new V3(Math.random(), Math.random(), Math.random()).sub2(new V3(.5,.5,.5)).scale2(2*Math.PI).add2(best_test.initorbit); 
 		//parameters for a circular orbit of fixed radius; longitude, inclination, roll
 
-		velocity = Math_methods.rotatepoint(new V3(Trajectory_optimizer.basevelocity, 0, 0), orbit).invert2();
-		position = Math_methods.rotatepoint(new V3(0, Trajectory_optimizer.altitude+Main_class.elist.get(Trajectory_optimizer.start).radius, 0), orbit);
+		velocity = Math_methods.rotatepoint(new V3(0,0,Trajectory_optimizer.basevelocity), orbit).add2(Main_class.elist.get(Trajectory_optimizer.start).velocity);
+		position = Math_methods.rotatepoint(new V3(0, Trajectory_optimizer.altitude+Main_class.elist.get(Trajectory_optimizer.start).radius, 0), orbit).add2(Main_class.elist.get(Trajectory_optimizer.start).position);
 
-		initorbit=orbit;
+		initorbit = orbit;
+		
+		minsquaredistance = Double.MAX_VALUE;
+		
+	}
+	
+	public Test_mass(V3[] data){
+		
+		V3 orbit = Math_methods.randomangle().dimscale2(new V3(1,1,1).sub2(data[1])).add2(data[0]);
+		
+		velocity = Math_methods.rotatepoint(new V3(0,0,Trajectory_optimizer.basevelocity), orbit).add2(Main_class.elist.get(Trajectory_optimizer.start).velocity);
+		position = Math_methods.rotatepoint(new V3(0, Trajectory_optimizer.altitude+Main_class.elist.get(Trajectory_optimizer.start).radius, 0), orbit).add2(Main_class.elist.get(Trajectory_optimizer.start).position);
+
+		System.out.println(velocity.tostring());
+		
+		initorbit = orbit;
 		
 		minsquaredistance = Double.MAX_VALUE;
 		

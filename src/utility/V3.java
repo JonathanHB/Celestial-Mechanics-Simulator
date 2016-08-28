@@ -12,6 +12,24 @@ public class V3 { //a 3d vector
 	
 	public V3(){} //basic vector constructor
 	
+	public V3(double a, double b, double c){ //vector constructor from components
+		this.set(a,b,c);
+	}
+	
+	public V3(V3 v){ //vector constructor from another vector via deep copying
+		this.set(v);
+	}
+	
+	public V3(V3 sin, V3 cos){ 
+		this.set(Math.atan2(sin.x, cos.x), Math.atan2(sin.y, cos.y), Math.atan2(sin.z, cos.z));
+	}
+	
+	public V3(V3 a, V3 b, boolean c){ //the boolean is for overloading purposes
+		this.set(Math.sqrt(a.x*a.x+b.x*b.x), Math.sqrt(a.y*a.y+b.y*b.y), Math.sqrt(a.z*a.z+b.z*b.z));
+	}
+	
+	//-------------------------------------------------------------------------------
+	
 	public void set(double a, double b, double c){ //sets vector from components
 		x=a;
 		y=b;
@@ -22,14 +40,6 @@ public class V3 { //a 3d vector
 		x=v.x;
 		y=v.y;
 		z=v.z;
-	}
-	
-	public V3(double a, double b, double c){ //vector constructor from components
-		this.set(a,b,c);
-	}
-	
-	public V3(V3 v){ //vector constructor from another vector via deep copying
-		this.set(v);
 	}
 	
 	//-------------------------------------------------------------------------------
@@ -64,6 +74,10 @@ public class V3 { //a 3d vector
 	
 	public double squmagnitude(){ //vector magnitude squared, improves computational efficiency by avoiding square roots
 		return x*x+y*y+z*z;
+	}
+	
+	public double magpow(double pow){ //returns magnitude to a power, using squmagnitude is efficient
+		return Math.pow(this.squmagnitude(), pow/2.0);
 	}
 	
 	public double sum(){ //sum of vector components
@@ -115,8 +129,7 @@ public class V3 { //a 3d vector
 	}
 	
 	public V3 sub2(double a, double b, double c){ //subtracts from the components of this vector
-		V3 output = new V3(x-a, y-b, z-c);
-		return output;
+		return new V3(x-a, y-b, z-c);
 	}
 	
 	public V3 sub2(V3 v){ //subtracts another vector from this one
@@ -146,7 +159,7 @@ public class V3 { //a 3d vector
 	}
 	
 	//-------------------------------------------------------------------------------
-	//inverse versions of dimscale will be created later if they are needed
+	
 	public void dimscale(V3 v){
 		x*=v.x;
 		y*=v.y;
@@ -155,6 +168,16 @@ public class V3 { //a 3d vector
 	
 	public V3 dimscale2(V3 v){
 		return new V3(x*v.x, y*v.y, z*v.z);
+	}
+	
+	public void invdimscale(V3 v){
+		x/=v.x;
+		y/=v.y;
+		z/=v.z;
+	}
+	
+	public V3 invdimscale2(V3 v){
+		return new V3(x/v.x, y/v.y, z/v.z);
 	}
 	
 	//-------------------------------------------------------------------------------
@@ -187,9 +210,13 @@ public class V3 { //a 3d vector
 	
 	//------------------------------------------------------------------------------
 	
+	public V3 cosines(){
+		return new V3(Math.cos(x), Math.cos(y), Math.cos(z));
+	}
 	
-	
-	
+	public V3 sines(){
+		return new V3(Math.sin(x), Math.sin(y), Math.sin(z));
+	}
 	
 	
 }

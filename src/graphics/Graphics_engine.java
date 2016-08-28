@@ -3,6 +3,9 @@ package graphics;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import objects.Cable;
+import objects.Cablenode;
+import objects.Entity;
 import objects.Line;
 import objects.Plane;
 import objects.Point;
@@ -18,8 +21,8 @@ public class Graphics_engine {
 	public static ArrayList <Render_obj> order2 = new ArrayList<Render_obj>(0);
 
 	public static V3 viewposition = new V3(0,0,0);//-1000000000.0
-	public static V3 axis_orientation = new V3(0,0,0); //x=azimuth, y=polar, z=roll
-	public static V3 orientation = new V3(0,1.5,0); //x=azimuth, y=polar, z=roll
+	public static V3 axis_orientation = new V3(0,.0000000000000000000000000000000000001,0); //x=azimuth, y=polar, z=roll, small value prevents a certain undefined glitch
+	public static V3 orientation = new V3(0,0,0); //x=azimuth, y=polar, z=roll
 
 	public static int focus = -1;
 
@@ -32,25 +35,45 @@ public class Graphics_engine {
 
 	public static void projector(){
 
-		for(int x = 0; x < Main_class.elist.size(); x++){
-			for(Point p:Main_class.elist.get(x).p.vertices){
-				projectpointP(p,Main_class.elist.get(x).position);
+		for(Entity e : Main_class.elist){
 
+			for(Point p:e.p.vertices){
+				projectpointP(p,e.position);
 			}
-			for(Point p:Main_class.elist.get(x).t.nodes){
-				projectpointT(p);
 
+			for(Point p:e.t.nodes){
+				projectpointT(p);
 			}
 			//----------------------------------------------------------
-			for(Plane p:Main_class.elist.get(x).p.faces){
+			for(Plane p:e.p.faces){
 				projectface(p);
-
 			}
-			for(Line l:Main_class.elist.get(x).t.links){
+
+			for(Line l:e.t.links){
 				projectedge(l);				
-
 			}
+
 		} 
+
+		for(Cable c : Main_class.clist){
+
+			for(Cablenode cn:c.nodes){
+				projectpointT(cn.p);
+			}
+
+			for(Line l : c.links){
+				projectedge(l);				
+			}
+			
+			for(Point p:c.t.nodes){
+				projectpointT(p);
+			}
+			
+			for(Line l:c.t.links){
+				projectedge(l);				
+			}
+
+		}
 
 	} 
 
@@ -62,21 +85,21 @@ public class Graphics_engine {
 
 		V3 v = new V3(utility.Math_methods.rotatepoint(utility.Math_methods.rotatepoint(p.position.add2(entpos).sub2(viewposition), orientation), axis_orientation));
 
-		double hypotenuse = Math.sqrt(v.z*v.z + v.y*v.y);	
-
-		double arc = visualrange*Math.atan2(hypotenuse, v.x)/hypotenuse;
+		double hypotenuse = Math.sqrt(v.z*v.z + v.y*v.y);
+		
+		double arc = visualrange*Math.atan2(hypotenuse, v.x)/hypotenuse; //this leads to a glitch when hypotenuse = 0;
 
 		p.projectx = (int) Math.round(windowscale*(v.y*arc+Math.PI)); //y
 		p.projecty = (int) Math.round(windowscale*(v.z*arc+Math.PI)); //z
-
+		
 	}
 
 	public static void projectpointT(Point p){
 
 		V3 v = new V3(utility.Math_methods.rotatepoint(utility.Math_methods.rotatepoint(p.position.sub2(viewposition), orientation), axis_orientation));
 
-		double hypotenuse = Math.sqrt(v.z*v.z + v.y*v.y);	
-
+		double hypotenuse = Math.sqrt(v.z*v.z + v.y*v.y); //this leads to a glitch when hypotenuse = 0;
+		
 		double arc = visualrange*Math.atan2(hypotenuse, v.x)/hypotenuse;
 
 		p.projectx = (int) Math.round(windowscale*(v.y*arc+Math.PI)); //y
@@ -108,19 +131,33 @@ public class Graphics_engine {
 
 		order2.clear();		
 
-		for(int x = 0; x < Main_class.elist.size(); x++){
+		for(Entity e : Main_class.elist){
 
-			for(int y = 0; y<Main_class.elist.get(x).p.faces.length; y++){ //<---not to be converted to type t:<array> format
-				if(Main_class.elist.get(x).p.faces[y].arcshort){
-					order2.add(new Render_obj(Main_class.elist.get(x).p.faces[y]));					
+			for(Plane p : e.p.faces){
+				if(p.arcshort){
+					order2.add(new Render_obj(p));					
 				}
 			}
 
-			for(int y = 0; y<Main_class.elist.get(x).t.length-1; y++){ //<---not to be converted to type t:<array> format
-				if(Main_class.elist.get(x).t.links[y].arcshort){
-					order2.add(new Render_obj(Main_class.elist.get(x).t.links[y]));
+			for(Line l : e.t.links){
+				if(l.arcshort){
+					order2.add(new Render_obj(l));
 				}
 			}
+		}
+
+		for(Cable c : Main_class.clist){
+			for(Line l : c.links){
+				if(l.arcshort){
+					order2.add(new Render_obj(l));
+				}
+			}	
+			
+			for(Line l : c.t.links){
+				if(l.arcshort){
+					order2.add(new Render_obj(l));
+				}
+			}	
 		}
 
 		order2.trimToSize();
@@ -129,37 +166,71 @@ public class Graphics_engine {
 
 	}
 
-	public static void lighting(){
+	public static void lighting(){ //turn off for traject_opt?, replace numerical for loops
 
-		for(int x = 0; x < Main_class.elist.size(); x++){
-			for(Plane p:Main_class.elist.get(x).p.faces){
+		for(Entity e : Main_class.elist){
+			for(Plane p : e.p.faces){
 				if(p.arcshort){
 					p.illumination.set(0,0,0);
 				}
 			}
 
-			for(int z = 0; z<Main_class.elist.get(x).t.length-1; z++){
-				if(Main_class.elist.get(x).t.links[z].arcshort){
-					Main_class.elist.get(x).t.links[z].illumination.set(0,0,0);
+			for(Line l : e.t.links){
+				if(l.arcshort){
+					l.illumination.set(0,0,0);
 				}
-			}		
+			}
+
 		} 	
 
-		for(int x = 0; x < Main_class.elist.size(); x++){
-			for(int y = 0; y < Main_class.elist.size(); y++){
-				for(Plane p:Main_class.elist.get(y).p.faces){
-					if(p.arcshort){
-						p.illumination.add(Main_class.elist.get(x).luminosity.invscale2(p.center.sub2(Main_class.elist.get(x).position).squmagnitude()));
+		for(Cable c : Main_class.clist){
+			for(Line l : c.links){
+				if(l.arcshort){
+					l.illumination.set(0,0,0);
+				}
+			}
+			
+			for(Line l : c.t.links){
+				if(l.arcshort){
+					l.illumination.set(0,0,0);
+				}
+			}
+		}
+
+		for(Entity e1 : Main_class.elist){
+			if(e1.luminosity.isnonzero()){
+				for(Entity e2 : Main_class.elist){
+					for(Plane p : e2.p.faces){
+						if(p.arcshort){
+							p.illumination.add(e1.luminosity.invscale2(p.center.sub2(e1.position).squmagnitude()));
+						}
+					}
+
+					for(Line l : e2.t.links){
+						if(l.arcshort){
+							l.illumination.add(e1.luminosity.invscale2(l.center.sub2(e1.position).squmagnitude()));
+						}
+					}
+				} 
+
+				for(Cable c : Main_class.clist){
+					for(Line l : c.links){
+						if(l.arcshort){
+							l.illumination.add(e1.luminosity.invscale2(l.center.sub2(e1.position).squmagnitude()));
+						}
+					}
+					
+					for(Line l : c.t.links){
+						if(l.arcshort){
+							l.illumination.add(e1.luminosity.invscale2(l.center.sub2(e1.position).squmagnitude()));
+						}
 					}
 				}
 
-				for(int z = 0; z<Main_class.elist.get(y).t.length-1; z++){
-					if(Main_class.elist.get(y).t.links[z].arcshort){
-						Main_class.elist.get(y).t.links[z].illumination.add(Main_class.elist.get(x).luminosity.invscale2(Main_class.elist.get(y).t.links[z].center.sub2(Main_class.elist.get(x).position).squmagnitude()));
-					}
-				}
-			} 	
-		} 	
+			}
+
+		} 
+
 	}
 
 }

@@ -9,11 +9,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
+import utility.Math_methods;
+import utility.V3;
+import graphics.Graphics_engine;
+
 public class Mouse_control implements MouseMotionListener{
 	
 	public static Point lastpoint = new Point();
 	
-	public static double sensitivity = .006;
+	public static double sensitivity = .006;//.006
 	
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
@@ -39,7 +43,7 @@ public class Mouse_control implements MouseMotionListener{
 			
 			//	System.out.println("hi");
 								
-			/*	try {
+			/*	try { //a failed attempt at mouse locking
 			        Robot r = new Robot();
 			        r.mouseMove(400, 400);
 			    } catch (AWTException e) {
@@ -49,13 +53,11 @@ public class Mouse_control implements MouseMotionListener{
 			}
 			
 			public void mouseDragged(MouseEvent arg0) {
-			
-			//	System.out.println("hey");
-				graphics.Graphics_engine.orientation.x-=sensitivity*(arg0.getPoint().x-lastpoint.x);
+				
+				graphics.Graphics_engine.orientation.z-=sensitivity*(arg0.getPoint().x-lastpoint.x);
 				graphics.Graphics_engine.orientation.y+=sensitivity*(arg0.getPoint().y-lastpoint.y);
-				
-				lastpoint.setLocation(arg0.getPoint());
-				
+								
+				lastpoint.setLocation(arg0.getPoint());				
 				
 			}
 
