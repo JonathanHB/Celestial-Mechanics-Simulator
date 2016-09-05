@@ -38,8 +38,8 @@ import physics.Trajectory_optimizer;
 
 public class Frame_functions extends JPanel{
 
-	public static JFrame displayframe = new JFrame("CMS 2.0"); //display window	
-	static JFrame inputbox = new JFrame("Enter input file location"); //control window
+	public static JFrame displayframe = new JFrame("OMS 2.0"); //display window	
+	static JFrame inputbox = new JFrame("Enter load/save commands"); //control window
 	public static final JTextField inputfield = new JTextField(); //part of control window
 	
 	static int height = 800; 
