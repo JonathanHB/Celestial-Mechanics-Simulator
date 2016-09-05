@@ -15,33 +15,36 @@ import objects.Entity;
 import objects.Poly_library;
 import utility.V3;
 import utility.Main_class;
+import graphics.Frame_functions;
 import graphics.Graphics_engine;
 import physics.Motion;
 import physics.Trajectory_optimizer;
 
 public class FileIO {	
 
-	public static String inputfile = "/home/jonathan/Desktop/cabletest2.txt"; //file to read from
-	public static String outputfile = "/home/jonathan/Desktop/iotest2.txt"; //file to save to
-
 	static PrintWriter writer; //declared outside for fillfile and writefile
 
-	public static void readfile(String filename){ //get rid of argument, use inputfile?
+	public static void readfile(String filename){ //reads in text files to generate objects
 
 		try { 
-			//reads in text files to generate objects
+			
 			BufferedReader br = new BufferedReader(new FileReader(filename));
+			
+			Main_class.elist.clear();
+			Main_class.clist.clear();
 			
 			Motion.repbuff=0;
 			Motion.repetition=0;
-						
+									
 			Main_class.framewait=Integer.parseInt(br.readLine());
+			
+			Frame_functions.background = parsecolor(br.readLine());
 			
 			Motion.increment=Double.parseDouble(br.readLine());
 			Motion.incbuff=Motion.increment;
 			
 			Key_control.phys_rep_inc=Integer.parseInt(br.readLine());
-			Key_control.tsensitivity=Integer.parseInt(br.readLine());
+			Key_control.tsensitivity=Double.parseDouble(br.readLine());
 										
 			boolean reading = true;
 			boolean ents = true;
@@ -49,9 +52,7 @@ public class FileIO {
 			
 			while(reading){		
 				String s = br.readLine();
-				if (s!=null){
-					
-				//	System.out.println(s+ ents);
+				if (s!=null){					
 					if(ents){	
 						if(s.equals("cables")){
 							ents = false;
@@ -87,28 +88,15 @@ public class FileIO {
 				new Cable(
 						Double.parseDouble(cableargs[0]),
 						Double.parseDouble(cableargs[1]),
-						Double.parseDouble(cableargs[2]),
-						Integer.parseInt(cableargs[3]),
-						Integer.parseInt(cableargs[4]),
+						Integer.parseInt(cableargs[2]),
+						Main_class.elist.get(Integer.parseInt(cableargs[3])),
+						parsecolor(cableargs[4]),
 						parsecolor(cableargs[5]),
-						parsecolor(cableargs[6]),
-						Integer.parseInt(cableargs[7]),
-						Double.parseDouble(cableargs[8])
+						Integer.parseInt(cableargs[6]),
+						Double.parseDouble(cableargs[7])
 						));
 		
 	}
-	
-/*	public static Entity[] getents(String s){
-		
-		String[] indices = s.substring(1, s.length()-1).split(";");
-		Entity[] output = new Entity[indices.length];
-		for(int x = 0; x<indices.length; x++){
-			output[x] = Main_class.elist.get(Integer.parseInt(indices[x]));
-		}
-		
-		return output;
-		
-	}*/
 	
 	public static void parseent(String s){
 		
@@ -190,22 +178,33 @@ public class FileIO {
 		
 	}
 	
+	//loading code
 	//--------------------------------------------------------------------------------------------
-
+	//saving code
+	
 	public static void writefile(String filename){ //get rid of argument, use outputfile
 
 		try {
 
 			writer = new PrintWriter(filename, "UTF-8");
 
-			writer.println(Main_class.elist.size());
-			writer.println(Main_class.framewait);			
+			writer.println(Main_class.framewait);
+			writer.println(reverseparsecolor(Frame_functions.background));
 			writer.println(Motion.increment);			
 			writer.println(Key_control.phys_rep_inc);
 			writer.println(Key_control.tsensitivity);
 
 			for(int i=0; i<Main_class.elist.size(); i++){
 				fillfile(i);
+			}
+			
+			if(Main_class.elist.size()>0){
+				writer.println("cables");
+				
+				for(int i=0; i<Main_class.clist.size(); i++){
+					writecable(i);
+				}
+				
 			}
 
 			writer.close();
@@ -222,37 +221,65 @@ public class FileIO {
 
 	public static void fillfile(int i){ //writes into file from array
 		
-		writer.print(Main_class.elist.get(i).mass);	
+		Entity e = Main_class.elist.get(i);
+		
+		writer.print(e.mass);	
 		writer.print(",");
-		writer.print(Main_class.elist.get(i).radius);
+		writer.print(e.radius);
 		writer.print(",");
-		writer.print(Main_class.elist.get(i).luminosity.tostring());
+		writer.print(e.luminosity.tostring());
 		writer.print(",");
-		writer.print(Main_class.elist.get(i).position.tostring());
+		writer.print(e.position.tostring());
 		writer.print(",");
-		writer.print(Main_class.elist.get(i).velocity.tostring());
+		writer.print(e.velocity.tostring());
 		writer.print(",");
-		writer.print(Main_class.elist.get(i).orientation.tostring());
+		writer.print(e.orientation.tostring());
 		writer.print(",");
-		writer.print(Main_class.elist.get(i).rotation.tostring());
+		writer.print(e.rotation.tostring());
 		writer.print(",");
-		writer.print(reverseparsecolor(Main_class.elist.get(i).p.c));
+		writer.print(reverseparsecolor(e.p.c));
 		writer.print(",");
-		writer.print(reverseparsepoly(Main_class.elist.get(i).polybase2));
+		writer.print(reverseparsepoly(e.polybase2));
 		writer.print(",");	
-		writer.print(reverseparsemap(Main_class.elist.get(i).cornermap2));
+		writer.print(reverseparsemap(e.cornermap2));
 		writer.print(",");	
-		writer.print(Main_class.elist.get(i).scale2.tostring());
+		writer.print(e.scale2.tostring());
 		writer.print(",");
-		writer.print(Main_class.elist.get(i).shift2.tostring());
+		writer.print(e.shift2.tostring());
 		writer.print(",");
-		writer.print(reverseparsecolor(Main_class.elist.get(i).t.c));
+		writer.print(reverseparsecolor(e.t.c));
 		writer.print(",");
-		writer.print(Main_class.elist.get(i).t.length);	
+		writer.print(e.t.length);	
 		writer.print(",");
-		writer.print(Main_class.elist.get(i).t.resolution);	
+		writer.print(e.t.resolution);	
 		
 		writer.println();
+
+	}
+	
+	public static void writecable(int i){
+
+		Cable c = Main_class.clist.get(i);
+
+		if(Main_class.elist.indexOf(c.primary_ent)!=-1){
+
+			writer.println(c.node_spacing);
+			writer.print(",");
+			writer.println(c.maxlength);
+			writer.print(",");
+			writer.println(c.nodes.length);
+			writer.print(",");
+			writer.println(Main_class.elist.indexOf(c.primary_ent));
+			writer.print(",");
+			writer.println(reverseparsecolor(c.col));
+			writer.print(",");
+			writer.println(reverseparsecolor(c.t.c));
+			writer.print(",");
+			writer.println(c.t.length);
+			writer.print(",");
+			writer.println(c.t.resolution);
+
+		}
 
 	}
 

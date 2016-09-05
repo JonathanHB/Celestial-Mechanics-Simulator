@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import physics.Motion;
+import utility.Main_class;
 import utility.Math_methods;
 import utility.V3;
 
@@ -29,25 +30,38 @@ public class Key_control implements KeyListener{
 		char c = e.getKeyChar();
 		//System.out.println(e.getKeyCode());
 		//find a decent data structure to use for this method rather than elif chains
+						
+		double cosy_scaling = tsensitivity*Math.abs(Math.cos(Graphics_engine.orientation.y));
+		
+		double cosz = Math.cos(Graphics_engine.orientation.z)*cosy_scaling;
+		double sinz = Math.sin(Graphics_engine.orientation.z)*cosy_scaling;
 		
 		if(c=='a'){
-			Graphics_engine.viewposition.x-=tsensitivity*Math.sin(Graphics_engine.orientation.z);
-			Graphics_engine.viewposition.y-=tsensitivity*Math.cos(Graphics_engine.orientation.z);//.sub(Math_methods.rotatepoint(new V3(tsensitivity,0,0), Graphics_engine.orientation));
+			Graphics_engine.viewposition.x-=sinz;
+			Graphics_engine.viewposition.y-=cosz;
 		}else if(c=='d'){
-			Graphics_engine.viewposition.x+=tsensitivity*Math.sin(Graphics_engine.orientation.z);
-			Graphics_engine.viewposition.y+=tsensitivity*Math.cos(Graphics_engine.orientation.z);//.add(Math_methods.rotatepoint(new V3(tsensitivity,0,0), Graphics_engine.orientation));
+			Graphics_engine.viewposition.x+=sinz;
+			Graphics_engine.viewposition.y+=cosz;
 		}else if(c=='s'){
-			Graphics_engine.viewposition.x-=tsensitivity*Math.cos(Graphics_engine.orientation.z);
-			Graphics_engine.viewposition.y+=tsensitivity*Math.sin(Graphics_engine.orientation.z);//.sub(Math_methods.rotatepoint(new V3(0,tsensitivity,0), Graphics_engine.orientation));
+			Graphics_engine.viewposition.x-=cosz;
+			Graphics_engine.viewposition.y+=sinz;
 		}else if(c=='w'){
-			Graphics_engine.viewposition.x+=tsensitivity*Math.cos(Graphics_engine.orientation.z);
-			Graphics_engine.viewposition.y-=tsensitivity*Math.sin(Graphics_engine.orientation.z);//.add(Math_methods.rotatepoint(new V3(0,tsensitivity,0), Graphics_engine.orientation));
+			Graphics_engine.viewposition.x+=cosz;
+			Graphics_engine.viewposition.y-=sinz;
 		}else if(c=='q'){
-			Graphics_engine.viewposition.z-=tsensitivity;//.sub(Math_methods.rotatepoint(new V3(0,0,tsensitivity), Graphics_engine.orientation));
+			Graphics_engine.viewposition.z-=tsensitivity;
 		}else if(c=='e'){
-			Graphics_engine.viewposition.z+=tsensitivity;//.add(Math_methods.rotatepoint(new V3(0,0,tsensitivity), Graphics_engine.orientation));
+			Graphics_engine.viewposition.z+=tsensitivity;
 		}
+		
+	/*	if(c=='l'){
+			Main_class.running = true;
+		}
+		if(c=='p'){
+			Main_class.running = false;
+		}*/
 
+		
 /*		if(c=='z'){ //code for altering physics increment, something which should be automatic or fixed
 			Motion.incbuff+=phys_inc_inc;
 		}else if(c=='x'){

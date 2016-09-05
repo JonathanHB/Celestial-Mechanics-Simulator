@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 
 
 
+
 import objects.Cable;
 import objects.Entity;
 import objects.Poly_library;
@@ -41,50 +42,81 @@ public class Main_class extends JPanel{
 	
 	public static int framewait;
 	
-	public static void main(String[] args) {
+	public static boolean running;
+	
+	public static boolean loading;
+	public static boolean saving;
+	
+	public static String loadstring;
+
+	
+	public static void main(String[] args) {		
 		
-		Poly_library.setup();		
+		Poly_library.setup();	
 		
-//		FileIO.writefile(user_interface.FileIO.outputfile);
-		FileIO.readfile(user_interface.FileIO.inputfile);
-		
-		Object_manager.fixcenter();	
-				
-		Frame_functions.frame_setup();	
+		Frame_functions.frame_setup();
 		
 		Text_control.controlreader();
 		Mouse_control.mcontrolreader();		
 		
+		running = false;
+		
+		while(true){
+		
+			while(running){
+				Main_class.runiteration();
+			}
+			
+			System.out.print(""); //keeps while loop from timing out and breaking
+			
+			if(loading){
+				startsimulation(loadstring);
+				running = true;
+				loading = false;
+			}
+			
+		}
+					
+	}
+	
+	public static void startsimulation(String s){
+		
+		FileIO.readfile(s);
+		
+		Object_manager.fixcenter();	
+							
 		if(Trajectory_optimizer.running){		
 			Trajectory_optimizer.maketables();
 			Trajectory_optimizer.optimize();
-		}	
-		
-	//	elist.get(2).t.refent=0;
-	//	elist.get(1).t.refent=0;
-		
-		for(int i=0;i<600000000;i++){						
-			
+		}			
+	}
+	
+	public static void runiteration(){
+
+		if(Main_class.elist.size() != 0){
+
 			Motion.physexec();
 			Graphics_engine.projector();
 			Graphics_engine.lighting();
 			Graphics_engine.setorder();			
 			Frame_functions.displayframe.repaint();
-						
+
+
 			if(Motion.increment !=0 && Motion.repetition !=0){
 				time += Motion.increment*Math.abs(Motion.repetition);
 				runtime += Math.abs(Motion.increment*Motion.repetition);
 				System.out.println(time);
 			}
-			
+
 			try {
 				TimeUnit.MILLISECONDS.sleep(framewait);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();					
 			}
+
 		}
-			
+
 	}
 
 }
@@ -93,13 +125,10 @@ public class Main_class extends JPanel{
  * 
  * 
  * 
- * port tidal forces and cable simulation (these should account for & influence rotation)
+ * port tidal forces (these should account for & influence rotation)
  * 
- * port trajectory optimizer
+ * fix cable physics
  * 
- * improve physics/graphics engine efficiency(store entities in arraylist & index (un)seen objects to remove if statements)
- * 
- * improve mouse control
  * improve movement and axis angle controls(base axis angle on location relative to barycenter, or eliminate it)
  * 
  * port piloting simulation?

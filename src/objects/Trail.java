@@ -10,6 +10,7 @@ public class Trail {
 	public int refent = -1; //index of entity relative to which trails are drawn, -1 is system barycenter
 	public int length; //number of points, equals the number of segments plus 1
 	public double resolution; //actually the resolution squared to save computing power
+	public double squres;
 	public Point[] nodes;
 	public Line[] links;
 	int nodepos=0;
@@ -20,7 +21,8 @@ public class Trail {
 
 		c=col;
 		length = l+1;
-		resolution=r*r;
+		resolution=r;
+		squres = r*r;
 		nodes = new Point[length];
 		links = new Line[length-1];
 
@@ -51,7 +53,7 @@ public class Trail {
 
 	public void update(V3 v){
 		if(nodepos != 0){
-			if(v.sub2(nodes[nodepos-1].position).squmagnitude()>=resolution){
+			if(v.sub2(nodes[nodepos-1].position).squmagnitude()>=squres){
 				
 				nodes[nodepos].position.set(v);								
 				links[linkpos].p1=nodes[nodepos];
@@ -72,8 +74,8 @@ public class Trail {
 				}
 			}			
 		}else{
-			if(v.sub2(nodes[length-1].position).magnitude()>=resolution){
-				
+			if(v.sub2(nodes[length-1].position).squmagnitude()>=squres){
+
 				nodes[nodepos].position.set(v);		
 				links[linkpos].p1=nodes[nodepos];
 				links[linkpos].p2=nodes[length-1];

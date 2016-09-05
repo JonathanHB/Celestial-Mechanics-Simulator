@@ -45,8 +45,10 @@ public class Frame_functions extends JPanel{
 	static int height = 800; 
 	static int width = 800;
 	
-	static int height2 = 100; 
+	static int height2 = 20; //this value behaves oddly near 0
 	static int width2 = 200;
+	
+	public static Color background = new Color(0,0,0); //paint component runs once initially; this prevents nullpointers
 	
 	public static void frame_setup(){ //sets up jframe window
 		
@@ -71,15 +73,12 @@ public class Frame_functions extends JPanel{
 		
 	}
 		
-	public void paintComponent(Graphics g){ //sets pixel based on associated probe
+	public void paintComponent(Graphics g){
 		
 		super.paintComponent(g);
 		
-		g.setColor(Color.BLACK);
-		
-		if(!Trajectory_optimizer.running){
-			g.fillRect(0, 0, 800, 800);
-		}
+		g.setColor(background);
+		g.fillRect(0, 0, 800, 800); //colors background
 		
 		for(int x = Graphics_engine.order2.size()-1; x >= 0; x--){					
 			
@@ -120,16 +119,11 @@ public class Frame_functions extends JPanel{
 						object.l.p2.projectx,
 						object.l.p2.projecty
 						);
-		
-				
+					
 			}
 			
 		}
-		
-		
-		
-		
-		
+			
 	}	
 
 	public Color illuminate(V3 light, Color c){

@@ -67,14 +67,19 @@ public class Motion {
 	
 	public static void cableforces(){
 		for(Cable c: Main_class.clist){
-			c.internalforces(increment);
+			
 			for(Entity e: Main_class.elist){
 				c.applygrav(e, increment);
-			}			
+			}	
+			
+			c.internalforces(increment);
+			
 		}
+		
 		for(int x = 0; x < Main_class.clist.size(); x++){
 			Object_manager.splitcable(Main_class.clist.get(x), Main_class.clist.get(x).checkforbreaks());
 		}	
+		
 	}
 	
 	public static void cablemove(){
@@ -91,8 +96,9 @@ public class Motion {
 					
 				movement();
 				cablemove();
+				
 				cableforces();
-				gravitation();								
+				gravitation();					
 
 			}
 		
@@ -101,7 +107,8 @@ public class Motion {
 			for(int i=0; i<Math.abs(repetition); i++){
 					
 				gravitation();
-				cableforces();				
+				cableforces();	
+				
 				cablemove();
 				movement();
 

@@ -116,12 +116,12 @@ public class Object_manager {
 				for(int x = 0; x<breaks.length-1; x++){
 					if(breaks[x]){
 						if(x-sectionstart>0){
-							Main_class.clist.add(new Cable(c.axialresponse, c.node_spacing, c.col, c.t.c, Arrays.copyOfRange(c.nodes, sectionstart, x+1), c.t.length, c.t.resolution));			
+							Main_class.clist.add(new Cable(c.node_spacing, c.col, c.t.c, Arrays.copyOfRange(c.nodes, sectionstart, x+1), c.t.length, c.t.resolution));			
 						}
 						sectionstart = x+1;
 
 					}else if(x == breaks.length-2){
-						Main_class.clist.add(new Cable(c.axialresponse, c.node_spacing, c.col, c.t.c, Arrays.copyOfRange(c.nodes, sectionstart, x+2), c.t.length, c.t.resolution));			
+						Main_class.clist.add(new Cable(c.node_spacing, c.col, c.t.c, Arrays.copyOfRange(c.nodes, sectionstart, x+2), c.t.length, c.t.resolution));			
 					}
 
 				}
