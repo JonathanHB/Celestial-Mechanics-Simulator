@@ -74,6 +74,15 @@ public class Misc_methods {
 
 	}
 	
+	public static int sigdigs(double d){		
+		String s = Double.toString(d);
+		return s.length()-s.indexOf(".")-1;
+	}
+	
+	public static double roundto(double d, int r){
+		return Math.round(d*Math.pow(10, r))/Math.pow(10, r);
+	}
+	
 }
 
 

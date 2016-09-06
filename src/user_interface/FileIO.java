@@ -72,12 +72,17 @@ public class FileIO {
 			}
 									
 			br.close();
+			
+			Frame_functions.statefield.setText(filename + " loaded");
+			Frame_functions.inputfield.setText(null);
 
 		}catch (IOException e) {
 
-			System.err.println("Error: " + e);
+			Frame_functions.statefield.setText("Error: " + e);			
+			//System.err.println("Error: " + e);
 
 		}		
+		
 	}
 	
 	public static void parsecable(String s){

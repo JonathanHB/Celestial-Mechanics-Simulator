@@ -54,12 +54,6 @@ public class Key_control implements KeyListener{
 			Graphics_engine.viewposition.z+=tsensitivity;
 		}
 		
-	/*	if(c=='l'){
-			Main_class.running = true;
-		}
-		if(c=='p'){
-			Main_class.running = false;
-		}*/
 
 		
 /*		if(c=='z'){ //code for altering physics increment, something which should be automatic or fixed

@@ -41,16 +41,21 @@ public class Frame_functions extends JPanel{
 	public static JFrame displayframe = new JFrame("OMS 2.0"); //display window	
 	static JFrame inputbox = new JFrame("Enter load/save commands"); //control window
 	public static final JTextField inputfield = new JTextField(); //part of control window
+	public static final JTextField statefield = new JTextField(); //part of control window
+	public static final JTextField timefield = new JTextField(); //prints simulation time
 	
 	static int height = 800; 
 	static int width = 800;
 	
-	static int height2 = 20; //this value behaves oddly near 0
+	static int height2 = 80; //this value behaves oddly
 	static int width2 = 200;
 	
 	public static Color background = new Color(0,0,0); //paint component runs once initially; this prevents nullpointers
 	
 	public static void frame_setup(){ //sets up jframe window
+		
+		statefield.setEditable(false);
+		timefield.setEditable(false);
 		
 		displayframe.setSize(width, height);
 		displayframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -67,6 +72,8 @@ public class Frame_functions extends JPanel{
 		inputbox.setSize(width2, height2);
 		inputbox.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		inputbox.add(timefield, BorderLayout.NORTH);		
+		inputbox.add(statefield, BorderLayout.CENTER);
 		inputbox.add(inputfield, BorderLayout.SOUTH);
 	
 		inputbox.setVisible(true); 

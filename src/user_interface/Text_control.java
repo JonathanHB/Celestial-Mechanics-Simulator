@@ -12,15 +12,23 @@ public class Text_control {
 	static int state = 0; //an unused state
 	
 	public static void parsetext(String s){
+		
 		if(s.equals("exit")){
 			System.exit(0);
 		}else if(s.equals("load")){
+			
 			state = 1;
 			Frame_functions.inputfield.setText(null);
+			Frame_functions.statefield.setText("loading from:");
+			
 		}else if(s.equals("save")){
+			
 			state = 2;
 			Frame_functions.inputfield.setText(null);
+			Frame_functions.statefield.setText("saving to:");
+			
 		}else{
+			
 			if(state == 1){
 
 				Main_class.running = false;

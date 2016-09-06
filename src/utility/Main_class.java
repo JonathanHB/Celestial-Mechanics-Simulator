@@ -49,8 +49,9 @@ public class Main_class extends JPanel{
 	
 	public static String loadstring;
 
+	static int siginc;
 	
-	public static void main(String[] args) {		
+	public static void main(String[] args) {						
 		
 		Poly_library.setup();	
 		
@@ -88,7 +89,12 @@ public class Main_class extends JPanel{
 		if(Trajectory_optimizer.running){		
 			Trajectory_optimizer.maketables();
 			Trajectory_optimizer.optimize();
-		}			
+		}	
+		
+		siginc = Misc_methods.sigdigs(Motion.increment);
+		
+		Frame_functions.timefield.setText("0.0 seconds");
+		
 	}
 	
 	public static void runiteration(){
@@ -105,7 +111,8 @@ public class Main_class extends JPanel{
 			if(Motion.increment !=0 && Motion.repetition !=0){
 				time += Motion.increment*Math.abs(Motion.repetition);
 				runtime += Math.abs(Motion.increment*Motion.repetition);
-				System.out.println(time);
+				Frame_functions.timefield.setText(Misc_methods.roundto(time, siginc) + " seconds");
+			//	System.out.println(time);
 			}
 
 			try {
