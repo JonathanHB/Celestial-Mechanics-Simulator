@@ -10,11 +10,6 @@ import javax.swing.JPanel;
 
 //----------external imports--------------------
 
-
-
-
-
-
 import objects.Cable;
 import objects.Entity;
 import objects.Poly_library;
@@ -47,13 +42,16 @@ public class Main_class extends JPanel{
 	public static boolean loading;
 	public static boolean saving;
 	
+	public static boolean loading_internal;
+	
 	public static String loadstring;
 
 	static int siginc;
 	
 	public static void main(String[] args) {						
 		
-		Poly_library.setup();	
+		Poly_library.setup();
+		FileIO.setup();
 		
 		Frame_functions.frame_setup();
 		
@@ -74,6 +72,10 @@ public class Main_class extends JPanel{
 				startsimulation(loadstring);
 				running = true;
 				loading = false;
+			}else if(loading_internal){
+				startsim2();
+				running = true;
+				loading_internal = false;
 			}
 			
 		}
@@ -94,6 +96,23 @@ public class Main_class extends JPanel{
 		siginc = Misc_methods.sigdigs(Motion.increment);
 		
 		Frame_functions.timefield.setText("0.0 seconds");
+		
+	}
+	
+	public static void startsim2(){
+		
+		FileIO.loadtest(FileIO.test_input);
+		
+		Object_manager.fixcenter();	
+							
+		if(Trajectory_optimizer.running){		
+			Trajectory_optimizer.maketables();
+			Trajectory_optimizer.optimize();
+		}	
+		
+		siginc = Misc_methods.sigdigs(Motion.increment);
+		
+		Frame_functions.timefield.setText("0.0 seconds"); //adjust this sometime to match siginc
 		
 	}
 	

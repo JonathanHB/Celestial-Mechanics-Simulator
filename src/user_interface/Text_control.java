@@ -31,10 +31,19 @@ public class Text_control {
 			
 			if(state == 1){
 
-				Main_class.running = false;
-				Main_class.loading = true;
+				if(s.equals("default")){
+					
+					Main_class.running = false;
+					Main_class.loading_internal = true;
 
-				Main_class.loadstring = s;
+				}else{
+				
+					Main_class.running = false;
+					Main_class.loading = true;
+
+					Main_class.loadstring = s;
+				
+				}
 								
 			}else if(state == 2){
 				
