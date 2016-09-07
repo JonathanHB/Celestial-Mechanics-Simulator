@@ -103,12 +103,12 @@ public class Key_control implements KeyListener{
 	}
 
 	@Override
-	public void keyTyped(KeyEvent arg0) {
-		keyparser(arg0);
-	}
+	public void keyTyped(KeyEvent arg0) {}
 
 	@Override
-	public void keyPressed(KeyEvent arg0) {}
+	public void keyPressed(KeyEvent arg0) {
+		keyparser(arg0);
+	}
 	@Override
 	public void keyReleased(KeyEvent arg0) {}
 
