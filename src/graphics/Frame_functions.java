@@ -80,7 +80,8 @@ public class Frame_functions extends JPanel{
 		
 	}
 		
-	public void paintComponent(Graphics g){
+	public void paintComponent(Graphics g){ 
+		//draws lines and planes from render_obj objects in order[] arraylist to jframe
 		
 		super.paintComponent(g);
 		
@@ -144,47 +145,3 @@ public class Frame_functions extends JPanel{
 	}
 		
 }
-
-
-//from paintcomponent
-//this code works nicely with small repetition values but covers the screen in bars for large ones
-		/*
-		int simtime = (int) Math.round(Motion.repetition*Motion.increment); //number of seconds simulated per frame
-		
-		g.setColor(Color.BLACK);		
-		g.fillRect(8, 8, 5, Math.abs(simtime)+4);
-		
-		Color repgauge;
-		
-		if(Math.signum(simtime)>0){
-			repgauge = Color.RED;
-		}else{
-			repgauge = Color.BLUE;
-		}
-		
-		int count = Math.abs(simtime);
-		int shift = 10;
-		
-		while(count > 0){
-			if(count >= height-20){
-				g.setColor(Color.BLACK);		
-				g.fillRect(shift, 8, 5, height-16);
-				
-				g.setColor(repgauge);		
-				g.fillRect(shift, 10, 3, height-20);
-				
-				shift+=4;
-				count -= height-20;
-
-			}else{
-				
-				g.setColor(Color.BLACK);		
-				g.fillRect(shift, 8, 5, count+4);
-				
-				g.setColor(repgauge);		
-				g.fillRect(shift, 10, 3, count);
-				
-				count = 0;
-				
-			}
-		}*/

@@ -16,9 +16,8 @@ import utility.V3;
 
 public class Graphics_engine {
 
-	static double order[][];
-
 	public static ArrayList <Render_obj> order2 = new ArrayList<Render_obj>(0);
+	//used to hold all graphics objects in order of distance for rendering purposes
 
 	public static V3 viewposition = new V3(0,0,0);//-1000000000.0
 	public static V3 axis_orientation = new V3(0,.0000000000000000000000000000000000001,0); //x=azimuth, y=polar, z=roll, small value prevents a certain undefined glitch

@@ -24,9 +24,11 @@ public class Entity {
 	public V3 rotation; //radians per second; x=azimuth, y=polar, z=roll
 	
 	public V3 scale2;
-	public V3 shift2; //poybase, cornermap, scale and shift are only used by polyhedron and for saving files, and may be moved
+	public V3 shift2; 
+	//poybase2, cornermap2, scale2, and shift2 are used to
+	//generate and save the polyhedron, and process collisions
 	public V3[] polybase2;
-	public int[][] cornermap2;
+	public int[][] cornermap2; 
 	
 	public Polyhedron p;
 	public Trail t;
@@ -90,12 +92,11 @@ public class Entity {
 	
 	public void rotate(double d){ //rotates the entity for a time increment of d seconds
 		
-		orientation.add(rotation.scale2(d));
+		orientation.add(rotation.scale2(d)); //update cube's orientation
 		p.rotatepoly(rotation.scale2(d)); //rotate the cube 
-		//would it make more sense to rotate it to the orientation rather than rotating it by the rotation rate??
+		//TODO would it be faster to rotate the polyhedron to the orientation rather than rotating it by the rotation rate??
 		p.translateby(position); 
-		//moves the face centers, which are located relative to the entity's position for efficient rotation 
-		//and are reset to this frame by rotatepoly, to the correct locations
+		//moves the polyhedron representing the object
 		
 	}
 				
