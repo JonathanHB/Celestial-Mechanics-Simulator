@@ -33,7 +33,7 @@ public class Entity {
 	
 	public Entity(){}
 	
-	public Entity( //full constructor, consider making one with fewer than 15 arguments
+	public Entity( //full constructor with 15 arguments
 			double m, double r, V3 lum, V3 pos, V3 vel, V3 ori, V3 rot, 
 			Color pcol, V3[] polybase, int[][] cornermap, V3 scale, V3 shift, 
 			Color tcol, int length, double res
@@ -62,14 +62,14 @@ public class Entity {
 		
 	}
 	
-	public void move(double d){
+	public void move(double d){ //translates and rotates entity
 		
 		translate(d);
 		rotate(d);
 	
 	}	
 	
-	public void translate(double d){ //moves and rotates the entity based on time increment of d seconds
+	public void translate(double d){ //moves entity for a time increment of d seconds
 		
 		V3 dpos=velocity.scale2(d);
 		position.add(dpos);
@@ -88,13 +88,13 @@ public class Entity {
 		
 	}
 	
-	public void rotate(double d){ //rotates the entity based on time increment of d seconds
+	public void rotate(double d){ //rotates the entity for a time increment of d seconds
 		
 		orientation.add(rotation.scale2(d));
 		p.rotatepoly(rotation.scale2(d)); //rotate the cube 
 		//would it make more sense to rotate it to the orientation rather than rotating it by the rotation rate??
-		p.translateby(position); //move the face centers, 
-		//which are centered around the entity's position for efficient rotation 
+		p.translateby(position); 
+		//moves the face centers, which are located relative to the entity's position for efficient rotation 
 		//and are reset to this frame by rotatepoly, to the correct locations
 		
 	}

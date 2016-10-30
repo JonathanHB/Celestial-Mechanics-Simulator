@@ -50,9 +50,9 @@ public class Frame_functions extends JPanel{
 	static int height2 = 80; //this value behaves oddly
 	static int width2 = 200;
 	
-	public static Color background = new Color(0,0,0); //paint component runs once initially; this prevents nullpointers
+	public static Color background = new Color(0,0,0); //paint component runs once initially; this assignment prevents nullpointers
 	
-	public static void frame_setup(){ //sets up jframe window
+	public static void frame_setup(){ //sets up jframe windows
 		
 		statefield.setEditable(false);
 		timefield.setEditable(false);
@@ -87,11 +87,11 @@ public class Frame_functions extends JPanel{
 		g.setColor(background);
 		g.fillRect(0, 0, 800, 800); //colors background
 		
-		for(int x = Graphics_engine.order2.size()-1; x >= 0; x--){					
+		for(int x = Graphics_engine.order2.size()-1; x >= 0; x--){				
 			
 			Render_obj object = Graphics_engine.order2.get(x);
 			
-			if(object.plane){
+			if(object.plane){ //renders planes
 				
 				int n = object.p.corners.length;
 				
@@ -106,7 +106,7 @@ public class Frame_functions extends JPanel{
 				g.setColor(illuminate(object.p.illumination, object.p.c));				
 				g.fillPolygon(xpoints, ypoints, n);
 				
-			}else{
+			}else{ //renders lines
 				
 				g.setColor(illuminate(object.l.illumination, object.l.c));				
 				
@@ -133,7 +133,8 @@ public class Frame_functions extends JPanel{
 			
 	}	
 
-	public Color illuminate(V3 light, Color c){
+	public Color illuminate(V3 light, Color c){ 
+		//scales an object's intrinsic color by the color and intensity of light on it
 		return new Color(
 				Misc_methods.capcolor(c.getRed()*light.x), 
 				Misc_methods.capcolor(c.getGreen()*light.y), 

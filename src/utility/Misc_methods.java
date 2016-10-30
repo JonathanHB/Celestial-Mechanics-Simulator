@@ -6,28 +6,31 @@ import java.util.Collections;
 
 import objects.Render_obj;
 
-public class Misc_methods { 
-	//make a general version of weighted_average that uses a pair of object and weight arrays
-
-	public static V3 weighted_average(V3 v1, V3 v2, double w1, double w2){ //v1 and v2 are V3 objects, w1 and w2 are relative, addable weights
+public class Misc_methods {
+		
+	public static V3 weighted_average(V3 v1, V3 v2, double w1, double w2){ 
+		//computes the weighted average of the vectors
+		//v1 and v2 are V3 objects, w1 and w2 are relative weights
 		
 		return ((v1.scale2(w1)).add2(v2.scale2(w2))).invscale2(w1+w2);
 		
 	}
 	
-	public static V3 weighted_average(V3 v1, V3 v2, double w1, double w2, double w3){ //v1 and v2 are V3 objects, w1 and w2 are relative weights, w3 is their psuedo-sum for non addable weights
+	public static V3 weighted_average(V3 v1, V3 v2, double w1, double w2, double w3){ 
+		//computes the weighted average of the vectors
+		//v1 and v2 are V3 objects, w1 and w2 are relative weights, w3 is their psuedo-sum for non addable weights(such as moments of inertia)
 		
 		return ((v1.scale2(w1)).add2(v2.scale2(w2))).invscale2(w3);
 		
 	}
 	
-	public static Color coloraverage(Color a, Color b, double v1, double v2){ //a weighted average of colors
+	public static Color coloraverage(Color a, Color b, double v1, double v2){ //a weighted average of two colors
 		
 		return new Color(capcolor((a.getRed()*v1+b.getRed()*v2)/(v1+v2)), capcolor((a.getGreen()*v1+b.getGreen()*v2)/(v1+v2)), capcolor((a.getBlue()*v1+b.getBlue()*v2)/(v1+v2)));
 		
 	}
 	
-	public static int capcolor(double d){
+	public static int capcolor(double d){ //makes sure d is a legal color component
 		
 		if(d<=255){
 			return (int) Math.round(d);
@@ -74,74 +77,13 @@ public class Misc_methods {
 
 	}
 	
-	public static int sigdigs(double d){		
+	public static int sigdigs(double d){ //computes the number of decimal places required to express d
 		String s = Double.toString(d);
 		return s.length()-s.indexOf(".")-1;
 	}
 	
-	public static double roundto(double d, int r){
+	public static double roundto(double d, int r){ //rounds d to r decimal places
 		return Math.round(d*Math.pow(10, r))/Math.pow(10, r);
 	}
 	
 }
-
-
-/*	
-//switches elements a and b
-public static void replace(int a, int b, double[][] array){
-
-	double distance = array[a][0];
-	int type = (int) array[a][1];
-	int ent = (int) array[a][2];       //leave these as doubles?
-	int location = (int) array[a][3];
-
-	array[a][0] = array[b][0];
-	array[a][1] = array[b][1];
-	array[a][2] = array[b][2];
-	array[a][3] = array[b][3];
-
-	array[b][0] = distance;		
-	array[b][1] = type;
-	array[b][2] = ent;
-	array[b][3] = location;
-
-}
-
-//sorts list for interval c-d with a quicksort
-public static void sort(int c, int d, double[][] array){
-	//	d is the upper end of the range, c is the lower one (inclusive)
-	if(d > c){
-
-		double pivot = array[d][0];
-
-		int n = d;
-
-		for(int x = c; x<n;){
-
-			if(array[x][0] > pivot){
-
-				replace(n,n-1,array);
-
-				if(x+1<n){
-					//keeps certain switches of adjacent elements from being undone
-					replace(n,x,array);	
-
-				}	
-
-				n--;
-
-			}else{
-
-				x++;
-
-			}
-
-		}
-
-		sort(c,n-1,array);
-		sort(n+1,d,array);		
-
-	}
-
-}
-*/

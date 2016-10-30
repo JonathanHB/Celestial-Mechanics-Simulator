@@ -6,15 +6,16 @@ import objects.Poly_library;
 import utility.V3;
 
 public class Parsingmethods {
+	//this class contains the type conversion methods used by FileIO
 	
-	public static Color parsecolor(String s){
+	public static Color parsecolor(String s){ //converts String to Color
 		
 		String values[] = s.substring(1,s.length()-1).split(";");
 		return new Color(Integer.parseInt(values[0]),Integer.parseInt(values[1]),Integer.parseInt(values[2]));
 		
 	}
 	
-	public static V3[] parsepoly(String s){ //replace contents with a map?
+	public static V3[] parsepoly(String s){ //converts a String to a set of polyhedron vertices
 
 		for(int x = 0; x<Poly_library.N; x++){
 			if(s.equals(Poly_library.standard_poly_names[x])){
@@ -31,7 +32,7 @@ public class Parsingmethods {
 		
 	}
 	
-	public static int[][] parsemap(String s){ //replace contents with a map?
+	public static int[][] parsemap(String s){ //converts a String to a set of polyhedron faces
 		
 		for(int x = 0; x<Poly_library.N; x++){
 			if(s.equals(Poly_library.standard_poly_names[x])){
@@ -65,13 +66,13 @@ public class Parsingmethods {
 	//-----------------------------------------------------------------------------------------
 	//saving
 	
-	public static String reverseparsecolor(Color c){
+	public static String reverseparsecolor(Color c){ //converts Color to String
 		
 		return "["+c.getRed()+";"+c.getGreen()+";"+c.getBlue()+"]";
 		
 	}
 	
-	public static String reverseparsepoly(V3[] v){
+	public static String reverseparsepoly(V3[] v){ //converts a set of polyhedron vertices to String
 		
 		String output = "[";
 		for(V3 vert:v){
@@ -80,7 +81,7 @@ public class Parsingmethods {
 		return output.substring(0,output.length()-1)+ "]";
 	}
 	
-	public static String reverseparsemap(int[][] i){
+	public static String reverseparsemap(int[][] i){ //converts a set of polyhedron faces to String
 		
 		String output = "[";
 		
@@ -92,9 +93,6 @@ public class Parsingmethods {
 		}
 		return output.substring(0,output.length()-1)+"]";
 	}
-	
-	
-	
+			
 }
-//    /home/jonathan/Desktop/S_E_M.txt
 

@@ -3,10 +3,11 @@ package objects;
 import utility.V3;
 
 public class Point {
-
-	public V3 position;
+	//a graphical point in 3d space
 	
-	public int projectx;
+	public V3 position; 
+	
+	public int projectx; //the point's 2d position in the viusal field
 	public int projecty;
 	
 	public Point(V3 a) {

@@ -20,10 +20,14 @@ public class V3 { //a 3d vector
 		this.set(v);
 	}
 	
+	//used to find the average best orbital parameters using the mean sines and cosines
+	//this constructor makes a vector containing 3 angles from vectors containing coordinates
 	public V3(V3 sin, V3 cos){ 
 		this.set(Math.atan2(sin.x, cos.x), Math.atan2(sin.y, cos.y), Math.atan2(sin.z, cos.z));
 	}
 	
+	//used to find how concentrated the test orbits are around the average best ones using the mean sines and cosines
+	//this constructor makes a vector containing 3 magnitudes from vectors containing coordinates
 	public V3(V3 a, V3 b, boolean c){ //the boolean is for overloading purposes
 		this.set(Math.sqrt(a.x*a.x+b.x*b.x), Math.sqrt(a.y*a.y+b.y*b.y), Math.sqrt(a.z*a.z+b.z*b.z));
 	}
@@ -44,6 +48,8 @@ public class V3 { //a 3d vector
 	
 	//-------------------------------------------------------------------------------
 	
+	//these methods are used for loading/saving V3 data to/from text files
+	
 	public V3(String s){ //vector constructor from a string
 		String values[] = s.substring(1,s.length()-1).split(";");
 		x=Double.parseDouble(values[0]); 
@@ -58,11 +64,11 @@ public class V3 { //a 3d vector
 		z=Double.parseDouble(values[2]);
 	}
 	
-	public String tostring(){
+	public String tostring(){ //converts V3 to a human readable string
 		return "["+x+";"+y+";"+z+"]";
 	}
 	
-	public String tostring_short(){
+	public String tostring_short(){ //converts V3 to a human readable string
 		return x+";"+y+";"+z;
 	}
 	
@@ -88,7 +94,7 @@ public class V3 { //a 3d vector
 		return x==0 && y==0 && z==0;
 	}
 	
-	public boolean isnonzero(){ //efficient check of zeroness
+	public boolean isnonzero(){ //efficient check of nonzeroness
 		return !this.iszero();
 	}
 	
@@ -160,23 +166,23 @@ public class V3 { //a 3d vector
 	
 	//-------------------------------------------------------------------------------
 	
-	public void dimscale(V3 v){
+	public void dimscale(V3 v){ //multiplies the components of 2 vectors
 		x*=v.x;
 		y*=v.y;
 		z*=v.z;
 	}
 	
-	public V3 dimscale2(V3 v){
+	public V3 dimscale2(V3 v){ //multiplies the components of 2 vectors
 		return new V3(x*v.x, y*v.y, z*v.z);
 	}
 	
-	public void invdimscale(V3 v){
+	public void invdimscale(V3 v){ //divides the components one vector by another
 		x/=v.x;
 		y/=v.y;
 		z/=v.z;
 	}
 	
-	public V3 invdimscale2(V3 v){
+	public V3 invdimscale2(V3 v){ //divides the components one vector by another
 		return new V3(x/v.x, y/v.y, z/v.z);
 	}
 	
@@ -209,6 +215,8 @@ public class V3 { //a 3d vector
 	//ifs to check for 0 magnitude may be bad for runtime, consider relying on nonzero inputs to speed up method
 	
 	//------------------------------------------------------------------------------
+	
+	//methods used to process vectors containing angles
 	
 	public V3 cosines(){
 		return new V3(Math.cos(x), Math.cos(y), Math.cos(z));

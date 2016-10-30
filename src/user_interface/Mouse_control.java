@@ -17,19 +17,19 @@ public class Mouse_control implements MouseMotionListener{
 	
 	public static Point lastpoint = new Point();
 	
-	public static double sensitivity = .006;//.006
+	public static double sensitivity = .006; //mouse sensitivity
 	
 	@Override
-	public void mouseDragged(MouseEvent arg0) {
+	public void mouseDragged(MouseEvent arg0) { //syntactically required
 		// TODO Auto-generated method stub	
 	}
 
 	@Override
-	public void mouseMoved(MouseEvent arg0) {
+	public void mouseMoved(MouseEvent arg0) { //syntactically required
 		// TODO Auto-generated method stub
 	}
 		
-	public static void mcontrolreader(){
+	public static void mcontrolreader(){ //uses mouse to point camera
 
 		graphics.Frame_functions.displayframe.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent arg0) {
@@ -40,15 +40,6 @@ public class Mouse_control implements MouseMotionListener{
 		graphics.Frame_functions.displayframe.addMouseMotionListener(new MouseMotionListener(){
 
 			public void mouseMoved(MouseEvent arg0) {
-			
-			//	System.out.println("hi");
-								
-			/*	try { //a failed attempt at mouse locking
-			        Robot r = new Robot();
-			        r.mouseMove(400, 400);
-			    } catch (AWTException e) {
-			        e.printStackTrace();
-			    }*/
 				
 			}
 			
@@ -57,7 +48,7 @@ public class Mouse_control implements MouseMotionListener{
 				graphics.Graphics_engine.orientation.z-=sensitivity*(arg0.getPoint().x-lastpoint.x);
 				graphics.Graphics_engine.orientation.y+=sensitivity*(arg0.getPoint().y-lastpoint.y);
 								
-				lastpoint.setLocation(arg0.getPoint());				
+				lastpoint.setLocation(arg0.getPoint());	//mouse's last position to compute movement			
 				
 			}
 

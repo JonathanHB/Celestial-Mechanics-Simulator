@@ -33,7 +33,7 @@ public class Graphics_engine {
 
 	static int stoplength = 0;
 
-	public static void projector(){
+	public static void projector(){ //converts 3d object positions to 2d positions in visual field
 
 		for(Entity e : Main_class.elist){
 
@@ -78,6 +78,9 @@ public class Graphics_engine {
 	} 
 
 	public static void projectpointP(Point p, V3 entpos){ 
+		//computes 2d visual field position of a point from its 3d position
+		//used for points in polyhedra
+		
 		//adds entity position to point position because polyhedron points store their locations 
 		//relative to their parent entities to make rotation more computationally efficient 
 		//(when rotation is 0 and the objects are moving, either storage method is equally efficient,
@@ -95,7 +98,9 @@ public class Graphics_engine {
 	}
 
 	public static void projectpointT(Point p){
-
+		//computes 2d visual field position of a point from its 3d position
+		//used for points in trails
+		
 		V3 v = new V3(utility.Math_methods.rotatepoint(utility.Math_methods.rotatepoint(p.position.sub2(viewposition), orientation), axis_orientation));
 
 		double hypotenuse = Math.sqrt(v.z*v.z + v.y*v.y); //this leads to a glitch when hypotenuse = 0;
@@ -108,7 +113,8 @@ public class Graphics_engine {
 	}
 
 	public static void projectface(Plane p){
-
+		//computes angle to a face from its 3d position, used for culling of objects outside of visual field
+		
 		V3 v = new V3(utility.Math_methods.rotatepoint(utility.Math_methods.rotatepoint(p.center.sub2(viewposition), orientation), axis_orientation));
 
 		p.squdistance = v.z*v.z + v.y*v.y + v.x*v.x;
@@ -118,7 +124,8 @@ public class Graphics_engine {
 	}
 
 	public static void projectedge(Line l){
-
+		//computes angle to a line from its 3d position, used for culling of objects outside of visual field
+		
 		V3 v = new V3(utility.Math_methods.rotatepoint(utility.Math_methods.rotatepoint(l.center.sub2(viewposition), orientation), axis_orientation));
 
 		l.squdistance = v.z*v.z + v.y*v.y + v.x*v.x;
@@ -127,8 +134,11 @@ public class Graphics_engine {
 
 	}
 
-	public static void setorder(){
-
+	public static void setorder(){ 
+		//sets up graphics object array to be sorted
+		//sorting is used to draw nearer objects in front of further ones
+		//culls objects outside of visual field
+		
 		order2.clear();		
 
 		for(Entity e : Main_class.elist){
@@ -161,12 +171,13 @@ public class Graphics_engine {
 		}
 
 		order2.trimToSize();
-		Misc_methods.sort2(0, order2.size()-1, order2);
+		Misc_methods.sort2(0, order2.size()-1, order2); //sort objects by distance
 
 
 	}
 
-	public static void lighting(){ //turn off for traject_opt?, replace numerical for loops
+	public static void lighting(){ 
+		//provides dynamic lighting for objects and trails, but doesn't simulate shadowing
 
 		for(Entity e : Main_class.elist){
 			for(Plane p : e.p.faces){

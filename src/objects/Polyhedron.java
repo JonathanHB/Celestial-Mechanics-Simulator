@@ -21,6 +21,7 @@ public class Polyhedron {
 	}
 
 	public void generatepoly(V3 shift, V3 scale, V3 orientation, V3[] polybase, int[][] cornermapping, Color col){
+		//generates a new polyhedron for the constructor
 		//polybase is a set of points centered on the origin
 		//each row of cornermapping: [a,b,c,d,...n,-1,w,x,...z] where a-n are non-negative integers and x-z are any integers
 		
@@ -49,7 +50,7 @@ public class Polyhedron {
 								
 	}		
 
-	public void translateby(V3 v){ //translate the cube by a value v
+	public void translateby(V3 v){ //translate the polyhedron by v
 	
 		for(Plane p:faces){
 			p.center.add(v);
@@ -57,7 +58,7 @@ public class Polyhedron {
 		
 	}
 	
-	public void rotatepoly(V3 v){
+	public void rotatepoly(V3 v){ //rotate the polyhedron by v
 		
 		for(Point p:vertices){
 			p.position.set(utility.Math_methods.rotatepoint(p.position, v));	
@@ -67,13 +68,14 @@ public class Polyhedron {
 		
 	}
 	
-	public void setcenters(){
+	public void setcenters(){ //compute face centers for lighting and distance calculations
 		for(Plane p:faces){
 			p.setcenter();
 		}
 	}
 	
-	public Point[] mapconverter(int[] i){ //returned array is intentionally shallowcopied
+	public Point[] mapconverter(int[] i){ //get points at indices i to use as corners of a plane
+		//returned array is intentionally shallowcopied because many points are shared between planes
 		Point[] output = new Point[i.length];
 		for(int x = 0; x<i.length; x++){
 			output[x]=vertices[i[x]];

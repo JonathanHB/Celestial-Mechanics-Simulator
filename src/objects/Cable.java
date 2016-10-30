@@ -9,23 +9,21 @@ import utility.V3;
 
 public class Cable {
 	
-//	public double axialresponse; //maintains cable length in (m/s)/m = 1/s = hz	
-//	double lateralresponse; //straightens cable in (m/s)/m = 1/s = hz; unimplemented
+	public Trail t; //the trail drawn by the cable's center of mass
 	
-	public Trail t;
+	public double node_spacing; //spacing between cable nodes
+	public double maxlength; //maximum strain between cable nodes before the cable breaks
 	
-	public double node_spacing;
-	public double maxlength;
-	
-	public Color col;
+	public Color col; //cable color
 
-	public Cablenode[] nodes;
+	public Cablenode[] nodes; //nodes used to simulate cable
 	
-	public Line[] links;
+	public Line[] links; //links which generate forces between nodes
 	
-	public Entity primary_ent; //entity, not array position, should be stored to account for array shifting
+	public Entity primary_ent; //entity above which the cable is in geostationary orbit
 		
 	public Cable(double spacing, double maxlen, int length, Entity ref_ent, Color c, Color ct, int traillength, double res){
+		//constructor to create a cable in geostationary orbit over the ref_ent entity
 		
 		col = c;
 		node_spacing = spacing;		
@@ -46,6 +44,7 @@ public class Cable {
 	}
 	
 	public Cable(double spacing, Color c, Color ct, Cablenode[] cn, int traillength, double res){
+		//constructor to create a cable when an existing cable breaks
 		
 		col = c;
 		node_spacing = spacing;
@@ -68,20 +67,24 @@ public class Cable {
 		
 	}
 	
-	public void generate(int length, Entity primary, Color c){ //check for 0 rotation
+	public void generate(int length, Entity primary, Color c){
+		//generates a cable in geostationary orbit over "primary" entity
+		//the method generates a cable at an arbitrary altitude and then uses bisection search to align it to
+		//within cablebalance Newtons of geostationary orbit
+		//the cable begins arbitrarily at the ascending or descending node of its orbit		
 		
 		double gsoradius = Math.cbrt(Motion.G*primary.mass/primary.rotation.squmagnitude());
 		double gsospeed = Math.sqrt(Motion.G*primary.mass/gsoradius);
 		
 		boolean adjusting = true;
-		double cablebalance = .000000000001; //maximum allowed imbalance inforce on cable, in Kg*m/s^2
+		double cablebalance = .000000000001; //maximum allowed imbalance in force on cable, in Newtons
 		
 		double[][] adjustedcable = new double[length][2];
 		
 		double deltarad = 1E12;
 		double totaldr = 0;
 					
-		while(adjusting){
+		while(adjusting){ //adjusts cable altitude to balance forces
 						
 			double nf = netforce(cableframegen(gsoradius, gsospeed, totaldr), primary.mass);
 			System.out.println(nf);
@@ -103,9 +106,8 @@ public class Cable {
 			totaldr += deltarad;
 			
 		}
-		
-					
-		for(int x = 0; x<length; x++){
+							
+		for(int x = 0; x<length; x++){ //generates cable once altitude is determined
 						
 			V3 node_long = new V3(0,0,Math.atan2(primary.rotation.y, primary.rotation.x));
 			V3 inclination = new V3(0,-Math.atan2(primary.rotation.z, Math.sqrt(primary.rotation.x*primary.rotation.x+primary.rotation.y*primary.rotation.y)),0);
@@ -114,7 +116,7 @@ public class Cable {
 				Math_methods.rotatepoint(new V3(0, adjustedcable[x][0], 0), node_long).add2(primary.position),
 				Math_methods.rotatepoint(Math_methods.rotatepoint(new V3(0, 0, adjustedcable[x][1]), inclination), node_long).add2(primary.velocity)
 			);
-			
+						
 		}
 		
 		for(int x = 0; x<length; x++){ //separate for loop keeps nodes[x+1] from throwing nullpointer errors
@@ -127,7 +129,7 @@ public class Cable {
 			
 	}
 	
-	public void realign(V3 dp, V3 dv){
+	public void realign(V3 dp, V3 dv){ //part of the altitude calculation code
 		for(Cablenode c : nodes){
 			c.position.sub(dp);
 			c.p.position.sub(dp);
@@ -139,7 +141,10 @@ public class Cable {
 		
 	}
 	
-	public boolean[] checkforbreaks(){
+	public boolean[] checkforbreaks(){ 
+		//finds breaks in cable where strain exceeds maxlength, passes these breaks
+		//to object_manager.splitcable() to actually break the cable
+		
 		boolean anybreak = false;
 		boolean[] output = new boolean[nodes.length-1];
 		for(int x = 0; x<nodes.length-1; x++){			
@@ -153,7 +158,7 @@ public class Cable {
 		return output;
 	}
 	
-	public void move(double increment){
+	public void move(double increment){ //moves cable and draws trail
 		
 		for(Cablenode c: nodes){
 			c.move(increment);
@@ -167,6 +172,7 @@ public class Cable {
 	}
 	
 	public void applygrav(Entity e, double increment){
+		//apply Newton's law of gravitation to the cable; see the physics.movement.gravitation()
 		
 		V3 dpos;
 		double squdistance;
@@ -188,13 +194,13 @@ public class Cable {
 		
 	}
 	
-	public void internalforces(double increment){
+	public void internalforces(double increment){ //calculates and applies forces between nodes
 		
 		for(int x = 0; x<nodes.length-1; x++){
 			
 			V3 deltapos = nodes[x+1].position.sub2(nodes[x].position);			
-			
-			double reactionmagnitude = .5*(deltapos.magnitude() - node_spacing)/increment;
+ 
+			double reactionmagnitude = .5*(deltapos.magnitude() - node_spacing)*Math.signum(increment);
 			V3 reactionvector = deltapos.tolength2(reactionmagnitude);
 			
 			nodes[x+1].velocity.sub(reactionvector);
@@ -204,7 +210,7 @@ public class Cable {
 		
 	}
 	
-	public V3 center_of_mass(){
+	public V3 center_of_mass(){ //calculates center of mass for trail drawing
 		V3 sum = new V3(0,0,0);
 		for(Cablenode n : nodes){
 			sum.add(n.position);
@@ -212,7 +218,10 @@ public class Cable {
 		return sum.invscale2(nodes.length);
 	}
 	
-	public double netforce(double[][] nodedata, double mass){ //for second index: 0=position, 1=velocity
+	public double netforce(double[][] nodedata, double mass){ 
+		//for second index in nodedata: 0=position, 1=velocity
+		//calculates net force on cable
+		
 		double sum = 0;
 		
 		for(double[] d : nodedata){
@@ -223,6 +232,7 @@ public class Cable {
 	}
 	
 	public double[][] cableframegen(double gsoradius, double gsospeed, double shift){
+		//generates new node position set to calculate force on with netforce()
 		
 		double output[][] = new double[nodes.length][2];
 

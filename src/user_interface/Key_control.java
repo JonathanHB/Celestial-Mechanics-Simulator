@@ -15,24 +15,24 @@ import utility.V3;
 
 public class Key_control implements KeyListener{
 
-	static double tsensitivity; //translational	
-	static double rsensitivity=.05; //rotational
+	static double tsensitivity; //translational	sensitivity
+	static double rsensitivity = .05; //rotational sensitivity
 
-//	static double phys_inc_inc=.1; //increment of physics engine incbuff adjustment
-	static int phys_rep_inc; //increment of physics engine repbuff adjustment
+	static int phys_rep_inc; //increment of physics engine repetition adjustment
 
 	static double mx; //unused
 	static double my;
 
 	static int lastrep = 0;
 
-	public static void keyparser(KeyEvent e){
+	public static void keyparser(KeyEvent e){ //controls camera movement with keyboard input
+		
 		char c = e.getKeyChar();
-		//System.out.println(e.getKeyCode());
-		//find a decent data structure to use for this method rather than elif chains
-						
+
+		//makes camera's lateral movement slow down when it points up or down				
 		double cosy_scaling = tsensitivity*Math.abs(Math.cos(Graphics_engine.orientation.y));
 		
+		//computes magnitudes of lateral x and y movement
 		double cosz = Math.cos(Graphics_engine.orientation.z)*cosy_scaling;
 		double sinz = Math.sin(Graphics_engine.orientation.z)*cosy_scaling;
 		
@@ -54,29 +54,20 @@ public class Key_control implements KeyListener{
 			Graphics_engine.viewposition.z+=tsensitivity;
 		}
 		
-
-		
-/*		if(c=='z'){ //code for altering physics increment, something which should be automatic or fixed
-			Motion.incbuff+=phys_inc_inc;
-		}else if(c=='x'){
-			if(Motion.incbuff>=phys_inc_inc){
-				Motion.incbuff-=phys_inc_inc;
-			}
-		}else*/ 
-		
-		if(c=='c'){
+		if(c=='c'){ //speeds up simulation
 
 			reversal(lastrep, Motion.repbuff, Motion.repbuff+phys_rep_inc);
 			lastrep = Motion.repbuff;
 			Motion.repbuff+=phys_rep_inc;	
 
-		}else if(c=='v'){
+		}else if(c=='v'){ 
+			//slows down simulation (including reversing it and increasing the magnitude of backwards simulation)
 
 			reversal(lastrep, Motion.repbuff, Motion.repbuff-phys_rep_inc);
 			lastrep = Motion.repbuff;
 			Motion.repbuff-=phys_rep_inc;	
 
-		}else if(c=='b'){
+		}else if(c=='b'){ //pauses simulation
 			lastrep = Motion.repbuff;
 			Motion.repbuff = 0;
 		}
@@ -84,32 +75,23 @@ public class Key_control implements KeyListener{
 	}
 
 	public static void reversal(int a, int b, int c){ //a = previous repetition rate, b = current rate, c = new rate
-
-		if(b*c<0){
+		//checks to reverse physics engine when repetition changes sign
+		
+		if(b*c<0 || (b == 0 && a*c<0) || (a == 0 && b == 0 && c<0)){
 			Motion.incbuff*=-1;
 			Motion.flipping = true;
-		
-		}else if(b == 0 && a*c<0){
-			Motion.incbuff*=-1;
-			Motion.flipping = true;
-		
-		}else if(a == 0 && b == 0 && c<0){
-			Motion.incbuff*=-1;
-			Motion.flipping = true;
-		
 		}
-
 
 	}
 
 	@Override
-	public void keyTyped(KeyEvent arg0) {}
+	public void keyTyped(KeyEvent arg0) {} //syntactically required
 
 	@Override
-	public void keyPressed(KeyEvent arg0) {
+	public void keyPressed(KeyEvent arg0) { //reads keyboard input
 		keyparser(arg0);
 	}
 	@Override
-	public void keyReleased(KeyEvent arg0) {}
+	public void keyReleased(KeyEvent arg0) {} //syntactically required
 
 }

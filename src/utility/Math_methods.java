@@ -2,7 +2,7 @@ package utility;
 
 public class Math_methods {
 
-	public static V3 rotatepoint(V3 v, V3 r){ //make this a utility method called by both this class and graphics
+	public static V3 rotatepoint(V3 v, V3 r){ //rotates V3 v around the origin by the angle r
 		
 		double sinro=Math.sin(r.x);
 		double cosro=Math.cos(r.x);	
@@ -19,17 +19,19 @@ public class Math_methods {
 		
 	}
 	
-	public static V3 getrotation(V3 dp, V3 dv){ //mass is accounted for later, adds kinetic energy as a side effect
+	public static V3 getrotation(V3 dp, V3 dv){ //returns the angular momentum resulting from a collision
 		
-		V3 pv = perpendicularpart(dv.invert2(), dp); //the part of the velocity tangent to the axis of collision
+		V3 pv = perpendicularpart(dv.invert2(), dp); //the part of the relative velocity perpendicular to the axis of collision
 			
-		//Investigate why only the z values need to be negated
+		//only z values are negated due to an inconsistency between treatment of angles and linear data in V3s
 				
 		return new V3(rotationcomp(pv.z, pv.y, dp.z, dp.y), rotationcomp(pv.x, pv.z, dp.x, dp.z), rotationcomp(pv.y, pv.x, dp.y, dp.x)).invert2();
 		
 	}
 	
-	public static double rotationcomp(double pva, double pvb, double dpa, double dpb){ //pv is perpendicular velocity, dp is delta position vector
+	public static double rotationcomp(double pva, double pvb, double dpa, double dpb){ 
+		//finds the component of rotation around a given axis resulting from a collision
+		//pv is perpendicular velocity, dp is delta position vector
 		
 		if(dpa != 0 || dpb != 0){
 			return (1-Math.abs(cosdot(new V3(pva, pvb, 0), new V3(dpa, dpb, 0))))*getsign(pva, pvb, dpa, dpb)*Math.sqrt((pva*pva+pvb*pvb)/(dpa*dpa+dpb*dpb));
@@ -40,7 +42,7 @@ public class Math_methods {
 	}
 	
 	public static int getsign(double ax, double ay, double bx, double by){ //dp = b, pv = a
-		
+		//gets sign for rotation calculations
 		if(bx < 0){
 			return (int) Math.signum(ay - ax*by/bx);
 		}else if(bx > 0){
@@ -51,7 +53,8 @@ public class Math_methods {
 		
 	}
 	
-	public static double capcosine(double d){ //to fix floatingpoint errors and zero magnitude errors
+	public static double capcosine(double d){ 
+		//fixes floating point errors NAN errors resulting from using the dot product to compute cosines
 		
 		if(Double.isNaN(d)){
 			return 0;

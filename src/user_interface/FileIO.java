@@ -24,9 +24,9 @@ public class FileIO {
 
 	static PrintWriter writer; //declared outside for fillfile and writefile
 
-	public static String[] test_input;
+	public static String[] test_input; //a string to read simulations from
 	
-	public static void setup(){
+	public static void setup(){ //sets the test_input string to a hardcoded value
 		FileIO.test_input = new String[]{
 				"30",
 				"[0;0;0]",
@@ -47,10 +47,12 @@ public class FileIO {
 			BufferedReader br = new BufferedReader(new FileReader(filename));
 			
 			Main_class.elist.clear();
-			Main_class.clist.clear();
+			Main_class.clist.clear(); //clears existing objects
+			
+			//reads in several global variables
 			
 			Motion.repbuff=0;
-			Motion.repetition=0;
+			Motion.repetition=0; 
 									
 			Main_class.framewait=Integer.parseInt(br.readLine());
 			
@@ -61,14 +63,16 @@ public class FileIO {
 			
 			Key_control.phys_rep_inc=Integer.parseInt(br.readLine());
 			Key_control.tsensitivity=Double.parseDouble(br.readLine());
-										
-			boolean reading = true;
-			boolean ents = true;
-
+					
 			
-			while(reading){		
+			boolean reading = true; //used to control file reading loops
+			boolean ents = true;
+			
+			while(reading){		//reads in entities, then cables
+				
 				String s = br.readLine();
-				if (s!=null){					
+				
+				if (s!=null){		//checks for end of file			
 					if(ents){	
 						if(s.equals("cables")){
 							ents = false;
@@ -81,16 +85,18 @@ public class FileIO {
 				}else{
 					reading = false;
 				}
+				
 			}
 			
-			if(Graphics_engine.focus!=-1){
+			if(Graphics_engine.focus!=-1){ 
+				//sets camera position to that of the object whose reference frame it moves in
 				Graphics_engine.viewposition.set(Main_class.elist.get(Graphics_engine.focus).position);
 			}
 									
 			br.close();
 			
-			Frame_functions.statefield.setText(filename + " loaded");
-			Frame_functions.inputfield.setText(null);
+			Frame_functions.statefield.setText(filename + " loaded"); //confirms file loading
+			Frame_functions.inputfield.setText(null); //clears input
 
 		}catch (IOException e) {
 
@@ -101,68 +107,56 @@ public class FileIO {
 		
 	}
 	
-	public static void loadtest(String[] inputdata){ //reads in text files to generate objects
+	public static void loadtest(String[] inputdata){ //generates objects from an array of strings
 
-	//	try { 
-			
-		//	BufferedReader br = new BufferedReader(new FileReader(filename));
-			
-			Main_class.elist.clear();
-			Main_class.clist.clear();
-			
-			Motion.repbuff=0;
-			Motion.repetition=0;
-									
-			Main_class.framewait=Integer.parseInt(inputdata[0]);
-			
-			Frame_functions.background = Parsingmethods.parsecolor(inputdata[1]);
-			
-			Motion.increment=Double.parseDouble(inputdata[2]);
-			Motion.incbuff=Motion.increment;
-			
-			Key_control.phys_rep_inc=Integer.parseInt(inputdata[3]);
-			Key_control.tsensitivity=Double.parseDouble(inputdata[4]);
-										
-			boolean reading = true;
-			boolean ents = true;
+		Main_class.elist.clear();
+		Main_class.clist.clear(); //clears existing objects
 
-			
-			for(int x = 5; x<inputdata.length; x++){		
-			//	String s = br.readLine();
-				//if (s!=null){					
-					if(ents){	
-						if(inputdata[x].equals("cables")){
-							ents = false;
-						}else{
-						parseent(inputdata[x]);
-						}
-					}else{
-						parsecable(inputdata[x]);
-					}										
-			//	}else{
-			//		reading = false;
-			//	}
-			}
-			
-			if(Graphics_engine.focus!=-1){
-				Graphics_engine.viewposition.set(Main_class.elist.get(Graphics_engine.focus).position);
-			}
-									
-		//	br.close();
-			
-			Frame_functions.statefield.setText("test_input loaded");
-			Frame_functions.inputfield.setText(null);
-
-	//	}catch (IOException e) {
-
-	//		Frame_functions.statefield.setText("Error: " + e);			
-			//System.err.println("Error: " + e);
-
-	//	}		
+		//reads in several global variables
 		
+		Motion.repbuff=0;
+		Motion.repetition=0;
+
+		Main_class.framewait=Integer.parseInt(inputdata[0]);
+
+		Frame_functions.background = Parsingmethods.parsecolor(inputdata[1]);
+
+		Motion.increment=Double.parseDouble(inputdata[2]);
+		Motion.incbuff=Motion.increment;
+
+		Key_control.phys_rep_inc=Integer.parseInt(inputdata[3]);
+		Key_control.tsensitivity=Double.parseDouble(inputdata[4]);
+
+		
+		boolean reading = true; //used to control string[] reading loops
+		boolean ents = true;
+
+		for(int x = 5; x<inputdata.length; x++){	//reads in entities, then cables	
+			
+			if(ents){	
+				if(inputdata[x].equals("cables")){
+					ents = false;
+				}else{
+					parseent(inputdata[x]);
+				}
+			}else{
+				parsecable(inputdata[x]);
+			}										
+
+		}
+
+		if(Graphics_engine.focus!=-1){
+			//sets camera position to that of the object whose reference frame it moves in
+			Graphics_engine.viewposition.set(Main_class.elist.get(Graphics_engine.focus).position);
+		}
+
+
+		Frame_functions.statefield.setText("test_input loaded"); //confirms file loading
+		Frame_functions.inputfield.setText(null); //clears input
+
 	}
 	
-	public static void parsecable(String s){
+	public static void parsecable(String s){ //generates cable from string, see cable constructors
 		
 		String cableargs[] = s.split(",");
 		
@@ -180,7 +174,7 @@ public class FileIO {
 		
 	}
 	
-	public static void parseent(String s){
+	public static void parseent(String s){ //generates ent from string, see cable constructors
 		
 		String entargs[] = s.split(",");
 		
@@ -206,29 +200,31 @@ public class FileIO {
 		
 	}
 	
-	
-	
+		
 	//loading code
 	//--------------------------------------------------------------------------------------------
 	//saving code
 	
-	public static void writefile(String filename){ //get rid of argument, use outputfile
+	public static void writefile(String filename){ //writes current state of the simulation to a text file
 
 		try {
 
 			writer = new PrintWriter(filename, "UTF-8");
 
+			//writes global variables			
 			writer.println(Main_class.framewait);
 			writer.println(Parsingmethods.reverseparsecolor(Frame_functions.background));
 			writer.println(Motion.increment);			
 			writer.println(Key_control.phys_rep_inc);
 			writer.println(Key_control.tsensitivity);
 
+			//saves entities, then cables
+			
 			for(int i=0; i<Main_class.elist.size(); i++){
 				fillfile(i);
 			}
 			
-			if(Main_class.elist.size()>0){
+			if(Main_class.clist.size()>0){
 				writer.println("cables");
 				
 				for(int i=0; i<Main_class.clist.size(); i++){
@@ -249,7 +245,7 @@ public class FileIO {
 
 	}
 
-	public static void fillfile(int i){ //writes into file from array
+	public static void fillfile(int i){ //saves the entity at index i
 		
 		Entity e = Main_class.elist.get(i);
 		
@@ -287,28 +283,30 @@ public class FileIO {
 
 	}
 	
-	public static void writecable(int i){
+	public static void writecable(int i){ //saves the cable at index i
 
 		Cable c = Main_class.clist.get(i);
 
 		if(Main_class.elist.indexOf(c.primary_ent)!=-1){
 
-			writer.println(c.node_spacing);
+			writer.print(c.node_spacing);
 			writer.print(",");
-			writer.println(c.maxlength);
+			writer.print(c.maxlength);
 			writer.print(",");
-			writer.println(c.nodes.length);
+			writer.print(c.nodes.length);
 			writer.print(",");
-			writer.println(Main_class.elist.indexOf(c.primary_ent));
+			writer.print(Main_class.elist.indexOf(c.primary_ent));
 			writer.print(",");
-			writer.println(Parsingmethods.reverseparsecolor(c.col));
+			writer.print(Parsingmethods.reverseparsecolor(c.col));
 			writer.print(",");
-			writer.println(Parsingmethods.reverseparsecolor(c.t.c));
+			writer.print(Parsingmethods.reverseparsecolor(c.t.c));
 			writer.print(",");
-			writer.println(c.t.length);
+			writer.print(c.t.length);
 			writer.print(",");
-			writer.println(c.t.resolution);
+			writer.print(c.t.resolution);
 
+			writer.println();
+			
 		}
 
 	}
