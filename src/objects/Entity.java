@@ -1,15 +1,9 @@
 package objects;
 
 import java.awt.Color;
-import java.util.Arrays;
 
-import user_interface.FileIO;
-import objects.Poly_library;
-import physics.Motion;
 import utility.Main_class;
 import utility.V3;
-import utility.Math_methods;
-import utility.Misc_methods;
 
 public class Entity {
 	
@@ -35,10 +29,10 @@ public class Entity {
 	
 	public Entity(){}
 	
-	public Entity( //full constructor with 15 arguments
+	public Entity( //full constructor with 16 arguments
 			double m, double r, V3 lum, V3 pos, V3 vel, V3 ori, V3 rot, 
 			Color pcol, V3[] polybase, int[][] cornermap, V3 scale, V3 shift, 
-			Color tcol, int length, double res
+			Color tcol, int length, double res, int refent
 			){		
 		
 		mass=m;
@@ -60,7 +54,7 @@ public class Entity {
 		p=new Polyhedron(pcol, shift, scale, ori, polybase, cornermap);
 		p.translateby(position);
 		
-		t=new Trail(length, res, pos, tcol);
+		t=new Trail(length, res, pos, tcol, refent);
 		
 	}
 	

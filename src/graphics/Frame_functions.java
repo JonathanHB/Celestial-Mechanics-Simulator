@@ -3,37 +3,15 @@ package graphics;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.Scanner;
-import java.util.Random;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import objects.Render_obj;
 import utility.Main_class;
 import utility.V3;
 import utility.Misc_methods;
-import physics.Motion;
 import physics.Trajectory_optimizer;
 
 public class Frame_functions extends JPanel{
@@ -77,6 +55,8 @@ public class Frame_functions extends JPanel{
 		inputbox.add(inputfield, BorderLayout.SOUTH);
 	
 		inputbox.setVisible(true); 
+		
+		Frame_functions.statefield.setText("loading from:");
 		
 	}
 		

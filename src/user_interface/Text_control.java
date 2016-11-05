@@ -30,25 +30,16 @@ public class Text_control {
 			
 		}else{
 			
-			if(state == 1){ //loads file
-
-				if(s.equals("default")){
+			if(state == 1){ //loads file				
+				
+				Main_class.running = false;
+				Main_class.loading = true;
 					
-					Main_class.running = false;
-					Main_class.loading_internal = true;
-
-				}else{
-				
-					Main_class.running = false;
-					Main_class.loading = true;
-
-					Main_class.loadstring = s;
-				
-				}
+				Main_class.loadstring = s;				
 								
 			}else if(state == 2){ //saves file
 				
-				FileIO.writefile(s);
+				FileIO.writefile(s); //runs without affecting simulation flow
 				
 			}
 		}

@@ -1,7 +1,5 @@
 package utility;
 
-import java.util.Arrays;
-
 public class V3 { //a 3d vector
 	
 	public double x;
@@ -11,6 +9,10 @@ public class V3 { //a 3d vector
 	//-------------------------------------------------------------------------------
 	
 	public V3(){} //basic vector constructor
+	
+	public V3(double a){ //vector constructor from components
+		this.set(a,a,a);
+	}
 	
 	public V3(double a, double b, double c){ //vector constructor from components
 		this.set(a,b,c);
@@ -33,6 +35,12 @@ public class V3 { //a 3d vector
 	}
 	
 	//-------------------------------------------------------------------------------
+	
+	public void set(double a){ //sets vector from components
+		x=a;
+		y=a;
+		z=a;
+	}
 	
 	public void set(double a, double b, double c){ //sets vector from components
 		x=a;

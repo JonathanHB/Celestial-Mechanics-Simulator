@@ -5,9 +5,7 @@ import java.util.Arrays;
 
 import objects.Cable;
 import objects.Entity;
-import objects.Plane;
 import objects.Poly_library;
-import objects.Polyhedron;
 import utility.Main_class;
 import utility.Math_methods;
 import utility.Misc_methods;
@@ -109,7 +107,7 @@ public class Object_manager {
 				new Entity(
 				newmass, radius, luminosity, newpos, newvel, orientation, rotation, 
 				pc, polybase2, cornermap2, scale, new V3(0,0,0), 
-				tc, a.t.length+b.t.length, (a.t.resolution+b.t.resolution)/2.0
+				tc, a.t.length+b.t.length, (a.t.resolution+b.t.resolution)/2.0, -1
 						));
 		
 		Main_class.elist.remove(a);
@@ -130,12 +128,12 @@ public class Object_manager {
 				for(int x = 0; x<breaks.length-1; x++){
 					if(breaks[x]){
 						if(x-sectionstart>0){
-							Main_class.clist.add(new Cable(c.node_spacing, c.col, c.t.c, Arrays.copyOfRange(c.nodes, sectionstart, x+1), c.t.length, c.t.resolution));			
+							Main_class.clist.add(new Cable(c.node_spacing, c.col, c.t.c, Arrays.copyOfRange(c.nodes, sectionstart, x+1), c.t.length, c.t.resolution, c.t.refent));			
 						}
 						sectionstart = x+1;
 
 					}else if(x == breaks.length-2){
-						Main_class.clist.add(new Cable(c.node_spacing, c.col, c.t.c, Arrays.copyOfRange(c.nodes, sectionstart, x+2), c.t.length, c.t.resolution));			
+						Main_class.clist.add(new Cable(c.node_spacing, c.col, c.t.c, Arrays.copyOfRange(c.nodes, sectionstart, x+2), c.t.length, c.t.resolution, c.t.refent));			
 					}
 
 				}

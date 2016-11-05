@@ -22,7 +22,7 @@ public class Cable {
 	
 	public Entity primary_ent; //entity above which the cable is in geostationary orbit
 		
-	public Cable(double spacing, double maxlen, int length, Entity ref_ent, Color c, Color ct, int traillength, double res){
+	public Cable(double spacing, double maxlen, int length, Entity ref_ent, Color c, Color ct, int traillength, double res, int trail_refent){
 		//constructor to create a cable in geostationary orbit over the ref_ent entity
 		
 		col = c;
@@ -34,16 +34,17 @@ public class Cable {
 		
 		generate(length, ref_ent, c);
 		
-		t=new Trail(
+		t = new Trail(
 				traillength,
 				res,
 				center_of_mass(),
-				ct
+				ct,
+				trail_refent
 				);
 		
 	}
 	
-	public Cable(double spacing, Color c, Color ct, Cablenode[] cn, int traillength, double res){
+	public Cable(double spacing, Color c, Color ct, Cablenode[] cn, int traillength, double res, int trail_refent){
 		//constructor to create a cable when an existing cable breaks
 		
 		col = c;
@@ -62,7 +63,8 @@ public class Cable {
 				traillength,
 				res,
 				center_of_mass(),
-				ct
+				ct,
+				trail_refent
 				);
 		
 	}
@@ -87,12 +89,12 @@ public class Cable {
 		while(adjusting){ //adjusts cable altitude to balance forces
 						
 			double nf = netforce(cableframegen(gsoradius, gsospeed, totaldr), primary.mass);
-			System.out.println(nf);
+		//	System.out.println(nf);
 
 			if(Math.abs(nf) <= cablebalance){
 				adjustedcable = cableframegen(gsoradius, gsospeed, totaldr);
 				adjusting = false;
-				System.out.println("done");
+		//		System.out.println("done");
 			}else if(nf<0){
 				deltarad*=.7;
 				deltarad = Math.abs(deltarad);
@@ -204,8 +206,14 @@ public class Cable {
 			V3 reactionvector = deltapos.tolength2(reactionmagnitude);
 			
 			nodes[x+1].velocity.sub(reactionvector);
-			nodes[x].velocity.add(reactionvector);						
-							
+			nodes[x].velocity.add(reactionvector);	
+			
+		//	System.out.println(reactionmagnitude*100000);	
+			
+			if(Main_class.stressvisualization){
+				links[x].illumination.set(reactionmagnitude*1000);
+			}
+			
 		}
 		
 	}

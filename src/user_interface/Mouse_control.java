@@ -1,17 +1,9 @@
 package user_interface;
 
-import java.awt.AWTException;
 import java.awt.Point;
-import java.awt.Robot;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-
-import utility.Math_methods;
-import utility.V3;
-import graphics.Graphics_engine;
 
 public class Mouse_control implements MouseMotionListener{
 	

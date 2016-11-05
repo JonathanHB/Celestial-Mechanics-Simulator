@@ -1,6 +1,5 @@
 package graphics;
 
-import java.awt.Color;
 import java.util.ArrayList;
 
 import objects.Cable;
@@ -192,14 +191,18 @@ public class Graphics_engine {
 			}
 
 		} 	
-
-		for(Cable c : Main_class.clist){
-			for(Line l : c.links){
-				if(l.arcshort){
-					l.illumination.set(0,0,0);
+		
+		if(Main_class.stressvisualization == false){
+			for(Cable c : Main_class.clist){
+				for(Line l : c.links){
+					if(l.arcshort){
+						l.illumination.set(0,0,0);
+					}
 				}
 			}
-			
+		}	
+		
+		for(Cable c : Main_class.clist){
 			for(Line l : c.t.links){
 				if(l.arcshort){
 					l.illumination.set(0,0,0);
@@ -222,21 +225,24 @@ public class Graphics_engine {
 						}
 					}
 				} 
-
-				for(Cable c : Main_class.clist){
-					for(Line l : c.links){
-						if(l.arcshort){
-							l.illumination.add(e1.luminosity.invscale2(l.center.sub2(e1.position).squmagnitude()));
-						}
+				
+				if(Main_class.stressvisualization == false){
+					for(Cable c : Main_class.clist){
+						for(Line l : c.links){
+							if(l.arcshort){
+								l.illumination.add(e1.luminosity.invscale2(l.center.sub2(e1.position).squmagnitude()));
+							}
+						}					
 					}
-					
+				}
+				
+				for(Cable c : Main_class.clist){
 					for(Line l : c.t.links){
 						if(l.arcshort){
 							l.illumination.add(e1.luminosity.invscale2(l.center.sub2(e1.position).squmagnitude()));
 						}
 					}
 				}
-
 			}
 
 		} 

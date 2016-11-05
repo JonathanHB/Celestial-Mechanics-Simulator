@@ -17,12 +17,13 @@ public class Trail {
 	int linkpos=0; //array position of link to be modified
 	public Color c;
 		
-	public Trail(int l, double r, V3 v, Color col){ //constructs a new trail
+	public Trail(int l, double r, V3 v, Color col, int referenceent){ //constructs a new trail
 
 		c=col;
 		length = l+1;
 		resolution=r;
 		squres = r*r;
+		refent = referenceent;
 		nodes = new Point[length];
 		links = new Line[length-1];
 

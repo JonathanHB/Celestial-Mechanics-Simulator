@@ -1,18 +1,13 @@
 package physics;
 
-import graphics.Graphics_engine;
-
 import java.awt.Color;
-import java.awt.List;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import objects.Entity;
 import objects.Poly_library;
 import objects.Test_mass;
 import utility.Main_class;
 import utility.Math_methods;
-import utility.Misc_methods;
 import utility.V3;
 
 public class Trajectory_optimizer {
@@ -22,21 +17,19 @@ public class Trajectory_optimizer {
 	public static int start = 0;    //locations in array of start and target entities
 	public static int target = 1;
 
-	public static double altitude = 400000; //distance above start entity surface to place test objects
+	public static double altitude = 4000000; //distance above start entity surface to place test objects
 
-	public static int start_num = 6000;     // number of particles used for the first repetition //6000
+	public static int start_num = 1000;     // number of particles used for the first repetition //6000
 	public static int rep_num = 400;		 // number of particles used for each repetition     //400
 
 	public static int particle_num;
 
-	public static int repetitions = 8;        //number of repetitions //16
+	public static int repetitions = 4;        //number of repetitions //16
 	public static double maxtime = 31557600;  //number of seconds to simulate for (1 year = 31557600 seconds) 
 	public static int ticknum;                //number of ticks to simulate for 
 
 	public static double basevelocity;        		   //velocity for a circular orbit
-	public static double maxdeltav = 3.01E3;           //maximum initial delta v in m/s
-	public static double deltavrange = maxdeltav; 	   //deltav range at current iteration
-	public static double deltavrangeshrinkfactor = .7; //factor by which to multiply deltav range
+	public static double deltav = 3.01E3;           //maximum initial delta v in m/s
 	
 	public static int i = 0;
 	public static int ii = 0; //used to immediately quit optimizer once a good trajectory is found
@@ -51,8 +44,8 @@ public class Trajectory_optimizer {
 
 		ticknum = (int) Math.ceil(maxtime/Motion.increment); 
 		//number of ticks to simulate each iteration for
-		basevelocity = Math.sqrt(Motion.G*Main_class.elist.get(start).mass/(Main_class.elist.get(start).radius+altitude));	
-		//velocity for a circular orbit	
+		basevelocity = deltav + Math.sqrt(Motion.G*Main_class.elist.get(start).mass/(Main_class.elist.get(start).radius+altitude));	
+		//velocity for a circular orbit	+ deltav
 		postable = new V3[Main_class.elist.size()][ticknum]; 
 		//a table of positions of entities at every tick; 
 		//data intensive but avoids the need to repeatedly simulate the motion of the entities
@@ -140,10 +133,10 @@ public class Trajectory_optimizer {
 			new Entity(
 				0,1,new V3(0,0,0),
 				Math_methods.rotatepoint(new V3(0, altitude+Main_class.elist.get(start).radius, 0), best_traject.initorbit).add2(Main_class.elist.get(start).position),
-				Math_methods.rotatepoint(new V3(0,0,basevelocity+maxdeltav), best_traject.initorbit).add2(Main_class.elist.get(start).velocity),
+				Math_methods.rotatepoint(new V3(0,0,basevelocity+deltav), best_traject.initorbit).add2(Main_class.elist.get(start).velocity),
 				new V3(0,0,0),new V3(0,0,0),
 				new Color(0,0,0),Poly_library.standard_poly_bases[0],Poly_library.standard_poly_maps[0],new V3(2E6,2E6,2E6),new V3(0,0,0),
-				new Color(0,0,0),2000,17000000
+				new Color(0,0,0),2000,17000000, -1
 			)
 		);
 

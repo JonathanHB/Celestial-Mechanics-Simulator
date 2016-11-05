@@ -1,19 +1,12 @@
 package utility;
 
-//----------package name------------------------
-
 import java.util.ArrayList;
-import java.util.Vector;
 import java.util.concurrent.TimeUnit;
-
 import javax.swing.JPanel;
-
-//----------external imports--------------------
 
 import objects.Cable;
 import objects.Entity;
 import objects.Poly_library;
-import objects.Test_mass;
 import physics.Object_manager;
 import physics.Motion;
 import physics.Trajectory_optimizer;
@@ -22,8 +15,6 @@ import graphics.Graphics_engine;
 import user_interface.FileIO;
 import user_interface.Text_control;
 import user_interface.Mouse_control;
-
-//----------internal imports--------------------
 
 @SuppressWarnings("serial")
 public class Main_class extends JPanel{
@@ -41,6 +32,8 @@ public class Main_class extends JPanel{
 	public static ArrayList<Cable> clist = new ArrayList<Cable>(0); //Space elevator cables
 	
 	public static int framewait; //time wait in milliseconds between rendering frames
+	
+	public static boolean stressvisualization = true;
 	
 	public static boolean running; 
 	public static boolean loading; 	//state variables used for loading, running, and saving	simulations
@@ -77,10 +70,6 @@ public class Main_class extends JPanel{
 				startsimulation(loadstring);
 				running = true;
 				loading = false;
-			}else if(loading_internal){ //loads the hardcoded simulation
-				startsim2();
-				running = true;
-				loading_internal = false;
 			}
 			
 		}
@@ -89,7 +78,7 @@ public class Main_class extends JPanel{
 	
 	public static void startsimulation(String s){ //loads simulation from file and sets it up
 
-		FileIO.readfile(s);
+		FileIO.loadfile(FileIO.readfile(s));
 		
 		Object_manager.fixcenter();
 							
@@ -101,23 +90,6 @@ public class Main_class extends JPanel{
 		siginc = Misc_methods.sigdigs(Motion.increment); 
 		
 		Frame_functions.timefield.setText("0.0 seconds");
-		
-	}
-	
-	public static void startsim2(){ //loads hardcoded simulation
-		
-		FileIO.loadtest(FileIO.test_input);
-		
-		Object_manager.fixcenter();	
-							
-		if(Trajectory_optimizer.running){ //runs trajectory optimizer		
-			Trajectory_optimizer.maketables();
-			Trajectory_optimizer.optimize();
-		}	
-		
-		siginc = Misc_methods.sigdigs(Motion.increment);
-		
-		Frame_functions.timefield.setText("0.0 seconds"); 
 		
 	}
 	
@@ -174,5 +146,5 @@ public class Main_class extends JPanel{
  * 
  * 
  *\/home/jonathan/workspace/CMS_2.0/cabledemo.txt
- *\
+ *\/home/jonathan/workspace/CMS_2.0/Earth_Moon.txt
  */

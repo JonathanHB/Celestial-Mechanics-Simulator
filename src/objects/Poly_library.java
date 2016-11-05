@@ -1,11 +1,11 @@
 package objects;
 
-import user_interface.FileIO;
 import utility.V3;
 
 public class Poly_library {
 	//a library of polyhedra used when loading objects so that the user 
 	//does not have to manually define common objects
+	//currently only contains a cube object
 	
 	//note: integer arrays deep copy automatically, so some code here should be updated
 	

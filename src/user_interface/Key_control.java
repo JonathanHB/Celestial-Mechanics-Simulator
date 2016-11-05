@@ -1,17 +1,11 @@
 package user_interface;
 
-import graphics.Frame_functions;
 import graphics.Graphics_engine;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import physics.Motion;
-import utility.Main_class;
-import utility.Math_methods;
-import utility.V3;
 
 public class Key_control implements KeyListener{
 
