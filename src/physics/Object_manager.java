@@ -43,6 +43,12 @@ public class Object_manager {
 		
 	}
 	
+	public static void initializerefs(){
+		for(Entity e : Main_class.elist){
+			e.getreference();
+		}
+	}
+	
 	public static void add(Entity a, Entity b, boolean keepgeom){ 
 		//fuses entities, adding their masses, volumes, angular and linear momentum, luminosity, and other properties
 		//this method models changes in angular momentum resulting from non-head on collisions
@@ -116,6 +122,8 @@ public class Object_manager {
 				tc, a.t.length+b.t.length, (a.t.resolution+b.t.resolution)/2.0, Main_class.elist.indexOf(reference)
 						));
 		
+		Main_class.elist.get(Main_class.elist.size()-1).getreference();
+		
 		check_refents(a,b);
 		
 		Main_class.elist.remove(a);
@@ -172,16 +180,21 @@ public class Object_manager {
 		for(Entity e : Main_class.elist){
 			
 			if(e.t.refent == b || e.t.refent == a ){
-				e.t.refent = Main_class.elist.get(Main_class.elist.size()-2);
-				e.primary = e.t.refent; 
+				e.t.refent = Main_class.elist.get(Main_class.elist.size()-1);
 			}
 			
+			if(e.t.refent == e){
+				e.t.refent = new Entity();
+				e.t.refent.velocity = new V3(0,0,0);				
+			}
+			
+			e.primary = e.t.refent;
 		}
 		
 		for(Cable c : Main_class.clist){
 			
 			if(c.t.refent == b || c.t.refent == a ){
-				c.t.refent = Main_class.elist.get(Main_class.elist.size()-2);
+				c.t.refent = Main_class.elist.get(Main_class.elist.size()-1);
 
 			}
 			

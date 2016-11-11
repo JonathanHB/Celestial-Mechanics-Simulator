@@ -29,6 +29,7 @@ public class Entity {
 	
 	public double maxforceproxy; //the largest force exerted by any object on this entity
 	public Entity primary; //the object exerting the largest force on this entity, probably an unnecessary buffer
+	public int indexbuffer;
 	
 	public Entity(){} //empty constructor
 	
@@ -59,20 +60,18 @@ public class Entity {
 		p=new Polyhedron(pcol, shift, scale, ori, polybase, cornermap);
 		p.translateby(position);
 		
-		if(refent == -1){
-			t=new Trail(length, res, pos, tcol, new Entity());
+		t=new Trail(length, res, pos, tcol, new Entity());
+		indexbuffer = refent;
+		
+	}
+	
+	public void getreference(){
+		if(indexbuffer == -1){
 			t.refent.velocity = new V3(0,0,0);
-			
-			primary = new Entity();
-			primary.velocity = new V3(0,0,0);
-
 		}else{
-			t=new Trail(length, res, pos, tcol, Main_class.elist.get(refent));
-			
-			primary = Main_class.elist.get(refent);			
+			t.refent = Main_class.elist.get(indexbuffer);			
 		}
-		
-		
+		primary = t.refent;
 	}
 	
 	public void accelerate(V3 dpos, double a, Entity potential_ref){
@@ -101,20 +100,17 @@ public class Entity {
 		p.translateby(dpos);
 		
 		t.shiftby(t.refent.velocity.scale2(d)); 
-
 		//order of elist subtly influences trail generation but not physics here; 
 		//put this code in a separate for loop to fix the above problem
 			
 		t.update(position);
-		
-		
-		
+						
 	}
 	
 	public void rotate(double d){ //rotates the entity for a time increment of d seconds
 		
-		orientation.add(rotation.scale2(d)); //update cube's orientation
-		p.rotatepoly(rotation.scale2(d)); //rotate the cube 
+		orientation.add(rotation.scale2(d)); //update polyhedron's orientation
+		p.rotatepoly(rotation.scale2(d)); //rotate the polyhedron 
 		//TODO would it be faster to rotate the polyhedron to the orientation rather than rotating it by the rotation rate??
 		p.translateby(position); 
 		//moves the polyhedron representing the object

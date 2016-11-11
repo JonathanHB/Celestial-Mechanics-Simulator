@@ -22,7 +22,8 @@ public class Graphics_engine {
 	public static V3 axis_orientation = new V3(0,.0000000000000000000000000000000000001,0); //x=azimuth, y=polar, z=roll, small value prevents a certain undefined glitch
 	public static V3 orientation = new V3(0,0,0); //x=azimuth, y=polar, z=roll
 
-	public static int focus = -1;
+	public static Entity focus;
+	public static int focusindex;
 
 	static double windowscale = 120;
 	static double visualrange = 6;

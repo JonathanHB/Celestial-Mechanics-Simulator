@@ -29,9 +29,7 @@ public class Motion {
 		}
 		
 		//moves camera in sync with the entity (if any) whose frame of reference it shares
-		if(Graphics_engine.focus!=-1){ 
-			Graphics_engine.viewposition.add(Main_class.elist.get(Graphics_engine.focus).velocity.scale2(increment));
-		}
+		Graphics_engine.viewposition.add(Graphics_engine.focus.velocity.scale2(increment));
 		
 	}
 	
@@ -112,17 +110,21 @@ public class Motion {
 				movement();
 				cablemove();
 				
+				Object_manager.updatetrailfoci();
+				
 				cableforces();
 				gravitation();					
 
 			}
 		
 		}else{
-			
+						
 			for(int i=0; i<Math.abs(repetition); i++){
 					
 				gravitation();
 				cableforces();	
+				
+				Object_manager.updatetrailfoci();
 				
 				cablemove();
 				movement();

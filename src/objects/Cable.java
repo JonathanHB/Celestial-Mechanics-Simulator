@@ -37,7 +37,15 @@ public class Cable {
 		Entity reference = new Entity();
 		reference.velocity = new V3(0,0,0);
 		
-		if(trail_refent == -1){
+		if(trail_refent == -2){
+			t = new Trail(
+					traillength,
+					res,
+					center_of_mass(),
+					ct,
+					primary_ent
+					);
+		}else if(trail_refent == -1){
 			t = new Trail(
 					traillength,
 					res,
