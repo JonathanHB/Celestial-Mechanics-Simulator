@@ -48,7 +48,6 @@ public class Motion {
 		for(int x = 0; x<Main_class.elist.size(); x++){ 
 			
 			for(int y = x+1; y<Main_class.elist.size(); y++){ 
-
 				
 				Entity e1 = Main_class.elist.get(x);
 				Entity e2 = Main_class.elist.get(y);
@@ -61,9 +60,12 @@ public class Motion {
 				//g_invrad is the the G/r^2 value used to calculate the acceleration of both objects, 
 				//divided by distance for use in calculating the final acceleration vector
 												
-				e1.velocity.sub(dpos.scale2(e2.mass*g_invrad));  //computes acceleration of each body and updates their velocities accordingly
-				e2.velocity.add(dpos.scale2(e1.mass*g_invrad));
-						
+			//	e1.velocity.sub(dpos.scale2(e2.mass*g_invrad));  //computes acceleration of each body and updates their velocities accordingly
+			//	e2.velocity.add(dpos.scale2(e1.mass*g_invrad));
+				
+				e1.accelerate(dpos, -e2.mass*g_invrad, e2);
+				e2.accelerate(dpos, e1.mass*g_invrad, e1);
+				
 				if(distance < e1.radius + e2.radius){ //checks if the objects collide
 					Object_manager.add(e1, e2, true);
 				}

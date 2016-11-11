@@ -27,7 +27,10 @@ public class Entity {
 	public Polyhedron p;
 	public Trail t;
 	
-	public Entity(){}
+	public double maxforceproxy; //the largest force exerted by any object on this entity
+	public Entity primary; //the object exerting the largest force on this entity, probably an unnecessary buffer
+	
+	public Entity(){} //empty constructor
 	
 	public Entity( //full constructor with 16 arguments
 			double m, double r, V3 lum, V3 pos, V3 vel, V3 ori, V3 rot, 
@@ -39,6 +42,8 @@ public class Entity {
 		radius=r;
 		
 		moi = .4*mass*radius*radius;
+		
+		maxforceproxy = 0;
 		
 		luminosity=new V3(lum);
 		position=new V3(pos);
@@ -54,7 +59,31 @@ public class Entity {
 		p=new Polyhedron(pcol, shift, scale, ori, polybase, cornermap);
 		p.translateby(position);
 		
-		t=new Trail(length, res, pos, tcol, refent);
+		if(refent == -1){
+			t=new Trail(length, res, pos, tcol, new Entity());
+			t.refent.velocity = new V3(0,0,0);
+			
+			primary = new Entity();
+			primary.velocity = new V3(0,0,0);
+
+		}else{
+			t=new Trail(length, res, pos, tcol, Main_class.elist.get(refent));
+			
+			primary = Main_class.elist.get(refent);			
+		}
+		
+		
+	}
+	
+	public void accelerate(V3 dpos, double a, Entity potential_ref){
+		
+		velocity.add(dpos.scale2(a));
+		
+		if(Math.abs(a)>maxforceproxy && potential_ref.mass>mass && Main_class.fixedreferences == false){
+			maxforceproxy = Math.abs(a);
+			primary = potential_ref;
+			
+		}
 		
 	}
 	
@@ -70,16 +99,14 @@ public class Entity {
 		V3 dpos=velocity.scale2(d);
 		position.add(dpos);
 		p.translateby(dpos);
-						
-		if(t.refent == -1){
-			t.update(position);
-		}else{
-			t.shiftby(Main_class.elist.get(t.refent).velocity.scale2(d)); 
-			//order of elist subtly influences trail generation but not physics here; 
-			//put this code in a separate for loop to fix the above problem
+		
+		t.shiftby(t.refent.velocity.scale2(d)); 
+
+		//order of elist subtly influences trail generation but not physics here; 
+		//put this code in a separate for loop to fix the above problem
 			
-			t.update(position);
-		}
+		t.update(position);
+		
 		
 		
 	}

@@ -34,17 +34,31 @@ public class Cable {
 		
 		generate(length, ref_ent, c);
 		
-		t = new Trail(
-				traillength,
-				res,
-				center_of_mass(),
-				ct,
-				trail_refent
-				);
+		Entity reference = new Entity();
+		reference.velocity = new V3(0,0,0);
+		
+		if(trail_refent == -1){
+			t = new Trail(
+					traillength,
+					res,
+					center_of_mass(),
+					ct,
+					reference
+					);
+		}else{
+			t = new Trail(
+					traillength,
+					res,
+					center_of_mass(),
+					ct,
+					Main_class.elist.get(trail_refent)
+					);
+		}	
+		
 		
 	}
 	
-	public Cable(double spacing, Color c, Color ct, Cablenode[] cn, int traillength, double res, int trail_refent){
+	public Cable(double spacing, Color c, Color ct, Cablenode[] cn, int traillength, double res, Entity trail_refent){
 		//constructor to create a cable when an existing cable breaks
 		
 		col = c;

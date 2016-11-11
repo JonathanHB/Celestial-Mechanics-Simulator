@@ -30,16 +30,19 @@ public class FileIO {
 				".01",
 				"1",
 				"1",
-				"200000000000.0,1,[400;200;110],[0;0;0],[0;0;0],[0;0;0],[0;0;0],[20;30;60],cube,cube,[1;1;1],[0;0;0],[30;50;40],10,1,-1",
+				"200000000000.0,1,[400;200;110],[0;0;0],[0;0;0],[0;0;0],[0;0;0],[20;30;60],cube,cube,[1;1;1],[0;0;0],[30;50;40],1000,.01,-1",
 				"1000000000.0,.6,[0;0;0],[10;0;.5],[0;1.1;0],[0;0;0],[0;.2;0],[20;70;30],cube,cube,[.5;.5;.7],[0;0;0],[20;60;40],300,1,-1",
 				"1000000000.0,.6,[0;0;0],[30;0;.5],[0;.6;-.1],[0;0;0],[.2;0;0],[120;20;30],cube,cube,[.5;.5;.5],[0;0;0],[110;30;40],600,1,-1",
-				"100000000.0,.3,[0;0;0],[0;20;0],[.6;0;-.2],[0;.77;0],[.2;0;.3],[60;70;130],cube,cube,[.2;.2;.2],[0;0;0],[70;50;120],2500,1,-1"
+				"100000000.0,.3,[0;0;0],[0;20;0],[.6;0;-.2],[0;.77;0],[.2;0;.3],[60;70;130],cube,cube,[.2;.2;.2],[0;0;0],[70;50;120],2500,1,-1",
+				"100000000.0,.1,[0;0;0],[30;1.6;.5],[.2;.6;-.1],[0;0;0],[.2;0;0],[120;20;50],cube,cube,[.1;.1;.1],[0;0;0],[110;30;50],600,.2,2",
+				"100000000.0,.1,[0;0;0],[30;1.5;2.5],[.2;.6;-.1],[0;0;0],[.2;0;0],[110;120;20],cube,cube,[.1;.1;.1],[0;0;0],[110;130;20],600,.2,2"
+
 		};
 	}
 	
 	public static String[] readfile(String filename){ //reads in text files to generate objects
 
-		if(filename.equals("default")){
+		if(filename.equals("d")){
 			return test_input;
 		}else{ //not required because return statement terminates the method, but helps readability
 
@@ -118,13 +121,16 @@ public class FileIO {
 		//sets camera position to that of the object whose reference frame it moves in
 		if(Graphics_engine.focus!=-1){			
 			Graphics_engine.viewposition.set(Main_class.elist.get(Graphics_engine.focus).position);
+			Graphics_engine.orientation.set(new V3(0,0,0));
+
 		}else{
 			Graphics_engine.viewposition.set(new V3(0,0,0));
+			Graphics_engine.orientation.set(new V3(0,.77,0));
 		}
 
 
 		Frame_functions.statefield.setText(Main_class.loadstring + " loaded"); //confirms file loading
-		Frame_functions.inputfield.setText(null); //clears input
+		//Frame_functions.inputfield.setText(null); //clears input
 
 	}
 	

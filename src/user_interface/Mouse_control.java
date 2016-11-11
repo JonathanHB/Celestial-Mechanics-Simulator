@@ -1,9 +1,14 @@
 package user_interface;
 
+import graphics.Graphics_engine;
+
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+
+import utility.V3;
+import utility.Math_methods;
 
 public class Mouse_control implements MouseMotionListener{
 	
@@ -37,10 +42,18 @@ public class Mouse_control implements MouseMotionListener{
 			
 			public void mouseDragged(MouseEvent arg0) {
 				
-				graphics.Graphics_engine.orientation.z-=sensitivity*(arg0.getPoint().x-lastpoint.x);
-				graphics.Graphics_engine.orientation.y+=sensitivity*(arg0.getPoint().y-lastpoint.y);
-								
-				lastpoint.setLocation(arg0.getPoint());	//mouse's last position to compute movement			
+				Graphics_engine.orientation.z-=sensitivity*(arg0.getPoint().x-lastpoint.x);
+				Graphics_engine.orientation.y+=sensitivity*(arg0.getPoint().y-lastpoint.y);
+				
+				
+				
+			//	Graphics_engine.orientation.add(Math_methods.rotatepoint(new V3(0,0,)),Graphics_engine.orientation));
+			//	Graphics_engine.orientation.add(Math_methods.rotatepoint(new V3(0,0,-sensitivity*(arg0.getPoint().x-lastpoint.x)),Graphics_engine.orientation.dimscale2(new V3(-1,1,-1))));
+				//sensitivity*(arg0.getPoint().y-lastpoint.y)
+				
+				
+				
+				lastpoint.setLocation(arg0.getPoint());	//stores mouse's last position to compute movement			
 				
 			}
 

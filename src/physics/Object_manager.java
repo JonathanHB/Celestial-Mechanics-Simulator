@@ -100,19 +100,27 @@ public class Object_manager {
 			
 		}
 	
+		Entity reference;
 		
+		if(a.mass>=b.mass){
+			reference = a.t.refent;
+		}else{
+			reference = b.t.refent;
+		}
 		
 		//fused entity added as a new entity
 		Main_class.elist.add(
 				new Entity(
 				newmass, radius, luminosity, newpos, newvel, orientation, rotation, 
 				pc, polybase2, cornermap2, scale, new V3(0,0,0), 
-				tc, a.t.length+b.t.length, (a.t.resolution+b.t.resolution)/2.0, -1
+				tc, a.t.length+b.t.length, (a.t.resolution+b.t.resolution)/2.0, Main_class.elist.indexOf(reference)
 						));
+		
+		check_refents(a,b);
 		
 		Main_class.elist.remove(a);
 		Main_class.elist.remove(b);		//both original entities are removed
-		Main_class.elist.trimToSize(); 
+		Main_class.elist.trimToSize(); 		
 		
 	}
 
@@ -142,6 +150,42 @@ public class Object_manager {
 
 			}
 		
+	}
+	
+	public static void updatetrailfoci(){
+		
+		if(Main_class.fixedreferences == false){
+		
+			for(Entity e : Main_class.elist){
+			
+				e.t.refent = e.primary;
+				e.maxforceproxy = 0;
+			
+			}
+		
+		}
+		
+	}
+	
+	public static void check_refents(Entity a, Entity b){ //must be run between new entity generation and old entity deletion in add() method
+		
+		for(Entity e : Main_class.elist){
+			
+			if(e.t.refent == b || e.t.refent == a ){
+				e.t.refent = Main_class.elist.get(Main_class.elist.size()-2);
+				e.primary = e.t.refent; 
+			}
+			
+		}
+		
+		for(Cable c : Main_class.clist){
+			
+			if(c.t.refent == b || c.t.refent == a ){
+				c.t.refent = Main_class.elist.get(Main_class.elist.size()-2);
+
+			}
+			
+		}
 	}
 	
 }

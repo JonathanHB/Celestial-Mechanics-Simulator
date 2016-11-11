@@ -34,6 +34,7 @@ public class Main_class extends JPanel{
 	public static int framewait; //time wait in milliseconds between rendering frames
 	
 	public static boolean stressvisualization = true;
+	public static boolean fixedreferences = false;
 	
 	public static boolean running; 
 	public static boolean loading; 	//state variables used for loading, running, and saving	simulations
@@ -42,7 +43,6 @@ public class Main_class extends JPanel{
 	public static boolean loading_internal; //whether the simulation is the hardcoded demo or a text file
 	
 	public static String loadstring; //location of input data file
-
 		
 	public static void main(String[] args) {						
 		
@@ -99,6 +99,8 @@ public class Main_class extends JPanel{
 
 			Motion.physexec(); //physics engine
 			
+			Object_manager.updatetrailfoci();
+			
 			Graphics_engine.projector();
 			Graphics_engine.lighting();   //graphics engine
 			Graphics_engine.setorder();			
@@ -146,5 +148,6 @@ public class Main_class extends JPanel{
  * 
  * 
  *\/home/jonathan/workspace/CMS_2.0/cabledemo.txt
+ *\/home/jonathan/workspace/CMS_2.0/basicdemo.txt
  *\/home/jonathan/workspace/CMS_2.0/Earth_Moon.txt
  */

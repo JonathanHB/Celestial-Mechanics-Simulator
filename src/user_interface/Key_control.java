@@ -66,6 +66,8 @@ public class Key_control implements KeyListener{
 			Motion.repbuff = 0;
 		}
 
+		
+		
 	}
 
 	public static void reversal(int a, int b, int c){ //a = previous repetition rate, b = current rate, c = new rate
