@@ -34,7 +34,7 @@ public class Main_class extends JPanel{
 	public static int framewait; //time wait in milliseconds between rendering frames
 	
 	public static boolean stressvisualization = true;
-	public static boolean fixedreferences = true;
+	public static boolean fixedreferences = false;
 	
 	public static boolean running; 
 	public static boolean loading; 	//state variables used for loading, running, and saving	simulations
@@ -100,7 +100,9 @@ public class Main_class extends JPanel{
 		if(Main_class.elist.size() != 0){ //checks for empty simulation
 
 			Motion.physexec(); //physics engine
-						
+			
+			Graphics_engine.getfocus();
+			
 			Graphics_engine.projector();
 			Graphics_engine.lighting();   //graphics engine
 			Graphics_engine.setorder();			

@@ -9,7 +9,7 @@ import physics.Motion;
 
 public class Key_control implements KeyListener{
 
-	static double tsensitivity; //translational	sensitivity
+	public static double tsensitivity; //translational	sensitivity
 	static double rsensitivity = .05; //rotational sensitivity
 
 	static int phys_rep_inc; //increment of physics engine repetition adjustment

@@ -9,6 +9,8 @@ import objects.Line;
 import objects.Plane;
 import objects.Point;
 import objects.Render_obj;
+import physics.Motion;
+import user_interface.Key_control;
 import utility.Main_class;
 import utility.Misc_methods;
 import utility.V3;
@@ -250,4 +252,33 @@ public class Graphics_engine {
 
 	}
 
+	public static void getfocus(){
+		
+		if(!Main_class.fixedreferences){
+			
+			Entity potentialref = new Entity();
+			double maxforce = 0;
+		//	double capturerad = 0;
+			
+			for(Entity e : Main_class.elist){
+				
+				double force = e.mass/(e.position.sub2(viewposition).squmagnitude()); 
+				//actually missing G; not a real force
+				
+				if(force>maxforce){
+					maxforce = force;
+					potentialref = e;
+				//	capturerad = e.position.sub2(viewposition).squmagnitude();
+				}
+				
+			}
+			
+			focus = potentialref;
+			
+		//	Key_control.tsensitivity = capturerad/10;
+			
+		}
+		
+	}
+	
 }
