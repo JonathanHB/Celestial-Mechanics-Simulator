@@ -49,6 +49,40 @@ public class Object_manager {
 		}
 	}
 	
+	public static boolean stable(Entity a, Entity b){ //checks is kinetic energy of collision exceeds the product's gravitational binding energy
+		
+		double vol1=a.radius*a.radius*a.radius; //compute volumes
+		double vol2=b.radius*b.radius*b.radius; 
+			
+		double radius = Math.cbrt(vol1+vol2); //add volumes, compute new radius
+		
+		double totalmass = a.mass+b.mass;
+		
+		double gravbindenergy = .6*Motion.G*totalmass*totalmass/radius;
+		
+		V3 newpos = Misc_methods.weighted_average(a.position, b.position, a.mass, b.mass); //update position
+		V3 newvel = Misc_methods.weighted_average(a.velocity, b.velocity, a.mass, b.mass); //update velocity	
+		
+		//compute relative positions and velocities for linear to angular momentum conversion
+		V3 dposa = a.position.sub2(newpos); 
+		V3 dposb = newpos.sub2(b.position); 		
+		V3 dvela = a.velocity.sub2(newvel); 
+		V3 dvelb = newvel.sub2(b.velocity);
+		
+		V3 dvelaxiala = Math_methods.parallelpart(dvela, dposa);
+		V3 dvelaxialb = Math_methods.parallelpart(dvelb, dposb);
+		
+		double cancelledkinetic = dvelaxiala.squmagnitude()*a.mass*.5 + dvelaxialb.squmagnitude()*b.mass*.5;
+		
+	/*	System.out.println(cancelledkinetic);
+		System.out.println(gravbindenergy);
+		System.out.println(cancelledkinetic <= gravbindenergy);*/
+		
+		return cancelledkinetic <= gravbindenergy;
+	}
+	
+	//TODO add a disintegrate method to deal with collisions where kinetic energy exceeds binding energy
+	
 	public static void add(Entity a, Entity b, boolean keepgeom){ 
 		//fuses entities, adding their masses, volumes, angular and linear momentum, luminosity, and other properties
 		//this method models changes in angular momentum resulting from non-head on collisions
@@ -66,7 +100,7 @@ public class Object_manager {
 		double vol1=a.radius*a.radius*a.radius; //compute volumes
 		double vol2=b.radius*b.radius*b.radius; 
 			
-		double radius = Math.cbrt(vol1+vol2); //add volumes
+		double radius = Math.cbrt(vol1+vol2); //add volumes, compute new radius
 		
 		double newmass = a.mass+b.mass; //add masses
 		double newmoi = .4*newmass*radius*radius; //newmoi is not the sum of the two other moi's, so the 3-weight method is used
@@ -78,13 +112,29 @@ public class Object_manager {
 		
 		//compute relative positions and velocities for linear to angular momentum conversion
 		V3 dposa = a.position.sub2(newpos); 
-		V3 dposb = newpos.sub2(b.position); 		
+		V3 dposb = newpos.sub2(b.position); 
 		V3 dvela = a.velocity.sub2(newvel); 
 		V3 dvelb = newvel.sub2(b.velocity);
 		
-		//calculate and add angular momentum based on angle and speed of collision
-		V3 rotation = new V3(Misc_methods.weighted_average(a.rotation, b.rotation, a.moi, b.moi, newmoi));		
-		rotation.add(Misc_methods.weighted_average(Math_methods.getrotation(dposa, dvela), Math_methods.getrotation(dposb, dvelb), a.moi, b.moi, newmoi));
+		V3 squaremomentarma = new V3(dposa.y*dposa.y+dposa.z*dposa.z + dposa.z*dposa.z+dposa.x*dposa.x + dposa.y*dposa.y+dposa.x*dposa.x);
+		V3 squaremomentarmb = new V3(dposb.y*dposb.y+dposb.z*dposb.z + dposb.z*dposb.z+dposb.x*dposb.x + dposb.y*dposb.y+dposb.x*dposb.x);
+		//finds moment arms associated with displacement in each plane
+		
+		V3 La = new V3(0);
+		La.add(squaremomentarma.scale2(a.mass));
+		La.add(a.moi);
+		La.dimscale(a.rotation);
+		La.add(Math_methods.getrotation(dposa, dvela).scale2(a.mass));
+		
+		V3 Lb = new V3(0);
+		Lb.add(squaremomentarmb.scale2(b.mass));
+		Lb.add(b.moi);
+		Lb.dimscale(b.rotation);
+		Lb.add(Math_methods.getrotation(dposb, dvelb).scale2(b.mass));
+		
+		V3 Lnet = La.add2(Lb);		
+		V3 rotation = new V3(Lnet.invscale2(newmoi));
+		
 		
 		Color pc = Misc_methods.coloraverage(a.p.c, b.p.c, vol1, vol2); //combine colors
 		Color tc = Misc_methods.coloraverage(a.t.c, b.t.c, vol1, vol2);

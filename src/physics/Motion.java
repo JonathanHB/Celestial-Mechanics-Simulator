@@ -65,6 +65,9 @@ public class Motion {
 				e2.accelerate(dpos, e1.mass*g_invrad, e1);
 				
 				if(distance < e1.radius + e2.radius){ //checks if the objects collide
+					
+					Object_manager.stable(e1, e2);
+					
 					Object_manager.add(e1, e2, true);
 				}
 

@@ -20,10 +20,12 @@ public class FileIO {
 
 	static PrintWriter writer; //declared outside for fillfile and writefile
 
-	public static String[] test_input; //a string to read simulations from
+	public static String[] test_input1; //a string to read simulations from
+	public static String[] test_input2; //a string to read simulations from
+	
 	
 	public static void setup(){ //sets the test_input string to a hardcoded value
-		FileIO.test_input = new String[]{
+		FileIO.test_input1 = new String[]{
 				"30",
 				"[0;0;0]",
 				"-1",
@@ -38,12 +40,30 @@ public class FileIO {
 				"100000000.0,.1,[0;0;0],[30;1.5;2.5],[.2;.6;-.1],[0;0;0],[.2;0;0],[110;120;20],cube,cube,[.1;.1;.1],[0;0;0],[110;130;20],600,.2,2"
 
 		};
+		
+		FileIO.test_input2 = new String[]{
+				"30",
+				"[0;0;0]",
+				"-1",
+				".01",
+				"1",
+				"1",
+				"200000000000.0,1,[400;200;110],[0;0;0],[0;0;0],[0;0;0],[0;0;0],[20;30;60],cube,cube,[1;1;1],[0;0;0],[30;50;40],1000,.01,-1",
+				"1000000000.0,.6,[0;0;0],[-2;0;.5],[0;1;0],[0;0;0],[0;.2;0],[20;70;30],cube,cube,[.5;.5;.7],[0;0;0],[20;60;40],300,1,-1"
+				/*"1000000000.0,.6,[0;0;0],[3;0;.5],[0;0;-.1],[0;0;0],[.2;0;0],[120;20;30],cube,cube,[.5;.5;.5],[0;0;0],[110;30;40],600,1,-1",
+				"100000000.0,.3,[0;0;0],[0;2;0],[0;0;-.2],[0;.77;0],[.2;0;.3],[60;70;130],cube,cube,[.2;.2;.2],[0;0;0],[70;50;120],2500,1,-1",
+				"100000000.0,.1,[0;0;0],[3;1.6;.5],[.2;0;-.1],[0;0;0],[.2;0;0],[120;20;50],cube,cube,[.1;.1;.1],[0;0;0],[110;30;50],600,.2,2",
+				"100000000.0,.1,[0;0;0],[3;1.5;2.5],[.2;0;-.1],[0;0;0],[.2;0;0],[110;120;20],cube,cube,[.1;.1;.1],[0;0;0],[110;130;20],600,.2,2"
+				*/
+		};
 	}
 	
 	public static String[] readfile(String filename){ //reads in text files to generate objects
 
 		if(filename.equals("d")){
-			return test_input;
+			return test_input1;
+		}else if(filename.equals("f")){
+			return test_input2;
 		}else{ //not required because return statement terminates the method, but helps readability
 
 			ArrayList<String> filecontents = new ArrayList<String>(0);

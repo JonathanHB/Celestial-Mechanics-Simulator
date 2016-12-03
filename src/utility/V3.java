@@ -108,6 +108,12 @@ public class V3 { //a 3d vector
 	
 	//-------------------------------------------------------------------------------
 	
+	public void add(double a){ //adds to the components of this vector
+		x+=a;
+		y+=a;
+		z+=a;
+	}
+	
 	public void add(double a, double b, double c){ //adds to the components of this vector
 		x+=a;
 		y+=b;
@@ -118,6 +124,10 @@ public class V3 { //a 3d vector
 		x+=v.x;
 		y+=v.y;
 		z+=v.z;
+	}
+	
+	public V3 add2(double a){ //adds to the components of this vector
+		return new V3(x+a, y+a, z+a);
 	}
 	
 	public V3 add2(double a, double b, double c){ //adds to the components of this vector

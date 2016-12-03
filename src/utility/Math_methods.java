@@ -21,11 +21,9 @@ public class Math_methods {
 	
 	public static V3 getrotation(V3 dp, V3 dv){ //returns the angular momentum resulting from a collision
 		
-		V3 pv = perpendicularpart(dv.invert2(), dp); //the part of the relative velocity perpendicular to the axis of collision
-			
-		//only z values are negated due to an inconsistency between treatment of angles and linear data in V3s
-				
-		return new V3(rotationcomp(pv.z, pv.y, dp.z, dp.y), rotationcomp(pv.x, pv.z, dp.x, dp.z), rotationcomp(pv.y, pv.x, dp.y, dp.x)).invert2();
+		V3 pv = perpendicularpart(dv, dp); //the part of the relative velocity perpendicular to the axis of collision
+							
+		return new V3(rotationcomp(pv.z, pv.y, dp.z, dp.y), rotationcomp(pv.x, pv.z, dp.x, dp.z), rotationcomp(pv.y, pv.x, dp.y, dp.x));
 		
 	}
 	
@@ -34,7 +32,15 @@ public class Math_methods {
 		//pv is perpendicular velocity, dp is delta position vector
 		
 		if(dpa != 0 || dpb != 0){
-			return (1-Math.abs(cosdot(new V3(pva, pvb, 0), new V3(dpa, dpb, 0))))*getsign(pva, pvb, dpa, dpb)*Math.sqrt((pva*pva+pvb*pvb)/(dpa*dpa+dpb*dpb));
+			//return (1-Math.abs(cosdot(new V3(pva, pvb, 0), new V3(dpa, dpb, 0))))*getsign(pva, pvb, dpa, dpb)*Math.sqrt((pva*pva+pvb*pvb)/(dpa*dpa+dpb*dpb));
+			//System.out.println(cosdot(new V3(pva, pvb, 0), new V3(dpa, dpb, 0)));
+			
+			V3 dv = new V3(pva, pvb, 0);
+			V3 dp = new V3(dpa, dpb, 0);
+			
+			return perpendicularpart(dv,dp).magnitude()*dp.magnitude()*getsign(pva, pvb, dpa, dpb);
+			//the return value is in units of m^2/s
+			
 		}else{
 			return 0;
 		}
@@ -78,7 +84,7 @@ public class Math_methods {
 		return b.tolength2(cosdot(a, b)*a.magnitude());
 	}
 	
-	public static double cosdot(V3 a, V3 b){ //cosine of the dot product of a and b
+	public static double cosdot(V3 a, V3 b){ //cosine of the angle between a and b, obtained by dividing the dot product by the magnitudes
 		
 		return capcosine((a.x*b.x+a.y*b.y+a.z*b.z)/(a.magnitude()*b.magnitude()));
 		

@@ -24,6 +24,14 @@ public class Misc_methods {
 		
 	}
 	
+	public static V3 weighted_average(V3 v1, V3 v2, V3 w1, V3 w2, double w3){ 
+		//computes the weighted average of the vectors
+		//v1 and v2 are V3 objects, w1 and w2 are relative weights, w3 is their psuedo-sum for non addable weights(such as moments of inertia)
+		
+		return ((v1.dimscale2(w1)).add2(v2.dimscale2(w2))).invscale2(w3);
+		
+	}
+	
 	public static Color coloraverage(Color a, Color b, double v1, double v2){ //a weighted average of two colors
 		
 		return new Color(capcolor((a.getRed()*v1+b.getRed()*v2)/(v1+v2)), capcolor((a.getGreen()*v1+b.getGreen()*v2)/(v1+v2)), capcolor((a.getBlue()*v1+b.getBlue()*v2)/(v1+v2)));
