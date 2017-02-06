@@ -2,14 +2,17 @@ package utility;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+
 import javax.swing.JPanel;
 
 import objects.Cable;
 import objects.Entity;
+import objects.Point;
 import objects.Poly_library;
 import physics.Object_manager;
 import physics.Motion;
 import physics.Trajectory_optimizer;
+import graphics.Equipotential_viz;
 import graphics.Frame_functions;
 import graphics.Graphics_engine;
 import user_interface.FileIO;
@@ -26,7 +29,9 @@ public class Main_class extends JPanel{
 	static int siginc; 
 	//the number of significant digits of the physics simulation's time increment,
 	//used to truncate floating point errors from the simulation time for display
-		
+	
+	public static ArrayList<Point> equipotential = new ArrayList<Point>(0); //equipotential surface points
+	
 	public static ArrayList<Entity> elist = new ArrayList<Entity>(0); //All planets/stars/moons
 
 	public static ArrayList<Cable> clist = new ArrayList<Cable>(0); //Space elevator cables
@@ -34,7 +39,8 @@ public class Main_class extends JPanel{
 	public static int framewait; //time wait in milliseconds between rendering frames
 	
 	public static boolean stressvisualization = true;
-	public static boolean fixedreferences = false;
+	public static boolean fixedreferences = true;
+	public static boolean equipotentialviz = true;
 	
 	public static boolean running; 
 	public static boolean loading; 	//state variables used for loading, running, and saving	simulations
@@ -102,6 +108,7 @@ public class Main_class extends JPanel{
 			Motion.physexec(); //physics engine
 			
 			Graphics_engine.getfocus();
+			Equipotential_viz.generatesurface();
 			
 			Graphics_engine.projector();
 			Graphics_engine.lighting();   //graphics engine
@@ -128,6 +135,7 @@ public class Main_class extends JPanel{
 	}
 
 }
+
 //TODO:
 /*
  * 
@@ -152,4 +160,5 @@ public class Main_class extends JPanel{
  *\/home/jonathan/workspace/CMS_2.0/cabledemo.txt
  *\/home/jonathan/workspace/CMS_2.0/basicdemo.txt
  *\/home/jonathan/workspace/CMS_2.0/Earth_Moon.txt
+ *\/home/jonathan/Desktop/binary_stars.txt
  */

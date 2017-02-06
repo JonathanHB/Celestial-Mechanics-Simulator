@@ -9,8 +9,16 @@ public class Point {
 	
 	public int projectx; //the point's 2d position in the viusal field
 	public int projecty;
+
+	public double squdistance;
 	
-	public Point(V3 a) {
+	public Point(){}
+	
+	public Point(V3 a, boolean b) { //shallowcopy constructor
+		position = a;
+	}
+	
+	public Point(V3 a) { //deep copy constructor
 		position = new V3(a);
 	}
 

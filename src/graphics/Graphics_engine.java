@@ -34,8 +34,12 @@ public class Graphics_engine {
 
 	static int stoplength = 0;
 
+	public static ArrayList <Line> rvectors = new ArrayList<Line>(0);
+	
 	public static void projector(){ //converts 3d object positions to 2d positions in visual field
 
+		rvectors.clear();
+		
 		for(Entity e : Main_class.elist){
 
 			for(Point p:e.p.vertices){
@@ -53,7 +57,19 @@ public class Graphics_engine {
 			for(Line l:e.t.links){
 				projectedge(l);				
 			}
-
+			
+			e.rvector.setcenter();			
+			projectpointP(e.rvector.p1, e.position);
+			projectpointP(e.rvector.p2, e.position);
+			projectedge(e.rvector);
+			rvectors.add(e.rvector);	
+			
+			e.velvector.setcenter();			
+			projectpointP(e.velvector.p1, e.position);
+			projectpointP(e.velvector.p2, e.position);
+			projectedge(e.velvector);
+			rvectors.add(e.velvector);	
+			
 		} 
 
 		for(Cable c : Main_class.clist){
@@ -74,6 +90,10 @@ public class Graphics_engine {
 				projectedge(l);				
 			}
 
+		}
+		
+		for(Point p : Main_class.equipotential){			
+				projectpointT(p);			
 		}
 
 	} 
@@ -108,6 +128,8 @@ public class Graphics_engine {
 		
 		double arc = visualrange*Math.atan2(hypotenuse, v.x)/hypotenuse;
 
+		p.squdistance = v.z*v.z + v.y*v.y + v.x*v.x;
+		
 		p.projectx = (int) Math.round(windowscale*(v.y*arc+Math.PI)); //y
 		p.projecty = (int) Math.round(windowscale*(v.z*arc+Math.PI)); //z
 
@@ -158,6 +180,7 @@ public class Graphics_engine {
 		}
 
 		for(Cable c : Main_class.clist){
+			
 			for(Line l : c.links){
 				if(l.arcshort){
 					order2.add(new Render_obj(l));
@@ -170,6 +193,16 @@ public class Graphics_engine {
 				}
 			}	
 		}
+		
+		for(Point p : Main_class.equipotential){
+			order2.add(new Render_obj(p));
+		}
+		
+		for(Line l : rvectors){
+		//	if(l.arcshort){
+		//		order2.add(new Render_obj(l));
+		//	}
+		}	
 
 		order2.trimToSize();
 		Misc_methods.sort2(0, order2.size()-1, order2); //sort objects by distance

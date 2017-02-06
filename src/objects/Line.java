@@ -17,6 +17,8 @@ public class Line {
 	public Color c;
 	public double squdistance; //square of distance to the line
 	
+	public Line(){}
+	
 	public Line(Point a, Point b, Color cc) { //constructs a line between points a and b
 		p1=a;
 		p2=b;

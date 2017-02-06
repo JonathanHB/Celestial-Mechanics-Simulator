@@ -31,6 +31,12 @@ public class Entity {
 	public Entity primary; //the object exerting the largest force on this entity, probably an unnecessary buffer
 	public int indexbuffer;
 	
+	Point velpt = new Point();
+	Point rotpt = new Point();
+	
+	public Line velvector = new Line();
+	public Line rvector = new Line();
+	
 	public Entity(){} //empty constructor
 	
 	public Entity( //full constructor with 16 arguments
@@ -63,6 +69,14 @@ public class Entity {
 		t=new Trail(length, res, pos, tcol, new Entity());
 		indexbuffer = refent;
 		
+		velpt = new Point(velocity, false);
+		rotpt = new Point(rotation, false);
+		
+		velvector = new Line(new Point(new V3(0)), velpt, p.c);
+		rvector = new Line(new Point(new V3(0)), rotpt, p.c);
+		
+		velvector.illumination = new V3(1,1,1);
+		rvector.illumination = new V3(1,1,1);
 	}
 	
 	public void getreference(){

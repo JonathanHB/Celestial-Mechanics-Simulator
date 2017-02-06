@@ -72,7 +72,7 @@ public class Frame_functions extends JPanel{
 			
 			Render_obj object = Graphics_engine.order2.get(x);
 			
-			if(object.plane){ //renders planes
+			if(object.plane && !object.point){ //renders planes
 				
 				int n = object.p.corners.length;
 				
@@ -87,7 +87,7 @@ public class Frame_functions extends JPanel{
 				g.setColor(illuminate(object.p.illumination, object.p.c));				
 				g.fillPolygon(xpoints, ypoints, n);
 				
-			}else{ //renders lines
+			}else if(!object.plane && !object.point){ //renders lines
 				
 				g.setColor(illuminate(object.l.illumination, object.l.c));				
 				
@@ -108,6 +108,10 @@ public class Frame_functions extends JPanel{
 						object.l.p2.projecty
 						);
 					
+			}else{ //renders points
+				
+				g.setColor(Color.BLUE);
+				g.drawOval(object.po.projectx, object.po.projecty, 1, 1);
 			}
 			
 		}

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import objects.Cable;
 import objects.Entity;
+import utility.Misc_methods;
 import utility.V3;
 import utility.Main_class;
 import graphics.Frame_functions;
@@ -22,6 +23,7 @@ public class FileIO {
 
 	public static String[] test_input1; //a string to read simulations from
 	public static String[] test_input2; //a string to read simulations from
+	public static String[] Sitnikov; //a string to read simulations from
 	
 	
 	public static void setup(){ //sets the test_input string to a hardcoded value
@@ -56,6 +58,23 @@ public class FileIO {
 				"100000000.0,.1,[0;0;0],[3;1.5;2.5],[.2;0;-.1],[0;0;0],[.2;0;0],[110;120;20],cube,cube,[.1;.1;.1],[0;0;0],[110;130;20],600,.2,2"
 				*/
 		};
+		
+		FileIO.Sitnikov = new String[]{
+				"30",
+				"[0;0;0]",
+				"-1",
+				".01",
+				"1",
+				"1",
+				"20000000000.0,1,[400;200;110],[4;0;0],[0;-.6;0],[0;0;0],[0;0;0],[20;30;60],cube,cube,[.5;.5;.5],[0;0;0],[30;50;40],2000,.1,-1",
+				"20000000000.0,.6,[0;0;0],[-4;0;0],[0;.6;0],[0;0;0],[0;0;0],[20;70;30],cube,cube,[.5;.5;.5],[0;0;0],[20;60;40],2000,.1,-1",
+				"20000000000.0,.6,[0;0;0],[0;0;0],[0;0;.5],[0;0;0],[0;0;0],[20;70;30],cube,cube,[.5;.5;.5],[0;0;0],[20;60;40],1000,.5,-1"
+				/*"1000000000.0,.6,[0;0;0],[3;0;.5],[0;0;-.1],[0;0;0],[.2;0;0],[120;20;30],cube,cube,[.5;.5;.5],[0;0;0],[110;30;40],600,1,-1",
+				"100000000.0,.3,[0;0;0],[0;2;0],[0;0;-.2],[0;.77;0],[.2;0;.3],[60;70;130],cube,cube,[.2;.2;.2],[0;0;0],[70;50;120],2500,1,-1",
+				"100000000.0,.1,[0;0;0],[3;1.6;.5],[.2;0;-.1],[0;0;0],[.2;0;0],[120;20;50],cube,cube,[.1;.1;.1],[0;0;0],[110;30;50],600,.2,2",
+				"100000000.0,.1,[0;0;0],[3;1.5;2.5],[.2;0;-.1],[0;0;0],[.2;0;0],[110;120;20],cube,cube,[.1;.1;.1],[0;0;0],[110;130;20],600,.2,2"
+				*/
+		};
 	}
 	
 	public static String[] readfile(String filename){ //reads in text files to generate objects
@@ -64,6 +83,8 @@ public class FileIO {
 			return test_input1;
 		}else if(filename.equals("f")){
 			return test_input2;
+		}else if(filename.equals("c")){
+			return Sitnikov;	
 		}else{ //not required because return statement terminates the method, but helps readability
 
 			ArrayList<String> filecontents = new ArrayList<String>(0);
@@ -198,7 +219,11 @@ public class FileIO {
 				Double.parseDouble(entargs[14]),
 				Integer.parseInt(entargs[15])
 			)
-		);		
+		);
+		
+	//	if(Main_class.elist.size() == 3){
+	//		Misc_methods.revolve(Main_class.elist.get(2));
+	//	}
 		
 	}
 	
