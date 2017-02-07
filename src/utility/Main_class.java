@@ -108,7 +108,7 @@ public class Main_class extends JPanel{
 			Motion.physexec(); //physics engine
 			
 			Graphics_engine.getfocus();
-			Equipotential_viz.generatesurface();
+			Equipotential_viz.efficient_surface();
 			
 			Graphics_engine.projector();
 			Graphics_engine.lighting();   //graphics engine
