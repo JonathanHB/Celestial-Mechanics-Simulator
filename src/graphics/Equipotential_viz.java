@@ -19,34 +19,6 @@ public class Equipotential_viz {
 	
 	public static boolean[][][] checkedcells = new boolean[(int)(lengths.x)][(int)(lengths.y)][(int)(lengths.z)]; 
 	
-	public static void generatesurface(){ //deprecated; the new method is confirmed to be better
-		
-		if(Main_class.equipotentialviz){
-
-			Main_class.equipotential.clear();
-			
-			for(double x = center.x-apothem.x; x<center.x+apothem.x; x+= spacing){
-				for(double y = center.y-apothem.y; y<center.y+apothem.y; y+= spacing){
-					for(double z = center.z-apothem.z; z<center.z+apothem.z; z+= spacing){
-						
-						double potential = 0;
-						
-						for(Entity e : Main_class.elist){
-							potential -= Motion.G*e.mass/(e.position.sub2(x, y, z)).magnitude();
-						}
-						
-						if(Math.abs(potential-potentialvalue)<= threshold){
-							Main_class.equipotential.add(new Point(new V3(x,y,z)));
-						}
-						
-					}
-				}
-			}
-
-		}
-
-	}
-	
 	public static void efficient_surface(){
 		
 		Main_class.equipotential.clear();
@@ -79,14 +51,14 @@ public class Equipotential_viz {
 				
 				checkedcells[a][b][c] = true;
 				
-				if(Math.abs(potential-potentialvalue)<= threshold){
+				if(Math.abs(potential-potentialvalue)<= threshold){ 
+					//the current system involves one repeat computation of the potential at the beginning of the recursive checkaround() tree
 					check_around(a,b,c);
 					
 				}
-				
-				
-				
+											
 			}
+			
 		}
 		
 	}

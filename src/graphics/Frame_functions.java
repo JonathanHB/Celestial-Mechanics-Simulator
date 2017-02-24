@@ -87,6 +87,17 @@ public class Frame_functions extends JPanel{
 				g.setColor(illuminate(object.p.illumination, object.p.c));				
 				g.fillPolygon(xpoints, ypoints, n);
 				
+				g.setColor(Color.BLUE);
+				
+				if(Main_class.edges){
+				
+					for(int z = 0; z < n-1; z++){
+						g.drawLine(xpoints[z], ypoints[z], xpoints[z+1], ypoints[z+1]);
+					}
+					g.drawLine(xpoints[0], ypoints[0], xpoints[n-1], ypoints[n-1]);
+					
+				}	
+				
 			}else if(!object.plane && !object.point){ //renders lines
 				
 				g.setColor(illuminate(object.l.illumination, object.l.c));				

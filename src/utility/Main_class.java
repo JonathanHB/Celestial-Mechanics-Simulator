@@ -39,9 +39,9 @@ public class Main_class extends JPanel{
 	public static int framewait; //time wait in milliseconds between rendering frames
 	
 	public static boolean stressvisualization = true;
-	public static boolean fixedreferences = true;
-	public static boolean equipotentialviz = true;
-	
+	public static boolean fixedreferences = false;
+	public static boolean equipotentialviz = false;
+	public static boolean edges = false;	
 	public static boolean running; 
 	public static boolean loading; 	//state variables used for loading, running, and saving	simulations
 	public static boolean saving;
@@ -74,7 +74,9 @@ public class Main_class extends JPanel{
 			
 			if(loading){ //loads simulation from a file specified by the variable loadstring
 				startsimulation(loadstring);
-				running = true;
+				if(Main_class.elist.size() != 0){ //checks for empty simulation
+					running = true;
+				}	
 				loading = false;
 			}
 			
@@ -103,33 +105,32 @@ public class Main_class extends JPanel{
 	
 	public static void runiteration(){ //runs the physics and graphics engines
 
-		if(Main_class.elist.size() != 0){ //checks for empty simulation
+		Motion.physexec(); //physics engine
 
-			Motion.physexec(); //physics engine
-			
-			Graphics_engine.getfocus();
+		Graphics_engine.getfocus();
+		
+		if(equipotentialviz){
 			Equipotential_viz.efficient_surface();
-			
-			Graphics_engine.projector();
-			Graphics_engine.lighting();   //graphics engine
-			Graphics_engine.setorder();			
-			
-			Frame_functions.displayframe.repaint(); //updates jframe
+		}
+
+		Graphics_engine.projector();
+		Graphics_engine.lighting();   //graphics engine
+		Graphics_engine.setorder();			
+
+		Frame_functions.displayframe.repaint(); //updates jframe
 
 
-			if(Motion.increment !=0 && Motion.repetition !=0){ //checks that simulation isn't paused
-				time += Motion.increment*Math.abs(Motion.repetition);      //update time and runtime
-				runtime += Math.abs(Motion.increment*Motion.repetition); 
-				Frame_functions.timefield.setText(Misc_methods.roundto(time, siginc) + " seconds"); //display the time
-			}
+		if(Motion.increment !=0 && Motion.repetition !=0){ //checks that simulation isn't paused
+			time += Motion.increment*Math.abs(Motion.repetition);      //update time and runtime
+			runtime += Math.abs(Motion.increment*Motion.repetition); 
+			Frame_functions.timefield.setText(Misc_methods.roundto(time, siginc) + " seconds"); //display the time
+		}
 
-			try {
-				TimeUnit.MILLISECONDS.sleep(framewait); //wait to control simulation speed
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();					
-			}
-
+		try {
+			TimeUnit.MILLISECONDS.sleep(framewait); //wait to control simulation speed
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();					
 		}
 
 	}
