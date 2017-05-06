@@ -39,7 +39,7 @@ public class Text_control {
 								
 			}else if(state == 2){ //saves file
 				
-				FileIO.writefile(s); //runs without affecting simulation flow
+				FileIO.writefile(FileIO.getfilepath()); //runs without affecting simulation flow
 				
 			}
 		}
@@ -54,7 +54,7 @@ public class Text_control {
 			public void actionPerformed(ActionEvent E){
 
 				parsetext(Frame_functions.inputfield.getText());
-				//System.out.println(Frame_functions.inputfield.getText());
+				System.out.println(Frame_functions.inputfield.getText());
 
 			}
 

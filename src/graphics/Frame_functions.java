@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -22,10 +23,14 @@ public class Frame_functions extends JPanel{
 	public static final JTextField statefield = new JTextField(); //part of control window
 	public static final JTextField timefield = new JTextField(); //prints simulation time
 	
+	public static JButton save = new JButton("save");
+	public static JButton load = new JButton("load");
+	//JButton save = new JButton("save");
+	
 	static int height = 800; 
 	static int width = 800;
 	
-	static int height2 = 80; //this value behaves oddly
+	static int height2 = 200; //this value behaves oddly
 	static int width2 = 200;
 	
 	public static Color background = new Color(0,0,0); //paint component runs once initially; this assignment prevents nullpointers
@@ -37,26 +42,35 @@ public class Frame_functions extends JPanel{
 		
 		displayframe.setSize(width, height);
 		displayframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		Frame_functions panel = new Frame_functions();
-		
+				
 		displayframe.addKeyListener(new user_interface.Key_control());
 		displayframe.addMouseMotionListener(new user_interface.Mouse_control());
 		
-		displayframe.getContentPane().add(panel, BorderLayout.CENTER);
+		displayframe.getContentPane().add(new Frame_functions(), BorderLayout.CENTER); //actually displays graphics
 		
 		displayframe.setVisible(true);
-					 		
+		
+		//-----------------------------------------------------------------------------------
+		
 		inputbox.setSize(width2, height2);
 		inputbox.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		inputbox.add(timefield, BorderLayout.NORTH);		
-		inputbox.add(statefield, BorderLayout.CENTER);
+		
+		inputbox.setLayout(null);
+		
+		load.setBounds(0,20,70,30);
+		inputbox.add(load);
+		save.setBounds(0,50,70,30);
+		inputbox.add(save);
+		
+		inputbox.setLayout(new BorderLayout());
+		
+		//inputbox.add(statefield, BorderLayout.CENTER);
+		inputbox.add(timefield, BorderLayout.NORTH);
 		inputbox.add(inputfield, BorderLayout.SOUTH);
 	
 		inputbox.setVisible(true); 
 		
-		Frame_functions.statefield.setText("loading from:");
+		//Frame_functions.statefield.setText("loading from:");
 		
 	}
 		
@@ -102,7 +116,7 @@ public class Frame_functions extends JPanel{
 				
 				g.setColor(illuminate(object.l.illumination, object.l.c));				
 				
-				if(Trajectory_optimizer.running){
+				if(Main_class.traject_opt){
 					g.setColor(
 							new Color(
 							(int) Math.round(155*object.l.time/Main_class.runtime),
@@ -130,7 +144,7 @@ public class Frame_functions extends JPanel{
 	}	
 
 	public Color illuminate(V3 light, Color c){ 
-		//scales an object's intrinsic color by the color and intensity of light on it
+		//scales an object's color by the color and intensity of light on it to get the color of the reflected light
 		return new Color(
 				Misc_methods.capcolor(c.getRed()*light.x), 
 				Misc_methods.capcolor(c.getGreen()*light.y), 

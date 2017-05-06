@@ -12,7 +12,7 @@ import utility.V3;
 
 public class Trajectory_optimizer {
 
-	public static boolean running = false; //whether to run the trajectory optimizer
+	//public static boolean running = true; //whether to run the trajectory optimizer
 
 	public static int start = 0;    //locations in array of start and target entities
 	public static int target = 1;

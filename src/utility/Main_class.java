@@ -15,6 +15,7 @@ import physics.Trajectory_optimizer;
 import graphics.Equipotential_viz;
 import graphics.Frame_functions;
 import graphics.Graphics_engine;
+import user_interface.Control_panel;
 import user_interface.FileIO;
 import user_interface.Text_control;
 import user_interface.Mouse_control;
@@ -39,9 +40,11 @@ public class Main_class extends JPanel{
 	public static int framewait; //time wait in milliseconds between rendering frames
 	
 	public static boolean stressvisualization = true;
-	public static boolean fixedreferences = false;
+	public static boolean fixedreferences = true;
 	public static boolean equipotentialviz = false;
-	public static boolean edges = false;	
+	public static boolean traject_opt = false;
+	public static boolean edges = false;
+	
 	public static boolean running; 
 	public static boolean loading; 	//state variables used for loading, running, and saving	simulations
 	public static boolean saving;
@@ -54,11 +57,11 @@ public class Main_class extends JPanel{
 		
 		//one time setup and initialization of various objects and variables
 		Poly_library.setup();
-		FileIO.setup();
+		//FileIO.setup();
 		
 		Frame_functions.frame_setup();
 		
-		Text_control.controlreader();
+		Control_panel.controlreader();
 		Mouse_control.mcontrolreader();		
 		
 		running = false; //ensures that the simulation waits for something to load before running
@@ -86,20 +89,26 @@ public class Main_class extends JPanel{
 	
 	public static void startsimulation(String s){ //loads simulation from file and sets it up
 
-		FileIO.loadfile(FileIO.readfile(s));
+		String f = FileIO.getfilepath();
 		
-		Object_manager.initializerefs();
-		
-		Object_manager.fixcenter();
-							
-		if(Trajectory_optimizer.running){ //runs trajectory optimizer	
-			Trajectory_optimizer.maketables();
-			Trajectory_optimizer.optimize();
-		}	
-		
-		siginc = Misc_methods.sigdigs(Motion.increment); 
-		
-		Frame_functions.timefield.setText("0.0 seconds");
+		if(f != null){ //cancels loading and resumes current simulation if no file is selected
+
+			FileIO.loadfile(FileIO.readfile(f));
+
+			Object_manager.initializerefs();
+
+			Object_manager.fixcenter();
+
+			if(traject_opt){ //runs trajectory optimizer	
+				Trajectory_optimizer.maketables();
+				Trajectory_optimizer.optimize();
+			}	
+
+			siginc = Misc_methods.sigdigs(Motion.increment); 
+
+			Frame_functions.timefield.setText("0.0 seconds");
+
+		}
 		
 	}
 	
