@@ -17,7 +17,6 @@ import graphics.Frame_functions;
 import graphics.Graphics_engine;
 import user_interface.Control_panel;
 import user_interface.FileIO;
-import user_interface.Text_control;
 import user_interface.Mouse_control;
 
 @SuppressWarnings("serial")
@@ -43,7 +42,7 @@ public class Main_class extends JPanel{
 	public static boolean fixedreferences = true;
 	public static boolean equipotentialviz = false;
 	public static boolean traject_opt = false;
-	public static boolean edges = false;
+	public static boolean edges = true;
 	
 	public static boolean running; 
 	public static boolean loading; 	//state variables used for loading, running, and saving	simulations

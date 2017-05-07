@@ -30,11 +30,13 @@ public class FileIO {
 	
 		fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
 		int result = fileChooser.showOpenDialog(null);
+		
 		if (result == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = fileChooser.getSelectedFile();
 			//System.out.println("Selected file: " + selectedFile.getAbsolutePath());
 			return selectedFile.getAbsolutePath();
 		}else{
+			
 			return null;
 		}
 		

@@ -1,5 +1,6 @@
 package user_interface;
 
+import graphics.Frame_functions;
 import graphics.Graphics_engine;
 
 import java.awt.event.KeyEvent;
@@ -13,11 +14,13 @@ public class Key_control implements KeyListener{
 	static double rsensitivity = .05; //rotational sensitivity
 
 	static int phys_rep_inc; //increment of physics engine repetition adjustment
-
+//	static int lastnonzero = 1;
+	
+	
 	static double mx; //unused
 	static double my;
 
-	static int lastrep = 0;
+//	static int lastrep = 0;
 
 	public static void keyparser(KeyEvent e){ //controls camera movement with keyboard input
 		
@@ -50,35 +53,39 @@ public class Key_control implements KeyListener{
 		
 		if(c=='c'){ //speeds up simulation
 
-			reversal(lastrep, Motion.repbuff, Motion.repbuff+phys_rep_inc);
-			lastrep = Motion.repbuff;
-			Motion.repbuff+=phys_rep_inc;	
+		//	reversal(lastrep, Motion.repbuff, Motion.repbuff+phys_rep_inc);
+		//	lastrep = Motion.repbuff;
+			Motion.repbuff+=phys_rep_inc;
+			Frame_functions.simspeed.setText(Integer.toString(Motion.repbuff));
 
 		}else if(c=='v'){ 
 			//slows down simulation (including reversing it and increasing the magnitude of backwards simulation)
 
-			reversal(lastrep, Motion.repbuff, Motion.repbuff-phys_rep_inc);
-			lastrep = Motion.repbuff;
-			Motion.repbuff-=phys_rep_inc;	
+		//	reversal(lastrep, Motion.repbuff, Motion.repbuff-phys_rep_inc);
+		//	lastrep = Motion.repbuff;
+			Motion.repbuff-=phys_rep_inc;
+			Frame_functions.simspeed.setText(Integer.toString(Motion.repbuff));
 
 		}else if(c=='b'){ //pauses simulation
-			lastrep = Motion.repbuff;
+		//	lastrep = Motion.repbuff;
 			Motion.repbuff = 0;
+			Frame_functions.simspeed.setText("0.0");
 		}
 
 		
 		
 	}
 
-	public static void reversal(int a, int b, int c){ //a = previous repetition rate, b = current rate, c = new rate
+/*	public static void reversal(int a, int b, int c){ //a = previous repetition rate, b = current rate, c = new rate
 		//checks to reverse physics engine when repetition changes sign
+		//also called when the repetition rate is reversed by text entry
 		
 		if(b*c<0 || (b == 0 && a*c<0) || (a == 0 && b == 0 && c<0)){
 			Motion.incbuff*=-1;
 			Motion.flipping = true;
 		}
 
-	}
+	}*/
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {} //syntactically required

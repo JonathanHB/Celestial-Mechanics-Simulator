@@ -19,13 +19,17 @@ public class Frame_functions extends JPanel{
 
 	public static JFrame displayframe = new JFrame("OMS 2.0"); //display window	
 	static JFrame inputbox = new JFrame("Enter load/save commands"); //control window
-	public static final JTextField inputfield = new JTextField(); //part of control window
-	public static final JTextField statefield = new JTextField(); //part of control window
+	public static final JTextField inputfield = new JTextField(); //part of control window //probably deprecated
+	public static final JTextField statefield = new JTextField(); //part of control window //probably deprecated
 	public static final JTextField timefield = new JTextField(); //prints simulation time
 	
 	public static JButton save = new JButton("save");
 	public static JButton load = new JButton("load");
 	//JButton save = new JButton("save");
+	
+	public static final JTextField camspeed = new JTextField(); //part of control window
+	public static final JTextField simspeed = new JTextField(); //part of control window
+
 	
 	static int height = 800; 
 	static int width = 800;
@@ -61,6 +65,10 @@ public class Frame_functions extends JPanel{
 		inputbox.add(load);
 		save.setBounds(0,50,70,30);
 		inputbox.add(save);
+		camspeed.setBounds(70,20,70,30);
+		inputbox.add(camspeed);
+		simspeed.setBounds(70,50,70,30);
+		inputbox.add(simspeed);
 		
 		inputbox.setLayout(new BorderLayout());
 		

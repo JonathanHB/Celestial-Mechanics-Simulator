@@ -15,7 +15,7 @@ public class Motion {
 	//simulation asymptotically approaches reality as increment->0, 
 	//long increments relative to system size lead to issues like precession of periapsis in two body systems
 		
-	public static boolean flipping = false;	//preserves determinism when reversing direction
+	//public static boolean flipping = false;	//preserves determinism when reversing direction, use unclear
 	
 	public static double incbuff = increment; //buffers used to prevent problematic variable updates as the method runs
 	public static int repbuff = repetition;		
