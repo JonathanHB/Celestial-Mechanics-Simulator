@@ -233,7 +233,7 @@ public class Cable {
 		//	System.out.println(reactionmagnitude*100000);	
 			
 			if(Main_class.stressvisualization){
-				links[x].illumination.set(reactionmagnitude*1000);
+				links[x].illumination.set(Math.abs(reactionmagnitude)*1000);
 			}
 			
 		}

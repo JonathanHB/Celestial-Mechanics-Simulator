@@ -39,9 +39,9 @@ public class Misc_methods {
 		
 	}
 	
-	public static int capcolor(double d){ //makes sure d is a legal color component
+	public static int capcolor(double d){ //makes sure d is a legal color component, but does not check for negative values
 		
-		if(d<=255){
+		if(d<255){			
 			return (int) Math.round(d);
 		}else{
 			return 255;
