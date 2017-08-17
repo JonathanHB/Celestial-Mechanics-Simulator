@@ -21,6 +21,8 @@ public class Cable {
 	public Line[] links; //links which generate forces between nodes
 	
 	public Entity primary_ent; //entity above which the cable is in geostationary orbit
+	
+	public Entity refent;
 		
 	public Cable(double spacing, double maxlen, int length, Entity ref_ent, Color c, Color ct, int traillength, double res, int trail_refent){
 		//constructor to create a cable in geostationary orbit over the ref_ent entity
@@ -32,35 +34,27 @@ public class Cable {
 		links = new Line[length-1];
 		primary_ent = ref_ent;
 		
-		generate(length, ref_ent, c);
+		generate(length, ref_ent, c);		
 		
-		Entity reference = new Entity();
-		reference.velocity = new V3(0,0,0);
+		t = new Trail(
+				traillength,
+				res,
+				center_of_mass(),
+				ct
+				);
 		
 		if(trail_refent == -2){
-			t = new Trail(
-					traillength,
-					res,
-					center_of_mass(),
-					ct,
-					primary_ent
-					);
+			
+			refent = primary_ent;
+			
 		}else if(trail_refent == -1){
-			t = new Trail(
-					traillength,
-					res,
-					center_of_mass(),
-					ct,
-					reference
-					);
+			
+			refent = new Entity(true);
+			
 		}else{
-			t = new Trail(
-					traillength,
-					res,
-					center_of_mass(),
-					ct,
-					Main_class.elist.get(trail_refent)
-					);
+	
+			refent = Main_class.elist.get(trail_refent);
+
 		}	
 		
 		
@@ -85,9 +79,10 @@ public class Cable {
 				traillength,
 				res,
 				center_of_mass(),
-				ct,
-				trail_refent
+				ct
 				);
+		
+		refent = trail_refent;
 		
 	}
 	

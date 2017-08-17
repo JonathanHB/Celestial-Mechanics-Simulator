@@ -7,7 +7,6 @@ import utility.V3;
 
 public class Trail {
 	
-	public Entity refent; //index of entity relative to which trails are drawn, -1 is system barycenter
 	public int length; //number of points, equals the number of segments plus 1
 	public double resolution; //actually the resolution squared to save computing power
 	public double squres; //square of the distance between nodes, computationally better than the actual distance
@@ -17,15 +16,13 @@ public class Trail {
 	int linkpos=0; //array position of link to be modified
 	public Color c;
 		
-	public Trail(int l, double r, V3 v, Color col, Entity referenceent){ //constructs a new trail
+	public Trail(int l, double r, V3 v, Color col){ //constructs a new trail
 
 		c=col;
 		length = l+1;
 		resolution=r;
 		squres = r*r;
-		
-		refent = referenceent;
-		
+				
 		nodes = new Point[length];
 		links = new Line[length-1];
 

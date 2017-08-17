@@ -21,16 +21,16 @@ public class Graphics_engine {
 	//used to hold all graphics objects in order of distance for rendering purposes
 
 	public static V3 viewposition = new V3(0,0,0);//-1000000000.0
-	public static V3 axis_orientation = new V3(0,.0000000000000000000000000000000000001,0); //x=azimuth, y=polar, z=roll, small value prevents a certain undefined glitch
+	//public static V3 axis_orientation = new V3(0,0,0); //x=azimuth, y=polar, z=roll, small value prevents a certain undefined glitch
 	public static V3 orientation = new V3(0,0,0); //x=azimuth, y=polar, z=roll
 
 	public static Entity focus;
 	public static int focusindex;
+	
+	static double windowscale = 800;
+	//static double visualrange = 6; //used in stereographic projections
 
-	static double windowscale = 120;
-	static double visualrange = 6;
-
-	static double arcmax = 1.1;
+	static double arcmax = 1.5;
 
 	static int stoplength = 0;
 
@@ -107,14 +107,19 @@ public class Graphics_engine {
 		//(when rotation is 0 and the objects are moving, either storage method is equally efficient,
 		//although stationary objects make this design less efficient)
 
-		V3 v = new V3(utility.Math_methods.rotatepoint(utility.Math_methods.rotatepoint(p.position.add2(entpos).sub2(viewposition), orientation), axis_orientation));
+		V3 v = new V3(utility.Math_methods.rotatepoint(p.position.add2(entpos).sub2(viewposition), orientation));
 
-		double hypotenuse = Math.sqrt(v.z*v.z + v.y*v.y);
+		//double hypotenuse = Math.sqrt(v.z*v.z + v.y*v.y);
 		
-		double arc = visualrange*Math.atan2(hypotenuse, v.x)/hypotenuse; //this leads to a glitch when hypotenuse = 0;
+		//double arc = visualrange*Math.atan2(hypotenuse, v.x)/hypotenuse; //this leads to a glitch when hypotenuse = 0;
 
-		p.projectx = (int) Math.round(windowscale*(v.y*arc+Math.PI)); //y
-		p.projecty = (int) Math.round(windowscale*(v.z*arc+Math.PI)); //z
+		int[] projection = planarprojection(v);
+		p.projectx = projection[0];
+		p.projecty = projection[1];
+
+		
+		//p.projectx = (int) Math.round(windowscale*(v.y*arc)+Frame_functions.ctrw); //y
+		//p.projecty = (int) Math.round(windowscale*(v.z*arc)+Frame_functions.ctrh); //z
 		
 	}
 
@@ -122,23 +127,27 @@ public class Graphics_engine {
 		//computes 2d visual field position of a point from its 3d position
 		//used for points in trails
 		
-		V3 v = new V3(utility.Math_methods.rotatepoint(utility.Math_methods.rotatepoint(p.position.sub2(viewposition), orientation), axis_orientation));
+		V3 v = new V3(utility.Math_methods.rotatepoint(p.position.sub2(viewposition), orientation));
 
-		double hypotenuse = Math.sqrt(v.z*v.z + v.y*v.y); //this leads to a glitch when hypotenuse = 0;
+		//double hypotenuse = Math.sqrt(v.z*v.z + v.y*v.y); //this leads to a glitch when hypotenuse = 0;
 		
-		double arc = visualrange*Math.atan2(hypotenuse, v.x)/hypotenuse;
+		//double arc = visualrange*Math.atan2(hypotenuse, v.x)/hypotenuse;
 
-		p.squdistance = v.z*v.z + v.y*v.y + v.x*v.x;
+		p.squdistance = v.squmagnitude(); //used for accurate overlap
 		
-		p.projectx = (int) Math.round(windowscale*(v.y*arc+Math.PI)); //y
-		p.projecty = (int) Math.round(windowscale*(v.z*arc+Math.PI)); //z
+		int[] projection = planarprojection(v);
+		p.projectx = projection[0];
+		p.projecty = projection[1];
+		
+		//p.projectx = (int) Math.round(windowscale*(v.y*arc)+Frame_functions.ctrw); //y
+		//p.projecty = (int) Math.round(windowscale*(v.z*arc)+Frame_functions.ctrh); //z
 
 	}
 
 	public static void projectface(Plane p){
 		//computes angle to a face from its 3d position, used for culling of objects outside of visual field
 		
-		V3 v = new V3(utility.Math_methods.rotatepoint(utility.Math_methods.rotatepoint(p.center.sub2(viewposition), orientation), axis_orientation));
+		V3 v = new V3(utility.Math_methods.rotatepoint(p.center.sub2(viewposition), orientation));
 
 		p.squdistance = v.z*v.z + v.y*v.y + v.x*v.x;
 
@@ -149,7 +158,7 @@ public class Graphics_engine {
 	public static void projectedge(Line l){
 		//computes angle to a line from its 3d position, used for culling of objects outside of visual field
 		
-		V3 v = new V3(utility.Math_methods.rotatepoint(utility.Math_methods.rotatepoint(l.center.sub2(viewposition), orientation), axis_orientation));
+		V3 v = new V3(utility.Math_methods.rotatepoint(l.center.sub2(viewposition), orientation));
 
 		l.squdistance = v.z*v.z + v.y*v.y + v.x*v.x;
 
@@ -311,6 +320,22 @@ public class Graphics_engine {
 		//	Key_control.tsensitivity = capturerad/10;
 			
 		}
+		
+	}
+	
+	public static int[] planarprojection(V3 v) {
+		
+		int[] xy = new int[2];
+		
+		if(v.x > 0) {
+			xy[0] = (int) (Math.round(windowscale*v.y/v.x)+Frame_functions.ctrw);
+			xy[1] =	(int) (Math.round(windowscale*v.z/v.x)+Frame_functions.ctrh);	
+		}else {
+			xy[0] = (int) (Math.round(9999*v.y));
+			xy[1] = (int) (Math.round(9999*v.z));
+		}
+		
+		return xy;
 		
 	}
 	

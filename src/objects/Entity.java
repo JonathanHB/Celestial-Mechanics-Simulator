@@ -28,8 +28,9 @@ public class Entity {
 	public Trail t;
 	
 	public double maxforceproxy; //the largest force exerted by any object on this entity
-	public Entity primary; //the object exerting the largest force on this entity, probably an unnecessary buffer
-	public int indexbuffer;
+	public Entity primary; //the object exerting the largest force on this entity
+	public int indexbuffer; //the index of the object around which this object's trails are drawn, used to find primary in the entity array once it has been loaded
+	public boolean iskeplerian;
 	
 	Point velpt = new Point();
 	Point rotpt = new Point();
@@ -39,10 +40,15 @@ public class Entity {
 	
 	public Entity(){} //empty constructor
 	
-	public Entity( //full constructor with 16 arguments
+	public Entity(boolean b){ //boolean for overloading
+		position = new V3(0,0,0);
+		velocity = new V3(0,0,0);
+	}
+	
+	public Entity( //full constructor with 17 arguments
 			double m, double r, V3 lum, V3 pos, V3 vel, V3 ori, V3 rot, 
 			Color pcol, V3[] polybase, int[][] cornermap, V3 scale, V3 shift, 
-			Color tcol, int length, double res, int refent
+			Color tcol, int length, double res, int refent, boolean kepler
 			){		
 		
 		mass=m;
@@ -66,7 +72,7 @@ public class Entity {
 		p=new Polyhedron(pcol, shift, scale, ori, polybase, cornermap);
 		p.translateby(position);
 		
-		t=new Trail(length, res, pos, tcol, new Entity());
+		t=new Trail(length, res, new V3(0,0,0), tcol);
 		indexbuffer = refent;
 		
 		velpt = new Point(velocity, false);
@@ -77,15 +83,18 @@ public class Entity {
 		
 		velvector.illumination = new V3(1,1,1);
 		rvector.illumination = new V3(1,1,1);
+		
+		iskeplerian = kepler;
+		
 	}
 	
 	public void getreference(){
 		if(indexbuffer == -1){
-			t.refent.velocity = new V3(0,0,0);
-		}else{
-			t.refent = Main_class.elist.get(indexbuffer);			
-		}
-		primary = t.refent;
+			primary = new Entity(true);
+		}else {
+			primary = Main_class.elist.get(indexbuffer);			
+
+		}	
 	}
 	
 	public void accelerate(V3 dpos, double a, Entity potential_ref){
@@ -95,6 +104,7 @@ public class Entity {
 		if(Math.abs(a)>maxforceproxy && potential_ref.mass>mass && Main_class.fixedreferences == false){
 			maxforceproxy = Math.abs(a);
 			primary = potential_ref;
+			
 			
 		}
 		
@@ -112,8 +122,9 @@ public class Entity {
 		V3 dpos=velocity.scale2(d);
 		position.add(dpos);
 		p.translateby(dpos);
-		
-		t.shiftby(t.refent.velocity.scale2(d)); 
+				
+		t.shiftby(primary.velocity.scale2(d)); 
+
 		//order of elist subtly influences trail generation but not physics here; 
 		//put this code in a separate for loop to fix the above problem
 			
@@ -130,6 +141,27 @@ public class Entity {
 		//moves the polyhedron representing the object
 		
 	}
+	
+	public V3[] getabsolutevectors(){ //digs through the tree of entities to get barycentric coordinates and velocities
+		
+		V3[] rootvals = new V3[2];
+		
+		if(indexbuffer == -1) {
+					
+			rootvals[0] = new V3(position);
+			rootvals[1] = new V3(velocity);						
+			
+		}else {
+			
+			rootvals = primary.getabsolutevectors();
+			rootvals[0].add(position);
+			rootvals[1].add(velocity);
+			
+		}
+		
+		return rootvals;
+		
+	}	
 				
 	
 }

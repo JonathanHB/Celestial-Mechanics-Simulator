@@ -14,27 +14,25 @@ public class Motion {
 	//but simulations are identical and deterministic under any repetition values
 	//simulation asymptotically approaches reality as increment->0, 
 	//long increments relative to system size lead to issues like precession of periapsis in two body systems
-		
-	//public static boolean flipping = false;	//preserves determinism when reversing direction, use unclear
-	
+			
 	public static double incbuff = increment; //buffers used to prevent problematic variable updates as the method runs
-	public static int repbuff = repetition;		
-	
+	public static int repbuff = repetition;
+		
 	public static double G = .00000000006674; //gravitational constant
 	
-	public static void movement(){ //moves entities
+	public static void movement(double tstep){ //moves entities
 		
 		for(Entity e : Main_class.elist){
-			e.move(increment); 	
+			e.move(tstep); 	
 		}
 		
 		//moves camera in sync with the entity (if any) whose frame of reference it shares
-		Graphics_engine.viewposition.add(Graphics_engine.focus.velocity.scale2(increment));
+		Graphics_engine.viewposition.add(Graphics_engine.focus.velocity.scale2(tstep));
 		
 	}
 	
 	//applies Newton's law of universal gravitation to all objects, an approximation of the N-body problem
-	public static void gravitation(){ 
+	public static void gravitation(double tstep){ 
 		
 		//numerical for loops are used to avoid concurrent modification exceptions when objects split or collide
 				
@@ -54,7 +52,7 @@ public class Motion {
 						
 				squdistance = dpos.squmagnitude();
 				distance = Math.sqrt(squdistance); 
-				g_invrad = increment*G/(squdistance*distance); 
+				g_invrad = tstep*G/(squdistance*distance); 
 				//g_invrad is the the G/r^2 value used to calculate the acceleration of both objects, 
 				//divided by distance for use in calculating the final acceleration vector
 												
@@ -77,27 +75,29 @@ public class Motion {
 		
 	}		
 	
-	public static void cableforces(){ //manages cable behavior
+	public static void cableforces(double tstep){ //manages cable behavior
 		
 		for(Cable c: Main_class.clist){ 
 			
 			for(Entity e: Main_class.elist){ //accelerates cables under gravity
-				c.applygrav(e, increment);
+				c.applygrav(e, tstep);
 			}	
 			
-			c.internalforces(increment);
+			c.internalforces(tstep);
 			
 		}
 		
-		for(int x = 0; x < Main_class.clist.size(); x++){ //checks if cables have broken and splits them accordingly
+		for(int x = 0; x < Main_class.clist.size(); x++){ 
+			//checks if cables have broken and splits them accordingly, 
+			//uses a separate numerical loop because it can change the arraylist length as it splits cables
 			Object_manager.splitcable(Main_class.clist.get(x), Main_class.clist.get(x).checkforbreaks());
 		}	
 		
 	}
 	
-	public static void cablemove(){ //executes cable movement
+	public static void cablemove(double tstep){ //executes cable movement
 		for(Cable c: Main_class.clist){
-			c.move(increment);
+			c.move(tstep);
 		}
 	}
 	
@@ -108,15 +108,15 @@ public class Motion {
 		
 		if(repetition>0){
 		
-			for(int i=0; i<Math.abs(repetition); i++){ 
+			for(int i=0; i<repetition; i++){ 
 					
-				movement();
-				cablemove();
+				movement(increment);
+				cablemove(increment);
 				
 				Object_manager.updatetrailfoci();
 				
-				cableforces();
-				gravitation();					
+				cableforces(increment);
+				gravitation(increment);					
 
 			}
 		
@@ -124,13 +124,13 @@ public class Motion {
 						
 			for(int i=0; i<Math.abs(repetition); i++){
 					
-				gravitation();
-				cableforces();	
+				gravitation(-increment);
+				cableforces(-increment);	
 								
 				Object_manager.updatetrailfoci();
 				
-				cablemove();
-				movement();
+				cablemove(-increment);
+				movement(-increment);
 
 			}
 			

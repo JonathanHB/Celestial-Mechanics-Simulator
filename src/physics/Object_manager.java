@@ -159,9 +159,9 @@ public class Object_manager {
 		Entity reference;
 		
 		if(a.mass>=b.mass){
-			reference = a.t.refent;
+			reference = a.primary;
 		}else{
-			reference = b.t.refent;
+			reference = b.primary;
 		}
 		
 		//fused entity added as a new entity
@@ -169,10 +169,11 @@ public class Object_manager {
 				new Entity(
 				newmass, radius, luminosity, newpos, newvel, orientation, rotation, 
 				pc, polybase2, cornermap2, scale, new V3(0,0,0), 
-				tc, a.t.length+b.t.length, (a.t.resolution+b.t.resolution)/2.0, Main_class.elist.indexOf(reference)
+				tc, a.t.length+b.t.length, (a.t.resolution+b.t.resolution)/2.0, Main_class.elist.indexOf(reference), false
 						));
-		
+				
 		Main_class.elist.get(Main_class.elist.size()-1).getreference();
+		Main_class.elist.get(Main_class.elist.size()-1).t.shiftby(Main_class.elist.get(Main_class.elist.size()-1).getabsolutevectors()[0]);
 		
 		check_refents(a,b);
 		
@@ -194,12 +195,12 @@ public class Object_manager {
 				for(int x = 0; x<breaks.length-1; x++){
 					if(breaks[x]){
 						if(x-sectionstart>0){
-							Main_class.clist.add(new Cable(c.node_spacing, c.col, c.t.c, Arrays.copyOfRange(c.nodes, sectionstart, x+1), c.t.length, c.t.resolution, c.t.refent));			
+							Main_class.clist.add(new Cable(c.node_spacing, c.col, c.t.c, Arrays.copyOfRange(c.nodes, sectionstart, x+1), c.t.length, c.t.resolution, c.primary_ent));			
 						}
 						sectionstart = x+1;
 
 					}else if(x == breaks.length-2){
-						Main_class.clist.add(new Cable(c.node_spacing, c.col, c.t.c, Arrays.copyOfRange(c.nodes, sectionstart, x+2), c.t.length, c.t.resolution, c.t.refent));			
+						Main_class.clist.add(new Cable(c.node_spacing, c.col, c.t.c, Arrays.copyOfRange(c.nodes, sectionstart, x+2), c.t.length, c.t.resolution, c.primary_ent));			
 					}
 
 				}
@@ -216,7 +217,7 @@ public class Object_manager {
 		
 			for(Entity e : Main_class.elist){
 			
-				e.t.refent = e.primary;
+				e.primary = e.primary;
 				e.maxforceproxy = 0;
 			
 			}
@@ -225,28 +226,67 @@ public class Object_manager {
 		
 	}
 	
-	public static void check_refents(Entity a, Entity b){ //must be run between new entity generation and old entity deletion in add() method
+	public static void check_refents(Entity a, Entity b){
+		//Updates the refents of objects orbiting colliding entities to the product of the collision
+		//must be run between new entity generation and old entity deletion in add() method
 		
 		for(Entity e : Main_class.elist){
 			
-			if(e.t.refent == b || e.t.refent == a ){
-				e.t.refent = Main_class.elist.get(Main_class.elist.size()-1);
+			if(e.primary == b || e.primary == a ){
+				e.primary = Main_class.elist.get(Main_class.elist.size()-1);
 			}
 			
-			if(e.t.refent == e){
-				e.t.refent = new Entity();
-				e.t.refent.velocity = new V3(0,0,0);				
+			if(e.primary == e){
+				e.primary = new Entity();
+				e.primary.velocity = new V3(0,0,0);				
 			}
 			
-			e.primary = e.t.refent;
+			e.primary = e.primary;
 		}
 		
 		for(Cable c : Main_class.clist){
 			
-			if(c.t.refent == b || c.t.refent == a ){
-				c.t.refent = Main_class.elist.get(Main_class.elist.size()-1);
+			if(c.refent == b || c.refent == a ){
+				c.refent = Main_class.elist.get(Main_class.elist.size()-1);
 
 			}
+			
+		}
+		
+	}
+	
+	public static void keptocart() {
+		
+		for(Entity e : Main_class.elist){
+			
+			if(e.iskeplerian){ //converts from keplerian orbital elements to state vectors
+			
+				V3[] cart = Math_methods.kepleriantocartesian(e.position.x, e.position.y, e.position.z, e.velocity.x, e.velocity.y, e.velocity.z, e.primary.mass);
+				
+				e.position = cart[0];
+				e.velocity = cart[1];
+
+			}
+				
+		}
+		
+	}
+	
+	
+	
+	public static void relativetoabsolute() {
+		
+		for(Entity e : Main_class.elist){
+			
+			if(e.indexbuffer != -1){
+				
+				e.position.set(e.getabsolutevectors()[0]);
+				e.velocity.set(e.getabsolutevectors()[1]);
+				e.indexbuffer = -1;			
+
+			}	
+				e.t.shiftby(e.getabsolutevectors()[0]);
+
 			
 		}
 	}

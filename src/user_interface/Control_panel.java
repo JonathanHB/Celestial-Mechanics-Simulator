@@ -53,7 +53,6 @@ public class Control_panel {
 				
 				if(t.matches("\\d+|-\\d+")){
 										
-					System.out.println(t);
 					Motion.repbuff = Integer.parseInt(t);
 					
 				}else{

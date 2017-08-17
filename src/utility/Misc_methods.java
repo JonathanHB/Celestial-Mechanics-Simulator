@@ -95,15 +95,5 @@ public class Misc_methods {
 		return Math.round(d*Math.pow(10, r))/Math.pow(10, r);
 	}
 	
-	public static void revolve(Entity e){
-		double angle = .35;
-		double altitude = e.position.x;
-		e.position.x = altitude*Math.cos(angle);
-		e.position.y = altitude*Math.sin(angle);
-		double speed = e.velocity.y;
-		e.velocity.x = speed*Math.sin(-angle);
-		e.velocity.y = speed*Math.cos(-angle);
-		
-	}
 	
 }

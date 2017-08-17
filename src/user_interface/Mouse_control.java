@@ -1,7 +1,5 @@
 package user_interface;
 
-import graphics.Graphics_engine;
-
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -9,6 +7,8 @@ import java.awt.event.MouseMotionListener;
 
 import utility.V3;
 import utility.Math_methods;
+import graphics.Graphics_engine;
+
 
 public class Mouse_control implements MouseMotionListener{
 	
@@ -45,10 +45,9 @@ public class Mouse_control implements MouseMotionListener{
 				Graphics_engine.orientation.z-=sensitivity*(arg0.getPoint().x-lastpoint.x);
 				Graphics_engine.orientation.y+=sensitivity*(arg0.getPoint().y-lastpoint.y);
 				
-				
-				
-			//	Graphics_engine.orientation.add(Math_methods.rotatepoint(new V3(0,0,)),Graphics_engine.orientation));
-			//	Graphics_engine.orientation.add(Math_methods.rotatepoint(new V3(0,0,-sensitivity*(arg0.getPoint().x-lastpoint.x)),Graphics_engine.orientation.dimscale2(new V3(-1,1,-1))));
+								
+				//Graphics_engine.axis_orientation.add(Math_methods.rotatepoint(new V3(0,-sensitivity*(arg0.getPoint().x-lastpoint.x),0), new V3(0,0,Graphics_engine.orientation.z)));
+				//Graphics_engine.orientation.add(Math_methods.rotatepoint(new V3(0,0,-sensitivity*(arg0.getPoint().x-lastpoint.x)),Graphics_engine.orientation.dimscale2(new V3(-1,1,-1))));
 				//sensitivity*(arg0.getPoint().y-lastpoint.y)
 				
 				

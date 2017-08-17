@@ -87,7 +87,6 @@ public class FileIO {
 		Motion.repetition = 0;
 
 		Main_class.framewait = Integer.parseInt(inputdata[0]);
-
 		Frame_functions.background = Parsingmethods.parsecolor(inputdata[1]);//make optional
 
 		Graphics_engine.focusindex = Integer.parseInt(inputdata[2]); //make optional
@@ -104,6 +103,8 @@ public class FileIO {
 
 			if(ents){	
 				if(inputdata[x].equals("cables")){
+					
+					
 					ents = false;
 				}else{
 					parseent(inputdata[x]);
@@ -172,7 +173,8 @@ public class FileIO {
 				Parsingmethods.parsecolor(entargs[12]),
 				Integer.parseInt(entargs[13]),
 				Double.parseDouble(entargs[14]),
-				Integer.parseInt(entargs[15])
+				Integer.parseInt(entargs[15]),
+				Boolean.parseBoolean(entargs[16])
 			)
 		);
 		
@@ -224,6 +226,13 @@ public class FileIO {
 
 	}
 
+	/*public static void printwithcomma(String s) {
+		
+		writer.print(s);	
+		writer.print(",");
+		
+	}*/
+	
 	public static void fillfile(int i){ //saves the entity at index i
 		
 		Entity e = Main_class.elist.get(i);
@@ -258,7 +267,9 @@ public class FileIO {
 		writer.print(",");
 		writer.print(e.t.resolution);
 		writer.print(",");
-		writer.print(Main_class.elist.indexOf(e.t.refent));
+		writer.print(Main_class.elist.indexOf(e.primary));
+		writer.print(",");
+		writer.print(e.iskeplerian);
 		
 		writer.println();
 
@@ -286,7 +297,7 @@ public class FileIO {
 			writer.print(",");
 			writer.print(c.t.resolution);
 			writer.print(",");
-			writer.print(c.t.refent);
+			writer.print(Main_class.elist.indexOf(c.refent));
 			
 			writer.println();
 			

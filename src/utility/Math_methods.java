@@ -95,5 +95,70 @@ public class Math_methods {
 		return new V3(Math.random(), Math.random(), Math.random()).sub2(.5, .5, .5).scale2(2*Math.PI);
 				
 	}
+	
+	public static double mlototra(double mlo, double ecc, double lan, double arg) { //converts mean longitude to true anomaly
+		
+		double man = mlo-lan-arg;
+		
+		double lasteccanom = 0;
+		double lasterr = 999999999;
+		
+		for(double x = -1; x <= 1; x += .0001) {
+			double esteccanom = man+x;
+			double err = Math.abs(man-esteccanom+ecc*Math.sin(esteccanom));
+
+			if(err < lasterr) {
+				lasteccanom = esteccanom;
+				lasterr = err;
+			}
+			
+		}
+		
+		double tra = 2*Math.atan2(Math.sqrt(1+ecc)*Math.sin(lasteccanom/2), Math.sqrt(1-ecc)*Math.cos(lasteccanom/2));
+		return tra;		
+		
+	}
+	
+	//sma = semimajor axis, ecc = eccentricity, mlo = mean longitude
+	//arg = argument of periapsis, inc = inclination, lan = longitude of ascending node
+	//mpr = mass of primary 
+	//tra = true anomaly
+	public static V3[] kepleriantocartesian(double sma, double ecc, double mlo, double arg, double inc, double lan, double mpr){
+		
+		double tra = mlototra(mlo, ecc, lan, arg);
+
+		V3 orbitorientation = new V3(lan, inc, arg);
+				
+		double r = sma*(1-ecc*ecc)/(1-ecc*Math.cos(tra));
+
+		double v = Math.sqrt(physics.Motion.G*mpr*(2/r-1/sma));
+		
+		double dr = sma*ecc*(1-ecc*ecc)*Math.sin(tra);
+		double dth = (1-ecc*Math.cos(tra))*(1-ecc*Math.cos(tra));
+				
+		double x = r*Math.cos(tra);
+		double y = r*Math.sin(tra);
+		
+		V3 pos = new V3(x,y,0);
+		
+		double tanangle = tra - Math.atan2(r*dth, dr);
+		
+		double vx = Math.cos(tanangle)*v;
+		double vy = Math.sin(tanangle)*v;
+		
+		V3 vel = new V3(vx,vy,0);
+		
+		pos.set(Math_methods.rotatepoint(pos, orbitorientation));
+		vel.set(Math_methods.rotatepoint(vel, orbitorientation));
+		
+		V3[] cartesian = new V3[2]; 
+		cartesian[0] = pos;
+		cartesian[1] = vel;
+		
+		//System.out.println(pos.tostring() + ", " + vel.tostring());
+		//System.out.println("done");
+
+		return cartesian;
+	}
 		
 }

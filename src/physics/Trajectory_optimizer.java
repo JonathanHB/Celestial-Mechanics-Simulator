@@ -54,7 +54,7 @@ public class Trajectory_optimizer {
 		//an array of duplicate entities used to generate postable
 		
 		
-		//the code below generate virtualents and uses them to generate the postable
+		//the code below generates virtualents and uses them to generate the postable
 		
 		for(Entity e : Main_class.elist){
 
@@ -136,7 +136,7 @@ public class Trajectory_optimizer {
 				Math_methods.rotatepoint(new V3(0,0,basevelocity+deltav), best_traject.initorbit).add2(Main_class.elist.get(start).velocity),
 				new V3(0,0,0),new V3(0,0,0),
 				new Color(0,0,0),Poly_library.standard_poly_bases[0],Poly_library.standard_poly_maps[0],new V3(2E6,2E6,2E6),new V3(0,0,0),
-				new Color(0,0,0),2000,17000000, -1
+				new Color(0,0,0),2000,17000000, -1, false
 			)
 		);
 

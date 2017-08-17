@@ -95,6 +95,8 @@ public class Main_class extends JPanel{
 			FileIO.loadfile(FileIO.readfile(f));
 
 			Object_manager.initializerefs();
+			Object_manager.keptocart();
+			Object_manager.relativetoabsolute();
 
 			Object_manager.fixcenter();
 

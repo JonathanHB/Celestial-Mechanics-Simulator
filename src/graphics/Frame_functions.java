@@ -31,8 +31,11 @@ public class Frame_functions extends JPanel{
 	public static final JTextField simspeed = new JTextField(); //part of control window
 
 	
-	static int height = 800; 
-	static int width = 800;
+	static int height = 1000; //these change over time to track window size
+	static int width = 1900;
+	
+	static int ctrh = height/2; //used by graphics engine
+	static int ctrw = width/2;
 	
 	static int height2 = 200; //this value behaves oddly
 	static int width2 = 200;
@@ -49,6 +52,8 @@ public class Frame_functions extends JPanel{
 				
 		displayframe.addKeyListener(new user_interface.Key_control());
 		displayframe.addMouseMotionListener(new user_interface.Mouse_control());
+	    displayframe.addComponentListener(new Resizehandler());
+
 		
 		displayframe.getContentPane().add(new Frame_functions(), BorderLayout.CENTER); //actually displays graphics
 		
@@ -88,25 +93,25 @@ public class Frame_functions extends JPanel{
 		super.paintComponent(g);
 		
 		g.setColor(background);
-		g.fillRect(0, 0, 800, 800); //colors background
+		g.fillRect(0, 0, 1900, 1000); //colors background
 		
 		for(int x = Graphics_engine.order2.size()-1; x >= 0; x--){				
 			
-			Render_obj object = Graphics_engine.order2.get(x);
+			Render_obj robject = Graphics_engine.order2.get(x);
 			
-			if(object.plane && !object.point){ //renders planes
+			if(robject.plane && !robject.point){ //renders planes
 				
-				int n = object.p.corners.length;
+				int n = robject.p.corners.length;
 				
 				int xpoints[] = new int[n];
 				int ypoints[] = new int[n];
 
 				for(int z = 0; z < n; z++){
-					xpoints[z] = object.p.corners[z].projectx;
-					ypoints[z] = object.p.corners[z].projecty;
+					xpoints[z] = robject.p.corners[z].projectx;
+					ypoints[z] = robject.p.corners[z].projecty;
 				}
 
-				g.setColor(illuminate(object.p.illumination, object.p.c));				
+				g.setColor(illuminate(robject.p.illumination, robject.p.c));				
 				g.fillPolygon(xpoints, ypoints, n);
 				
 				g.setColor(Color.BLUE);
@@ -120,31 +125,31 @@ public class Frame_functions extends JPanel{
 					
 				}	
 				
-			}else if(!object.plane && !object.point){ //renders lines
+			}else if(!robject.plane && !robject.point){ //renders lines
 				
-				g.setColor(illuminate(object.l.illumination, object.l.c));				
+				g.setColor(illuminate(robject.l.illumination, robject.l.c));				
 				
 				if(Main_class.traject_opt){
 					g.setColor(
 							new Color(
-							(int) Math.round(155*object.l.time/Main_class.runtime),
-							(int) Math.round(155*object.l.time/Main_class.runtime),
-							(int) Math.round(255*object.l.time/Main_class.runtime)
+							(int) Math.round(155*robject.l.time/Main_class.runtime),
+							(int) Math.round(155*robject.l.time/Main_class.runtime),
+							(int) Math.round(255*robject.l.time/Main_class.runtime)
 							)
 							);
 				}
 				
 				g.drawLine(
-						object.l.p1.projectx,
-						object.l.p1.projecty,
-						object.l.p2.projectx,
-						object.l.p2.projecty
+						robject.l.p1.projectx,
+						robject.l.p1.projecty,
+						robject.l.p2.projectx,
+						robject.l.p2.projecty
 						);
 					
 			}else{ //renders points
 				
 				g.setColor(Color.BLUE);
-				g.drawOval(object.po.projectx, object.po.projecty, 1, 1);
+				g.drawOval(robject.po.projectx, robject.po.projecty, 1, 1);
 			}
 			
 		}

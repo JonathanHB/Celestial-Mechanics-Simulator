@@ -22,18 +22,6 @@ public class V3 { //a 3d vector
 		this.set(v);
 	}
 	
-	//used to find the average best orbital parameters using the mean sines and cosines
-	//this constructor makes a vector containing 3 angles from vectors containing coordinates
-	public V3(V3 sin, V3 cos){ 
-		this.set(Math.atan2(sin.x, cos.x), Math.atan2(sin.y, cos.y), Math.atan2(sin.z, cos.z));
-	}
-	
-	//used to find how concentrated the test orbits are around the average best ones using the mean sines and cosines
-	//this constructor makes a vector containing 3 magnitudes from vectors containing coordinates
-	public V3(V3 a, V3 b, boolean c){ //the boolean is for overloading purposes
-		this.set(Math.sqrt(a.x*a.x+b.x*b.x), Math.sqrt(a.y*a.y+b.y*b.y), Math.sqrt(a.z*a.z+b.z*b.z));
-	}
-	
 	//-------------------------------------------------------------------------------
 	
 	public void set(double a){ //sets vector from components
@@ -81,16 +69,16 @@ public class V3 { //a 3d vector
 	}
 	
 	//-------------------------------------------------------------------------------
-
-	public double magnitude(){ //vector magnitude	
-		return Math.sqrt(x*x+y*y+z*z);
-	}
 	
 	public double squmagnitude(){ //vector magnitude squared, improves computational efficiency by avoiding square roots
-		return x*x+y*y+z*z;
+		return x*x + y*y + z*z;
 	}
 	
-	public double magpow(double pow){ //returns magnitude to a power, using squmagnitude is efficient
+	public double magnitude(){ //vector magnitude	
+		return Math.sqrt(this.squmagnitude());
+	}
+	
+	public double magpow(double pow){ //returns magnitude to an arbitrary power, using squmagnitude is efficient
 		return Math.pow(this.squmagnitude(), pow/2.0);
 	}
 	
@@ -106,58 +94,60 @@ public class V3 { //a 3d vector
 		return !this.iszero();
 	}
 	
-	//-------------------------------------------------------------------------------
-	
-	public void add(double a){ //adds to the components of this vector
-		x+=a;
-		y+=a;
-		z+=a;
-	}
+	//-------------------------------------------------------------------------------		
 	
 	public void add(double a, double b, double c){ //adds to the components of this vector
-		x+=a;
-		y+=b;
-		z+=c;
+		x += a;
+		y += b;
+		z += c;
+	}
+	
+	public void add(double a){ //adds to the components of this vector
+		this.add(a,a,a);
 	}
 	
 	public void add(V3 v){ //adds another vector to this one
-		x+=v.x;
-		y+=v.y;
-		z+=v.z;
+		this.add(v.x, v.y, v.z);
 	}
-	
-	public V3 add2(double a){ //adds to the components of this vector
-		return new V3(x+a, y+a, z+a);
-	}
-	
+		
 	public V3 add2(double a, double b, double c){ //adds to the components of this vector
 		return new V3(x+a, y+b, z+c);
 	}
 	
+	public V3 add2(double a){ //adds to the components of this vector
+		return this.add2(a,a,a);
+	}
+	
 	public V3 add2(V3 v){  //adds another vector to this one
-		return new V3(x+v.x, y+v.y, z+v.z);
+		return this.add2(v.x, v.y, v.z);
 	}
 	
 	//-------------------------------------------------------------------------------
 	
 	public void sub(double a, double b, double c){ //subtracts from the components of this vector
-		x-=a;
-		y-=b;
-		z-=c;
+		x -= a;
+		y -= b;
+		z -= c;
 	}
 	
-	public void sub(V3 v){ //subtracts another vector from this one
-		x-=v.x;
-		y-=v.y;
-		z-=v.z;
+	public void sub(double a){ //adds to the components of this vector
+		this.sub(a,a,a);
+	}
+	
+	public void sub(V3 v){ //adds another vector to this one
+		this.sub(v.x, v.y, v.z);
 	}
 	
 	public V3 sub2(double a, double b, double c){ //subtracts from the components of this vector
 		return new V3(x-a, y-b, z-c);
 	}
 	
+	public V3 sub2(double a){ //subtracts from the components of this vector
+		return this.sub2(a,a,a);
+	}
+	
 	public V3 sub2(V3 v){ //subtracts another vector from this one
-		return new V3(x-v.x, y-v.y, z-v.z);
+		return this.sub2(v.x, v.y, v.z);
 	}
 	
 	//-------------------------------------------------------------------------------
@@ -212,7 +202,7 @@ public class V3 { //a 3d vector
 		z*=-1;
 	}
 	
-	public V3 invert2(){ //scales vector by d
+	public V3 invert2(){ //returns vector scaled by -1
 		return new V3(-x,-y,-z);
 	}
 	
@@ -242,6 +232,18 @@ public class V3 { //a 3d vector
 	
 	public V3 sines(){
 		return new V3(Math.sin(x), Math.sin(y), Math.sin(z));
+	}
+	
+	//used to find the average best orbital parameters using the mean sines and cosines
+	//this constructor makes a vector containing 3 angles from vectors containing coordinates
+	public V3(V3 sin, V3 cos){ 
+		this.set(Math.atan2(sin.x, cos.x), Math.atan2(sin.y, cos.y), Math.atan2(sin.z, cos.z));
+	}
+		
+	//used to find how concentrated the test orbits are around the average best ones using the mean sines and cosines
+	//this constructor makes a vector containing 3 magnitudes from vectors containing coordinates
+	public V3(V3 a, V3 b, boolean c){ //the boolean is for overloading purposes
+		this.set(Math.sqrt(a.x*a.x+b.x*b.x), Math.sqrt(a.y*a.y+b.y*b.y), Math.sqrt(a.z*a.z+b.z*b.z));
 	}
 	
 	
