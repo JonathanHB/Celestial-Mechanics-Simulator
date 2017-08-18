@@ -70,7 +70,7 @@ public class Entity {
 		shift2 = shift;
 		
 		p=new Polyhedron(pcol, shift, scale, ori, polybase, cornermap);
-		p.translateby(position);
+		//p.translateby(position);
 		
 		t=new Trail(length, res, new V3(0,0,0), tcol);
 		indexbuffer = refent;
@@ -121,7 +121,6 @@ public class Entity {
 		
 		V3 dpos=velocity.scale2(d);
 		position.add(dpos);
-		p.translateby(dpos);
 				
 		t.shiftby(primary.velocity.scale2(d)); 
 
@@ -135,10 +134,6 @@ public class Entity {
 	public void rotate(double d){ //rotates the entity for a time increment of d seconds
 		
 		orientation.add(rotation.scale2(d)); //update polyhedron's orientation
-		p.rotatepoly(rotation.scale2(d)); //rotate the polyhedron 
-		//TODO would it be faster to rotate the polyhedron to the orientation rather than rotating it by the rotation rate??
-		p.translateby(position); 
-		//moves the polyhedron representing the object
 		
 	}
 	

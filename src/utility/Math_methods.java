@@ -19,6 +19,21 @@ public class Math_methods {
 		
 	}
 	
+	public static V3 rotationaxis(V3 r) {
+		
+		double sinro=Math.sin(r.x);
+		double cosro=Math.cos(r.x);	
+		double sinpo=Math.sin(r.y);
+		double cospo=Math.cos(r.y);		
+		double sinaz=Math.sin(r.z);
+		double cosaz=Math.cos(r.z);
+		
+		V3 axis = new V3(sinro*cospo+cosro*sinpo*sinaz+cosaz*sinro, sinpo+cosro*sinpo*cosaz-sinro*sinaz, sinro*sinpo*cosaz+cosro*sinaz+sinaz*cospo);
+				
+		return axis;
+		
+	}
+	
 	public static V3 getrotation(V3 dp, V3 dv){ //returns the angular momentum resulting from a collision
 		
 		V3 pv = perpendicularpart(dv, dp); //the part of the relative velocity perpendicular to the axis of collision
@@ -160,5 +175,7 @@ public class Math_methods {
 
 		return cartesian;
 	}
+	
+	
 		
 }

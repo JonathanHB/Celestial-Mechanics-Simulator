@@ -33,7 +33,7 @@ public class Object_manager {
 			e.position.sub(massdist);
 			e.velocity.sub(momentum);
 			e.t.shiftby(massdist.invert2());
-			e.p.translateby(massdist.scale2(-1));
+		//	e.p.translateby(massdist.scale2(-1));
 		}
 		
 		for(Cable c : Main_class.clist){ //adjusts center of mass and net momentum to 0

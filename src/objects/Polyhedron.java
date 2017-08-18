@@ -50,24 +50,6 @@ public class Polyhedron {
 								
 	}		
 
-	public void translateby(V3 v){ //translate the polyhedron by v
-	
-		for(Plane p:faces){
-			p.center.add(v);
-		}
-		
-	}
-	
-	public void rotatepoly(V3 v){ //rotate the polyhedron by v
-		
-		for(Point p:vertices){
-			p.position.set(utility.Math_methods.rotatepoint(p.position, v));	
-		}
-		
-		setcenters();
-		
-	}
-	
 	public void setcenters(){ //compute face centers for lighting and distance calculations
 		for(Plane p:faces){
 			p.setcenter();

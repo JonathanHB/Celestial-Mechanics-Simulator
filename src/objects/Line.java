@@ -2,6 +2,7 @@ package objects;
 
 import java.awt.Color;
 
+import utility.Math_methods;
 import utility.V3;
 
 public class Line {
@@ -11,7 +12,7 @@ public class Line {
 	public Point p2; //the points defining the ends of the line
 	
 	public V3 center; //the line's midpoint, used to calculate arcshort and squdistance
-	public boolean arcshort; //whether the line is within the visual field
+	//public boolean arcshort; //whether the line is within the visual field
 	public V3 illumination = new V3(); //illumination at midpoint, lines, unlike planes and points, are individually lit
 	public double time;	//time since line was drawn, used for time-based line shading
 	public Color c;
@@ -27,6 +28,15 @@ public class Line {
 	
 	public void setcenter(){ //computes the midpoint
 		center = (p1.position.add2(p2.position)).scale2(.5);		
+	}
+	
+	public void project(V3 campos, V3 camori){ //camori isn't currently used
+		//computes angle to a line from its 3d position, used for culling of objects outside of visual field
+		
+		V3 v = new V3(Math_methods.rotatepoint(center.sub2(campos), camori));
+
+		squdistance = v.squmagnitude();
+
 	}
 	
 }

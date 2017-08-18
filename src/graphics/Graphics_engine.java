@@ -12,6 +12,7 @@ import objects.Render_obj;
 import physics.Motion;
 import user_interface.Key_control;
 import utility.Main_class;
+import utility.Math_methods;
 import utility.Misc_methods;
 import utility.V3;
 
@@ -20,8 +21,7 @@ public class Graphics_engine {
 	public static ArrayList <Render_obj> order2 = new ArrayList<Render_obj>(0);
 	//used to hold all graphics objects in order of distance for rendering purposes
 
-	public static V3 viewposition = new V3(0,0,0);//-1000000000.0
-	//public static V3 axis_orientation = new V3(0,0,0); //x=azimuth, y=polar, z=roll, small value prevents a certain undefined glitch
+	public static V3 viewposition = new V3(0,0,0);
 	public static V3 orientation = new V3(0,0,0); //x=azimuth, y=polar, z=roll
 
 	public static Entity focus;
@@ -32,8 +32,6 @@ public class Graphics_engine {
 
 	static double arcmax = 1.5;
 
-	static int stoplength = 0;
-
 	public static ArrayList <Line> rvectors = new ArrayList<Line>(0);
 	
 	public static void projector(){ //converts 3d object positions to 2d positions in visual field
@@ -41,64 +39,64 @@ public class Graphics_engine {
 		rvectors.clear();
 		
 		for(Entity e : Main_class.elist){
-
+			
 			for(Point p:e.p.vertices){
-				projectpointP(p,e.position);
+				p.project(e.position, e.orientation, viewposition, orientation);
 			}
 
 			for(Point p:e.t.nodes){
-				projectpointT(p);
+				p.projectabs(viewposition, orientation);
 			}
 			//----------------------------------------------------------
 			for(Plane p:e.p.faces){
-				projectface(p);
+				p.project(e.position, e.orientation, viewposition, orientation);
 			}
 
 			for(Line l:e.t.links){
-				projectedge(l);				
+				l.project(viewposition, orientation);		
 			}
 			
-			e.rvector.setcenter();			
-			projectpointP(e.rvector.p1, e.position);
-			projectpointP(e.rvector.p2, e.position);
+			/*e.rvector.setcenter();			
+			projectpointP(e.rvector.p1, e.position, e.orientation);
+			projectpointP(e.rvector.p2, e.position, e.orientation);
 			projectedge(e.rvector);
 			rvectors.add(e.rvector);	
 			
 			e.velvector.setcenter();			
-			projectpointP(e.velvector.p1, e.position);
-			projectpointP(e.velvector.p2, e.position);
+			projectpointP(e.velvector.p1, e.position, e.orientation);
+			projectpointP(e.velvector.p2, e.position, e.orientation);
 			projectedge(e.velvector);
-			rvectors.add(e.velvector);	
+			rvectors.add(e.velvector);	*/
 			
 		} 
 
 		for(Cable c : Main_class.clist){
 
 			for(Cablenode cn:c.nodes){
-				projectpointT(cn.p);
+			//	projectpointT(cn.p);
 			}
 
 			for(Line l : c.links){
-				projectedge(l);				
+			//	projectedge(l);				
 			}
 			
 			for(Point p:c.t.nodes){
-				projectpointT(p);
+			//	projectpointT(p);
 			}
 			
 			for(Line l:c.t.links){
-				projectedge(l);				
+			//	projectedge(l);				
 			}
 
 		}
 		
 		for(Point p : Main_class.equipotential){			
-				projectpointT(p);			
+		//		projectpointT(p);			
 		}
 
 	} 
-
-	public static void projectpointP(Point p, V3 entpos){ 
+/*
+	public static void projectpointP(Point p, V3 entpos, V3 entori){ //combine with T version?
 		//computes 2d visual field position of a point from its 3d position
 		//used for points in polyhedra
 		
@@ -107,7 +105,7 @@ public class Graphics_engine {
 		//(when rotation is 0 and the objects are moving, either storage method is equally efficient,
 		//although stationary objects make this design less efficient)
 
-		V3 v = new V3(utility.Math_methods.rotatepoint(p.position.add2(entpos).sub2(viewposition), orientation));
+		V3 v = new V3(Math_methods.rotatepoint(Math_methods.rotatepoint(p.position, entori).add2(entpos).sub2(viewposition), orientation));
 
 		//double hypotenuse = Math.sqrt(v.z*v.z + v.y*v.y);
 		
@@ -127,13 +125,13 @@ public class Graphics_engine {
 		//computes 2d visual field position of a point from its 3d position
 		//used for points in trails
 		
-		V3 v = new V3(utility.Math_methods.rotatepoint(p.position.sub2(viewposition), orientation));
+		V3 v = new V3(Math_methods.rotatepoint(p.position.sub2(viewposition), orientation));
 
 		//double hypotenuse = Math.sqrt(v.z*v.z + v.y*v.y); //this leads to a glitch when hypotenuse = 0;
 		
 		//double arc = visualrange*Math.atan2(hypotenuse, v.x)/hypotenuse;
 
-		p.squdistance = v.squmagnitude(); //used for accurate overlap
+		//p.squdistance = v.squmagnitude(); //used for accurate overlap
 		
 		int[] projection = planarprojection(v);
 		p.projectx = projection[0];
@@ -144,27 +142,27 @@ public class Graphics_engine {
 
 	}
 
-	public static void projectface(Plane p){
+	public static void projectface(Plane p, V3 entpos, V3 entori){
 		//computes angle to a face from its 3d position, used for culling of objects outside of visual field
 		
-		V3 v = new V3(utility.Math_methods.rotatepoint(p.center.sub2(viewposition), orientation));
+		V3 v = new V3(Math_methods.rotatepoint(Math_methods.rotatepoint(p.center, entori).add2(entpos).sub2(viewposition), orientation));
 
-		p.squdistance = v.z*v.z + v.y*v.y + v.x*v.x;
+		p.squdistance = v.squmagnitude();
 
-		p.arcshort = Math.atan2(Math.sqrt(v.z*v.z + v.y*v.y), v.x)<=arcmax;
+		//p.arcshort = Math.atan2(Math.sqrt(v.z*v.z + v.y*v.y), v.x)<=arcmax; //has negligible effect on runtime
 
 	}
 
 	public static void projectedge(Line l){
 		//computes angle to a line from its 3d position, used for culling of objects outside of visual field
 		
-		V3 v = new V3(utility.Math_methods.rotatepoint(l.center.sub2(viewposition), orientation));
+		V3 v = new V3(Math_methods.rotatepoint(l.center.sub2(viewposition), orientation));
 
-		l.squdistance = v.z*v.z + v.y*v.y + v.x*v.x;
+		l.squdistance = v.squmagnitude();
 
-		l.arcshort = Math.atan2(Math.sqrt(v.z*v.z + v.y*v.y), v.x)<=arcmax;
+		//l.arcshort = Math.atan2(Math.sqrt(v.z*v.z + v.y*v.y), v.x)<=arcmax;
 
-	}
+	}*/
 
 	public static void setorder(){ 
 		//sets up graphics object array to be sorted
@@ -176,30 +174,30 @@ public class Graphics_engine {
 		for(Entity e : Main_class.elist){
 
 			for(Plane p : e.p.faces){
-				if(p.arcshort){
+			//	if(p.arcshort){
 					order2.add(new Render_obj(p));					
-				}
+			//	}
 			}
 
 			for(Line l : e.t.links){
-				if(l.arcshort){
+			//	if(l.arcshort){
 					order2.add(new Render_obj(l));
-				}
+			//	}
 			}
 		}
 
 		for(Cable c : Main_class.clist){
 			
 			for(Line l : c.links){
-				if(l.arcshort){
+			//	if(l.arcshort){
 					order2.add(new Render_obj(l));
-				}
+			//	}
 			}	
 			
 			for(Line l : c.t.links){
-				if(l.arcshort){
+			//	if(l.arcshort){
 					order2.add(new Render_obj(l));
-				}
+			//	}
 			}	
 		}
 		
@@ -209,7 +207,7 @@ public class Graphics_engine {
 		
 		for(Line l : rvectors){
 		//	if(l.arcshort){
-		//		order2.add(new Render_obj(l));
+				order2.add(new Render_obj(l));
 		//	}
 		}	
 
@@ -224,15 +222,15 @@ public class Graphics_engine {
 
 		for(Entity e : Main_class.elist){
 			for(Plane p : e.p.faces){
-				if(p.arcshort){
+			//	if(p.arcshort){
 					p.illumination.set(0,0,0);
-				}
+			//	}
 			}
 
 			for(Line l : e.t.links){
-				if(l.arcshort){
+			//	if(l.arcshort){
 					l.illumination.set(0,0,0);
-				}
+			//	}
 			}
 
 		} 	
@@ -240,18 +238,18 @@ public class Graphics_engine {
 		if(Main_class.stressvisualization == false){
 			for(Cable c : Main_class.clist){
 				for(Line l : c.links){
-					if(l.arcshort){
+				//	if(l.arcshort){
 						l.illumination.set(0,0,0);
-					}
+				//	}
 				}
 			}
 		}	
 		
 		for(Cable c : Main_class.clist){
 			for(Line l : c.t.links){
-				if(l.arcshort){
+			//	if(l.arcshort){
 					l.illumination.set(0,0,0);
-				}
+			//	}
 			}
 		}
 
@@ -259,33 +257,33 @@ public class Graphics_engine {
 			if(e1.luminosity.isnonzero()){
 				for(Entity e2 : Main_class.elist){
 					for(Plane p : e2.p.faces){
-						if(p.arcshort){
-							p.illumination.add(e1.luminosity.invscale2(p.center.sub2(e1.position).squmagnitude()));
-						}
+					//	if(p.arcshort){
+							p.illumination.add(e1.luminosity.invscale2(Math_methods.rotatepoint(p.center, e2.orientation).add2(e2.position).sub2(e1.position).squmagnitude()));
+					//	}
 					}
 
 					for(Line l : e2.t.links){
-						if(l.arcshort){
+					//	if(l.arcshort){
 							l.illumination.add(e1.luminosity.invscale2(l.center.sub2(e1.position).squmagnitude()));
-						}
+					//	}
 					}
 				} 
 				
-				if(Main_class.stressvisualization == false){
+				if(Main_class.stressvisualization == false){ //illuminates cables
 					for(Cable c : Main_class.clist){
 						for(Line l : c.links){
-							if(l.arcshort){
+						//	if(l.arcshort){
 								l.illumination.add(e1.luminosity.invscale2(l.center.sub2(e1.position).squmagnitude()));
-							}
+						//	}
 						}					
 					}
 				}
 				
-				for(Cable c : Main_class.clist){
+				for(Cable c : Main_class.clist){ //illuminates cable trails
 					for(Line l : c.t.links){
-						if(l.arcshort){
+					//	if(l.arcshort){
 							l.illumination.add(e1.luminosity.invscale2(l.center.sub2(e1.position).squmagnitude()));
-						}
+					//	}
 					}
 				}
 			}
