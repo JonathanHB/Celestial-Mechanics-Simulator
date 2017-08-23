@@ -3,6 +3,7 @@ package objects;
 import java.awt.Color;
 
 import utility.Main_class;
+import utility.Math_methods;
 import utility.V3;
 
 public class Entity {
@@ -75,8 +76,8 @@ public class Entity {
 		t=new Trail(length, res, new V3(0,0,0), tcol);
 		indexbuffer = refent;
 		
-		velpt = new Point(velocity, false);
-		rotpt = new Point(rotation, false);
+		velpt = new Point(new V3(velocity), false);
+		rotpt = new Point(new V3(rotation), false);
 		
 		velvector = new Line(new Point(new V3(0)), velpt, p.c);
 		rvector = new Line(new Point(new V3(0)), rotpt, p.c);
@@ -113,7 +114,7 @@ public class Entity {
 	public void move(double d){ //translates and rotates entity
 		
 		translate(d);
-		rotate(d);
+	//	rotate(d);
 	
 	}	
 	
@@ -133,7 +134,9 @@ public class Entity {
 	
 	public void rotate(double d){ //rotates the entity for a time increment of d seconds
 		
-		orientation.add(rotation.scale2(d)); //update polyhedron's orientation
+		orientation.add(rotation.scale2(d)); //update polyhedron's orientation, doesn't work
+		//Math_methods.rotatepoint(orientation, rotation);
+		//t.update(Math_methods.rotatepoint(new V3(10,10,10), orientation).add2(position));
 		
 	}
 	

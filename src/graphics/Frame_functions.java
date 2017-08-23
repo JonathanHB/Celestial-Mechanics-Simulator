@@ -93,7 +93,7 @@ public class Frame_functions extends JPanel{
 		super.paintComponent(g);
 		
 		g.setColor(background);
-		g.fillRect(0, 0, 1900, 1000); //colors background
+		g.fillRect(0, 0, 1900, 1000); //colors background //TODO set rect dimensions to window size
 		
 		for(int x = Graphics_engine.order2.size()-1; x >= 0; x--){				
 			

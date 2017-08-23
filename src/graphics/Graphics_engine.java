@@ -41,7 +41,7 @@ public class Graphics_engine {
 		for(Entity e : Main_class.elist){
 			
 			for(Point p:e.p.vertices){
-				p.project(e.position, e.orientation, viewposition, orientation);
+				p.project3(e.position, viewposition, orientation);
 			}
 
 			for(Point p:e.t.nodes){
@@ -49,24 +49,32 @@ public class Graphics_engine {
 			}
 			//----------------------------------------------------------
 			for(Plane p:e.p.faces){
-				p.project(e.position, e.orientation, viewposition, orientation);
+				p.project3(e.position, viewposition, orientation);
 			}
 
 			for(Line l:e.t.links){
 				l.project(viewposition, orientation);		
 			}
+			/*
+			e.rvector.p1.position.set(Math_methods.rotationaxis(e.rotation).scale2(5));
+			e.rvector.p2.position.set(0);
+
 			
-			/*e.rvector.setcenter();			
-			projectpointP(e.rvector.p1, e.position, e.orientation);
-			projectpointP(e.rvector.p2, e.position, e.orientation);
-			projectedge(e.rvector);
-			rvectors.add(e.rvector);	
+			e.rvector.setcenter();			
+			e.rvector.p1.project(e.position, new V3(0,0,0), viewposition, orientation);
+			e.rvector.p2.project(e.position, new V3(0,0,0), viewposition, orientation);
+			e.rvector.project(viewposition, orientation);
 			
+			//System.out.println(e.rotation.tostring());
+			
+			rvectors.add(e.rvector);
+			*/
+			/*
 			e.velvector.setcenter();			
 			projectpointP(e.velvector.p1, e.position, e.orientation);
 			projectpointP(e.velvector.p2, e.position, e.orientation);
 			projectedge(e.velvector);
-			rvectors.add(e.velvector);	*/
+			rvectors.add(e.velvector);*/	
 			
 		} 
 
@@ -74,24 +82,29 @@ public class Graphics_engine {
 
 			for(Cablenode cn:c.nodes){
 			//	projectpointT(cn.p);
+				cn.p.project3(cn.position, viewposition, orientation);
 			}
 
 			for(Line l : c.links){
-			//	projectedge(l);				
+			//	projectedge(l);		
+				l.project(viewposition, orientation);
 			}
 			
 			for(Point p:c.t.nodes){
 			//	projectpointT(p);
+				p.projectabs(viewposition, orientation);
 			}
 			
 			for(Line l:c.t.links){
-			//	projectedge(l);				
+			//	projectedge(l);	
+				l.project(viewposition, orientation);
 			}
 
 		}
 		
 		for(Point p : Main_class.equipotential){			
-		//		projectpointT(p);			
+		//	projectpointT(p);		
+			p.projectabs(viewposition, orientation);
 		}
 
 	} 
@@ -174,9 +187,9 @@ public class Graphics_engine {
 		for(Entity e : Main_class.elist){
 
 			for(Plane p : e.p.faces){
-			//	if(p.arcshort){
+				if(p.arcshort){
 					order2.add(new Render_obj(p));					
-			//	}
+				}
 			}
 
 			for(Line l : e.t.links){
@@ -319,6 +332,10 @@ public class Graphics_engine {
 			
 		}
 		
+	}
+	
+	public static void camtofocus() {
+		viewposition = focus.position.add2(0,0,2*focus.radius);
 	}
 	
 	public static int[] planarprojection(V3 v) {

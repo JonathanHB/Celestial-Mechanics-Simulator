@@ -34,6 +34,8 @@ public class Math_methods {
 		
 	}
 	
+	//public static V3 
+	
 	public static V3 getrotation(V3 dp, V3 dv){ //returns the angular momentum resulting from a collision
 		
 		V3 pv = perpendicularpart(dv, dp); //the part of the relative velocity perpendicular to the axis of collision
@@ -118,7 +120,7 @@ public class Math_methods {
 		double lasteccanom = 0;
 		double lasterr = 999999999;
 		
-		for(double x = -1; x <= 1; x += .0001) {
+		for(double x = -1; x <= 1; x += .000001) {
 			double esteccanom = man+x;
 			double err = Math.abs(man-esteccanom+ecc*Math.sin(esteccanom));
 
@@ -129,6 +131,8 @@ public class Math_methods {
 			
 		}
 		
+		
+		
 		double tra = 2*Math.atan2(Math.sqrt(1+ecc)*Math.sin(lasteccanom/2), Math.sqrt(1-ecc)*Math.cos(lasteccanom/2));
 		return tra;		
 		
@@ -138,16 +142,17 @@ public class Math_methods {
 	//arg = argument of periapsis, inc = inclination, lan = longitude of ascending node
 	//mpr = mass of primary 
 	//tra = true anomaly
+	//angles in radians
 	public static V3[] kepleriantocartesian(double sma, double ecc, double mlo, double arg, double inc, double lan, double mpr){
 		
 		double tra = mlototra(mlo, ecc, lan, arg);
 
-		V3 orbitorientation = new V3(lan, inc, arg);
-				
+		//V3 orbitorientation = new V3(arg, inc, lan);//doesn't work; 2 rotations in the same plane are needed
+	
 		double r = sma*(1-ecc*ecc)/(1-ecc*Math.cos(tra));
 
 		double v = Math.sqrt(physics.Motion.G*mpr*(2/r-1/sma));
-		
+
 		double dr = sma*ecc*(1-ecc*ecc)*Math.sin(tra);
 		double dth = (1-ecc*Math.cos(tra))*(1-ecc*Math.cos(tra));
 				
@@ -163,8 +168,11 @@ public class Math_methods {
 		
 		V3 vel = new V3(vx,vy,0);
 		
-		pos.set(Math_methods.rotatepoint(pos, orbitorientation));
-		vel.set(Math_methods.rotatepoint(vel, orbitorientation));
+		pos.set(Math_methods.rotatepoint(pos, new V3(0,0,arg)));		
+		vel.set(Math_methods.rotatepoint(vel, new V3(0,0,arg)));
+		pos.set(Math_methods.rotatepoint(pos, new V3(0,inc,lan)));		
+		vel.set(Math_methods.rotatepoint(vel, new V3(0,inc,lan)));
+		
 		
 		V3[] cartesian = new V3[2]; 
 		cartesian[0] = pos;

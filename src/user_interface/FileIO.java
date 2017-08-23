@@ -55,7 +55,7 @@ public class FileIO {
 			while(reading){	
 
 				String s = br.readLine();
-
+				//System.out.println(s);
 				if (s!=null){		//checks for end of file			
 					filecontents.add(s);
 

@@ -46,6 +46,7 @@ public class Object_manager {
 	public static void initializerefs(){
 		for(Entity e : Main_class.elist){
 			e.getreference();
+			System.out.println(e.position);
 		}
 	}
 	
@@ -261,7 +262,7 @@ public class Object_manager {
 			
 			if(e.iskeplerian){ //converts from keplerian orbital elements to state vectors
 			
-				V3[] cart = Math_methods.kepleriantocartesian(e.position.x, e.position.y, e.position.z, e.velocity.x, e.velocity.y, e.velocity.z, e.primary.mass);
+				V3[] cart = Math_methods.kepleriantocartesian(e.position.x, e.position.y, 0.0174533*e.position.z, 0.0174533*e.velocity.x, 0.0174533*e.velocity.y, 0.0174533*e.velocity.z, e.primary.mass);
 				
 				e.position = cart[0];
 				e.velocity = cart[1];
