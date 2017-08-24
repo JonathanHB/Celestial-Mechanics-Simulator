@@ -46,7 +46,7 @@ public class Object_manager {
 	public static void initializerefs(){
 		for(Entity e : Main_class.elist){
 			e.getreference();
-			System.out.println(e.position.tostring());
+			
 		}
 	}
 	

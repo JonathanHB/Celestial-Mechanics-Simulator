@@ -338,6 +338,7 @@ public class Graphics_engine {
 	public static void camtofocus() {
 		if(focusindex != -1) {
 			viewposition = focus.position.add2(0,0,2*focus.radius);
+			System.out.println(viewposition.tostring());
 		}	
 	}
 	

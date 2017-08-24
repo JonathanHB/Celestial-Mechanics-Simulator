@@ -100,7 +100,7 @@ public class Main_class extends JPanel{
 
 			Object_manager.fixcenter();
 
-			//Graphics_engine.camtofocus();
+			Graphics_engine.camtofocus();
 			
 			if(traject_opt){ //runs trajectory optimizer	
 				Trajectory_optimizer.maketables();
