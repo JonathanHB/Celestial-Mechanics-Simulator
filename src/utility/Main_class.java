@@ -100,7 +100,7 @@ public class Main_class extends JPanel{
 
 			Object_manager.fixcenter();
 
-			Graphics_engine.camtofocus();
+			//Graphics_engine.camtofocus();
 			
 			if(traject_opt){ //runs trajectory optimizer	
 				Trajectory_optimizer.maketables();
@@ -122,13 +122,14 @@ public class Main_class extends JPanel{
 		Graphics_engine.getfocus();
 		
 		if(equipotentialviz){
-			Equipotential_viz.efficient_surface();
+			Equipotential_viz.efficient_surface(); 
+			//crashes due to stackoverflow recursion errors despite actually having controlled recursion and being faster than the nonrecursive method
 		}
 
 		Graphics_engine.projector();
 		Graphics_engine.lighting();   //graphics engine
 		Graphics_engine.setorder();			
-
+		
 		Frame_functions.displayframe.repaint(); //updates jframe
 
 

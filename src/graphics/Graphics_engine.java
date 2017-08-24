@@ -39,7 +39,8 @@ public class Graphics_engine {
 		rvectors.clear();
 		
 		for(Entity e : Main_class.elist){
-			
+			//System.out.println(e.position.tostring());
+
 			for(Point p:e.p.vertices){
 				p.project3(e.position, viewposition, orientation);
 			}
@@ -335,7 +336,9 @@ public class Graphics_engine {
 	}
 	
 	public static void camtofocus() {
-		viewposition = focus.position.add2(0,0,2*focus.radius);
+		if(focusindex != -1) {
+			viewposition = focus.position.add2(0,0,2*focus.radius);
+		}	
 	}
 	
 	public static int[] planarprojection(V3 v) {

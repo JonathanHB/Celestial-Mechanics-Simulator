@@ -146,8 +146,6 @@ public class Math_methods {
 	public static V3[] kepleriantocartesian(double sma, double ecc, double mlo, double arg, double inc, double lan, double mpr){
 		
 		double tra = mlototra(mlo, ecc, lan, arg);
-
-		//V3 orbitorientation = new V3(arg, inc, lan);//doesn't work; 2 rotations in the same plane are needed
 	
 		double r = sma*(1-ecc*ecc)/(1-ecc*Math.cos(tra));
 

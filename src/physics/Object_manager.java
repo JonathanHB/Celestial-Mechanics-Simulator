@@ -33,7 +33,7 @@ public class Object_manager {
 			e.position.sub(massdist);
 			e.velocity.sub(momentum);
 			e.t.shiftby(massdist.invert2());
-		//	e.p.translateby(massdist.scale2(-1));
+
 		}
 		
 		for(Cable c : Main_class.clist){ //adjusts center of mass and net momentum to 0
@@ -46,7 +46,7 @@ public class Object_manager {
 	public static void initializerefs(){
 		for(Entity e : Main_class.elist){
 			e.getreference();
-			System.out.println(e.position);
+			System.out.println(e.position.tostring());
 		}
 	}
 	
@@ -286,8 +286,7 @@ public class Object_manager {
 				e.indexbuffer = -1;			
 
 			}	
-				e.t.shiftby(e.getabsolutevectors()[0]);
-
+			e.t.shiftby(e.getabsolutevectors()[0]);
 			
 		}
 	}
