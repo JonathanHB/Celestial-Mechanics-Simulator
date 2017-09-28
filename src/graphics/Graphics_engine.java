@@ -83,7 +83,7 @@ public class Graphics_engine {
 
 			for(Cablenode cn:c.nodes){
 			//	projectpointT(cn.p);
-				cn.p.project3(cn.position, viewposition, orientation);
+				cn.p.projectabs(viewposition, orientation);
 			}
 
 			for(Line l : c.links){
@@ -338,7 +338,7 @@ public class Graphics_engine {
 	public static void camtofocus() {
 		if(focusindex != -1) {
 			viewposition = focus.position.add2(0,0,2*focus.radius);
-			System.out.println(viewposition.tostring());
+			//System.out.println(viewposition.tostring());
 		}	
 	}
 	

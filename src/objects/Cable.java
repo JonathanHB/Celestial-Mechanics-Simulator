@@ -92,7 +92,7 @@ public class Cable {
 		//within cablebalance Newtons of geostationary orbit
 		//the cable begins arbitrarily at the ascending or descending node of its orbit		
 		
-		double gsoradius = Math.cbrt(Motion.G*primary.mass/primary.rotation.squmagnitude());
+		double gsoradius = Math.cbrt(Motion.G*primary.mass/primary.rotation.squmagnitude()); //adjust this rotation dependence when rotation is fixed
 		double gsospeed = Math.sqrt(Motion.G*primary.mass/gsoradius);
 		
 		boolean adjusting = true;
@@ -129,7 +129,7 @@ public class Cable {
 		for(int x = 0; x<length; x++){ //generates cable once altitude is determined
 						
 			V3 node_long = new V3(0,0,Math.atan2(primary.rotation.y, primary.rotation.x));
-			V3 inclination = new V3(0,-Math.atan2(primary.rotation.z, Math.sqrt(primary.rotation.x*primary.rotation.x+primary.rotation.y*primary.rotation.y)),0);
+			V3 inclination = new V3(0,-Math.atan2(primary.rotation.z, Math.sqrt(primary.rotation.x*primary.rotation.x+primary.rotation.y*primary.rotation.y)),0);//probably garbage
 			
 			nodes[x] = new Cablenode(
 				Math_methods.rotatepoint(new V3(0, adjustedcable[x][0], 0), node_long).add2(primary.position),
@@ -202,6 +202,7 @@ public class Cable {
 		for(Cablenode c: nodes){
 			
 			dpos = c.position.sub2(e.position);
+			//System.out.println(c.position.tostring());
 			
 			squdistance = dpos.squmagnitude();
 			distance = Math.sqrt(squdistance);
@@ -219,7 +220,7 @@ public class Cable {
 			
 			V3 deltapos = nodes[x+1].position.sub2(nodes[x].position);			
  
-			double reactionmagnitude = .5*(deltapos.magnitude() - node_spacing)*Math.signum(increment);
+			double reactionmagnitude = 171.5*(deltapos.magnitude() - node_spacing)*Math.signum(increment);
 			V3 reactionvector = deltapos.tolength2(reactionmagnitude);
 			
 			nodes[x+1].velocity.sub(reactionvector);
@@ -228,7 +229,7 @@ public class Cable {
 		//	System.out.println(reactionmagnitude*100000);	
 			
 			if(Main_class.stressvisualization){
-				links[x].illumination.set(Math.abs(reactionmagnitude)*1000);
+				links[x].illumination.set(Math.abs(reactionmagnitude)*1000000);
 			}
 			
 		}

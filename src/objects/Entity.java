@@ -2,6 +2,7 @@ package objects;
 
 import java.awt.Color;
 
+import physics.Motion;
 import utility.Main_class;
 import utility.Math_methods;
 import utility.V3;
@@ -9,6 +10,7 @@ import utility.V3;
 public class Entity {
 	
 	public double mass; //kilograms
+	public double GMt; //G*mass*tstep
 	public double radius; //meters
 	public double moi; //kilogram-square meters
 	
@@ -39,6 +41,8 @@ public class Entity {
 	public Line velvector = new Line();
 	public Line rvector = new Line();
 	
+	public V3 accbuff;
+	
 	public Entity(){} //empty constructor
 	
 	public Entity(boolean b){ //boolean for overloading
@@ -53,7 +57,9 @@ public class Entity {
 			){		
 		
 		mass=m;
+		GMt = .00000000006674*m*Motion.increment;
 		radius=r;
+		accbuff = new V3();
 		
 		moi = .4*mass*radius*radius;
 		

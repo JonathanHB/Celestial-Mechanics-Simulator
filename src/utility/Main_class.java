@@ -38,7 +38,7 @@ public class Main_class extends JPanel{
 	
 	public static int framewait; //time wait in milliseconds between rendering frames
 	
-	public static boolean stressvisualization = true;
+	public static boolean stressvisualization = false;
 	public static boolean fixedreferences = true;
 	public static boolean equipotentialviz = false;
 	public static boolean traject_opt = false;

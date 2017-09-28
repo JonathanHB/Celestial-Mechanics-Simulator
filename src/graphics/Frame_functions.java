@@ -25,6 +25,7 @@ public class Frame_functions extends JPanel{
 	
 	public static JButton save = new JButton("save");
 	public static JButton load = new JButton("load");
+	public static JButton reload = new JButton("reload");
 	//JButton save = new JButton("save");
 	
 	public static final JTextField camspeed = new JTextField(); //part of control window
@@ -70,6 +71,8 @@ public class Frame_functions extends JPanel{
 		inputbox.add(load);
 		save.setBounds(0,50,70,30);
 		inputbox.add(save);
+		reload.setBounds(0,80,70,30);
+		inputbox.add(reload);
 		camspeed.setBounds(70,20,70,30);
 		inputbox.add(camspeed);
 		simspeed.setBounds(70,50,70,30);

@@ -289,6 +289,11 @@ public class Object_manager {
 			e.t.shiftby(e.getabsolutevectors()[0]);
 			
 		}
+		
+		//for(Cable c : Main_class.clist){
+		//	c.realign(dp, dv);
+		//}
+		
 	}
 	
 }

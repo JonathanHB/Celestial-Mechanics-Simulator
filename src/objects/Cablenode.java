@@ -10,7 +10,7 @@ public class Cablenode {
 	
 	public Point p; //used for rendering the point's associated links
 	
-	public Cablenode(V3 pos, V3 vel){ //creates a cable node with the specified pos/vel
+	public Cablenode(V3 pos, V3 vel){ //creates a cable node with the specified position and velocity
 		position = new V3(pos);
 		velocity = new V3(vel);
 		p = new Point(position);

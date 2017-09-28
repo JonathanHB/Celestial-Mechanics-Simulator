@@ -32,16 +32,18 @@ public class Motion {
 	}
 	
 	//applies Newton's law of universal gravitation to all objects, an approximation of the N-body problem
-	public static void gravitation(double tstep){ 
+	public static void gravitation(byte tsign){ 
 		
 		//numerical for loops are used to avoid concurrent modification exceptions when objects split or collide
 				
-		double g_invrad; //G/r^3
+		double invrad; //G/r^3
 		double distance; //r
 		double squdistance; //r^2		//These variables are used stored to avoid repeating mathematical operations, speeding up calculations
 		V3 dpos;
 				
 		for(int x = 0; x<Main_class.elist.size(); x++){ 
+			
+			Main_class.elist.get(x).accbuff.set(0);
 			
 			for(int y = x+1; y<Main_class.elist.size(); y++){ 
 				
@@ -52,15 +54,15 @@ public class Motion {
 						
 				squdistance = dpos.squmagnitude();
 				distance = Math.sqrt(squdistance); 
-				g_invrad = tstep*G/(squdistance*distance); 
+				invrad = tsign/(squdistance*distance); 
 				//g_invrad is the the G/r^2 value used to calculate the acceleration of both objects, 
 				//divided by distance for use in calculating the final acceleration vector
 												
 			//	e1.velocity.sub(dpos.scale2(e2.mass*g_invrad));  //computes acceleration of each body and updates their velocities accordingly
 			//	e2.velocity.add(dpos.scale2(e1.mass*g_invrad));
 				
-				e1.accelerate(dpos, -e2.mass*g_invrad, e2);
-				e2.accelerate(dpos, e1.mass*g_invrad, e1);
+				e1.accelerate(dpos, -e2.GMt*invrad, e2);
+				e2.accelerate(dpos, e1.GMt*invrad, e1);
 				
 				if(distance < e1.radius + e2.radius){ //checks if the objects collide
 					
@@ -116,7 +118,7 @@ public class Motion {
 				Object_manager.updatetrailfoci();
 				
 				cableforces(increment);
-				gravitation(increment);					
+				gravitation((byte) 1);					
 
 			}
 		
@@ -124,7 +126,7 @@ public class Motion {
 						
 			for(int i=0; i<Math.abs(repetition); i++){
 					
-				gravitation(-increment);
+				gravitation((byte) -1);
 				cableforces(-increment);	
 								
 				Object_manager.updatetrailfoci();
