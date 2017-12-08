@@ -17,6 +17,7 @@ import graphics.Frame_functions;
 import graphics.Graphics_engine;
 import user_interface.Control_panel;
 import user_interface.FileIO;
+import user_interface.Key_control;
 import user_interface.Mouse_control;
 
 @SuppressWarnings("serial")
@@ -37,6 +38,7 @@ public class Main_class extends JPanel{
 	public static ArrayList<Cable> clist = new ArrayList<Cable>(0); //Space elevator cables
 	
 	public static int framewait; //time wait in milliseconds between rendering frames
+	//must be at least ~20ms or various nasty graphics issues occur; an exact value hasn't been determined and likely isn't fixed 
 	
 	public static boolean stressvisualization = false;
 	public static boolean fixedreferences = true;
@@ -45,7 +47,8 @@ public class Main_class extends JPanel{
 	public static boolean edges = true;
 	
 	public static boolean running; 
-	public static boolean loading; 	//state variables used for loading, running, and saving	simulations
+	public static boolean loading; 	//state variables used for (re)loading, running, and saving	simulations
+	public static boolean reloading;
 	public static boolean saving;
 	
 	public static boolean loading_internal; //whether the simulation is the hardcoded demo or a text file
@@ -75,20 +78,40 @@ public class Main_class extends JPanel{
 			System.out.print(""); //keeps while loop from timing out and breaking
 			
 			if(loading){ //loads simulation from a file specified by the variable loadstring
-				startsimulation(loadstring);
+				if (reloading){
+					startsimulation(true);
+				}else {
+					startsimulation(false);
+				}
+					
 				if(Main_class.elist.size() != 0){ //checks for empty simulation
 					running = true;
-				}	
+				}
+				reloading = false;
 				loading = false;
+				
 			}
 			
 		}
 					
 	}
 	
-	public static void startsimulation(String s){ //loads simulation from file and sets it up
-
-		String f = FileIO.getfilepath();
+	public static void startsimulation(boolean b){ //loads simulation from file and sets it up
+		
+		String f;
+		
+		if (b && loadstring != null) {
+		
+			f = loadstring;
+		
+		}else {
+			
+			f = FileIO.getfilepath(); //creates a file browser popup
+			loadstring = f;			
+			
+		}
+		
+		Frame_functions.inputfield.setText(f);
 		
 		if(f != null){ //cancels loading and resumes current simulation if no file is selected
 
@@ -123,7 +146,7 @@ public class Main_class extends JPanel{
 		
 		if(equipotentialviz){
 			Equipotential_viz.efficient_surface(); 
-			//crashes due to stackoverflow recursion errors despite actually having controlled recursion and being faster than the nonrecursive method
+			//crashes due to stack overflow recursion errors despite having controlled recursion and being faster than the nonrecursive method
 		}
 
 		Graphics_engine.projector();

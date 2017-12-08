@@ -30,6 +30,8 @@ public class Frame_functions extends JPanel{
 	
 	public static final JTextField camspeed = new JTextField(); //part of control window
 	public static final JTextField simspeed = new JTextField(); //part of control window
+	public static final JTextField primary = new JTextField(); //part of control window
+
 
 	
 	static int height = 1000; //these change over time to track window size
@@ -77,6 +79,8 @@ public class Frame_functions extends JPanel{
 		inputbox.add(camspeed);
 		simspeed.setBounds(70,50,70,30);
 		inputbox.add(simspeed);
+		primary.setBounds(70,80,70,30);
+		inputbox.add(primary);
 		
 		inputbox.setLayout(new BorderLayout());
 		
@@ -98,9 +102,16 @@ public class Frame_functions extends JPanel{
 		g.setColor(background);
 		g.fillRect(0, 0, 1900, 1000); //colors background //TODO set rect dimensions to window size
 		
+		//System.out.println(Graphics_engine.order2.size()-1);
 		for(int x = Graphics_engine.order2.size()-1; x >= 0; x--){				
 			
+			
 			Render_obj robject = Graphics_engine.order2.get(x);
+			
+			//this throws a bizarre and irrational mix of null pointer and index out of bounds errors if the framewait is less than about 20ms
+			//these errors aren't susceptible to usuall if/else checks for object existence and arraylist length
+			//this limitation is likely based on the rendering time and probably cannot be avoided in the current rendering systen
+			//20 ms has occasional errors, 10 ms constant errors, 30 is quite reliable
 			
 			if(robject.plane && !robject.point){ //renders planes
 				
@@ -156,6 +167,10 @@ public class Frame_functions extends JPanel{
 			}
 			
 		}
+			
+//		}
+			
+//		}
 			
 	}	
 

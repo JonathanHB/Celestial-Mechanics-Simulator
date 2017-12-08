@@ -11,9 +11,9 @@ public class Equipotential_viz {
 	public static V3 center = new V3(0,0,0);
 	public static V3 apothem = new V3(30,30,30);
 	public static V3 centminapo = new V3(center.sub2(apothem));
-	public static double spacing = .2;
-	public static double potentialvalue = -1.2;
-	public static double threshold = .05;
+	public static double spacing = .4;
+	public static double potentialvalue = -4.8;
+	public static double threshold = .3;
 	
 	public static V3 lengths = new V3(Math.round(2*apothem.x/spacing),Math.round(2*apothem.y/spacing),Math.round(2*apothem.z/spacing));
 	

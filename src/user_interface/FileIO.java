@@ -65,6 +65,8 @@ public class FileIO {
 				}
 
 			}
+			
+			//br.close();
 
 		}catch (IOException e) {
 
@@ -73,6 +75,8 @@ public class FileIO {
 		}	
 
 		return (String[]) filecontents.toArray(new String[filecontents.size()]);
+		
+		
 		
 	}
 		
@@ -86,7 +90,7 @@ public class FileIO {
 		Motion.repbuff = 0;
 		Motion.repetition = 0;
 
-		Main_class.framewait = Integer.parseInt(inputdata[0]);
+		Main_class.framewait = Integer.parseInt(inputdata[0]); //must be at least ~20ms or various nasty graphics issues occur
 		Frame_functions.background = Parsingmethods.parsecolor(inputdata[1]);//make optional
 
 		Graphics_engine.focusindex = Integer.parseInt(inputdata[2]); //make optional

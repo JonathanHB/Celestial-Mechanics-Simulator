@@ -35,7 +35,9 @@ public class Text_control {
 				Main_class.running = false;
 				Main_class.loading = true;
 					
-				Main_class.loadstring = s;				
+				Main_class.loadstring = s;	
+				
+				
 								
 			}else if(state == 2){ //saves file
 				

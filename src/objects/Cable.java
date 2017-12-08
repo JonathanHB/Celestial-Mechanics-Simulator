@@ -27,6 +27,10 @@ public class Cable {
 	public Cable(double spacing, double maxlen, int length, Entity ref_ent, Color c, Color ct, int traillength, double res, int trail_refent){
 		//constructor to create a cable in geostationary orbit over the ref_ent entity
 		
+		//note: cables extending too close to the primary will behave unrealistically and either gain or lose energy and orbit erratically
+		//on their own due to the limits of the FEA (finite element analysis) simulation;
+		//shorter timesteps might help but this aspect of the program isn't a priority
+		
 		col = c;
 		node_spacing = spacing;		
 		maxlength = maxlen;
@@ -43,11 +47,11 @@ public class Cable {
 				ct
 				);
 		
-		if(trail_refent == -2){
+		if(trail_refent == -2){ //used to generate a cable in [geo]stationary orbit
 			
 			refent = primary_ent;
 			
-		}else if(trail_refent == -1){
+		}else if(trail_refent == -1){ //used to generate a cable from a cablenode array when loading saved cables
 			
 			refent = new Entity(true);
 			
@@ -128,12 +132,14 @@ public class Cable {
 							
 		for(int x = 0; x<length; x++){ //generates cable once altitude is determined
 						
-			V3 node_long = new V3(0,0,Math.atan2(primary.rotation.y, primary.rotation.x));
-			V3 inclination = new V3(0,-Math.atan2(primary.rotation.z, Math.sqrt(primary.rotation.x*primary.rotation.x+primary.rotation.y*primary.rotation.y)),0);//probably garbage
+			//V3 node_long = new V3(0,0,Math.atan2(primary.rotation.y, primary.rotation.x));
+			//V3 inclination = new V3(0,-Math.atan2(primary.rotation.z, Math.sqrt(primary.rotation.x*primary.rotation.x+primary.rotation.y*primary.rotation.y)),0);//probably garbage
 			
 			nodes[x] = new Cablenode(
-				Math_methods.rotatepoint(new V3(0, adjustedcable[x][0], 0), node_long).add2(primary.position),
-				Math_methods.rotatepoint(Math_methods.rotatepoint(new V3(0, 0, adjustedcable[x][1]), inclination), node_long).add2(primary.velocity)
+				//Math_methods.rotatepoint(new V3(0, adjustedcable[x][0], 0), node_long).add2(primary.position),
+				//Math_methods.rotatepoint(Math_methods.rotatepoint(new V3(0, 0, adjustedcable[x][1]), inclination), node_long).add2(primary.velocity)
+				new V3(0, adjustedcable[x][0], 0).add2(primary.position),
+				new V3(0, 0, adjustedcable[x][1]).add2(primary.velocity)	
 			);
 						
 		}
@@ -220,7 +226,7 @@ public class Cable {
 			
 			V3 deltapos = nodes[x+1].position.sub2(nodes[x].position);			
  
-			double reactionmagnitude = 171.5*(deltapos.magnitude() - node_spacing)*Math.signum(increment);
+			double reactionmagnitude = 100.5*(deltapos.magnitude() - node_spacing);//*Math.signum(increment);
 			V3 reactionvector = deltapos.tolength2(reactionmagnitude);
 			
 			nodes[x+1].velocity.sub(reactionvector);

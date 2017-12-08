@@ -193,7 +193,7 @@ public class Trajectory_optimizer {
 
 		for(int x=0; x<Main_class.elist.size(); x++){
 			if(x!=target){
-				for(int y=x+1; y<probes.size(); y++){
+				for(int y=x+1; y<probes.size(); y++){ //x+1 should probably be 0 since gravity is being calculated between 2 separate object sets
 
 					dpos=probes.get(y).position.sub2(postable[x][time]);
 
