@@ -262,7 +262,7 @@ public class Object_manager {
 			
 			if(e.iskeplerian){ //converts from keplerian orbital elements to state vectors
 			
-				V3[] cart = Math_methods.kepleriantocartesian(e.position.x, e.position.y, 0.0174533*e.position.z, 0.0174533*e.velocity.x, 0.0174533*e.velocity.y, 0.0174533*e.velocity.z, e.primary.mass);
+				V3[] cart = Math_methods.kepleriantocartesian(e.position.x, e.position.y, 0.0174533*e.position.z, 0.0174533*e.velocity.x, 0.0174533*e.velocity.y, 0.0174533*e.velocity.z, e.primary.mass, true);
 				
 				e.position = cart[0];
 				e.velocity = cart[1];

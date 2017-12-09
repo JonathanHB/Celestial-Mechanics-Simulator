@@ -19,7 +19,7 @@ public class Math_methods {
 		
 	}
 	
-	public static V3 rotationaxis(V3 r) {
+	public static V3 rotationaxis(V3 r) { 
 		
 		double sinro=Math.sin(r.x);
 		double cosro=Math.cos(r.x);	
@@ -36,6 +36,7 @@ public class Math_methods {
 	
 	//public static V3 
 	
+	//likely inaccurate; rewrite
 	public static V3 getrotation(V3 dp, V3 dv){ //returns the angular momentum resulting from a collision
 		
 		V3 pv = perpendicularpart(dv, dp); //the part of the relative velocity perpendicular to the axis of collision
@@ -143,9 +144,16 @@ public class Math_methods {
 	//mpr = mass of primary 
 	//tra = true anomaly
 	//angles in radians
-	public static V3[] kepleriantocartesian(double sma, double ecc, double mlo, double arg, double inc, double lan, double mpr){
+	
+	public static V3[] kepleriantocartesian(double sma, double ecc, double mlo_tra, double arg, double inc, double lan, double mpr, boolean mlo_or_tra){
 		
-		double tra = mlototra(mlo, ecc, lan, arg);
+		double tra;
+		
+		if (mlo_or_tra) {		
+			tra = mlototra(mlo_tra, ecc, lan, arg);
+		}else {
+			tra = mlo_tra;
+		}
 	
 		double r = sma*(1-ecc*ecc)/(1-ecc*Math.cos(tra));
 

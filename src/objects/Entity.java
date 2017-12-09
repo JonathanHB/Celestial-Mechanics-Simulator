@@ -104,7 +104,7 @@ public class Entity {
 		}	
 	}
 	
-	public void accelerate(V3 dpos, double a, Entity potential_ref){
+	public void accelerate(V3 dpos, double a, Entity potential_ref){ //probably an unnecessary method
 		
 		velocity.add(dpos.scale2(a));
 		
@@ -117,14 +117,14 @@ public class Entity {
 		
 	}
 	
-	public void move(double d){ //translates and rotates entity
+	public void move(double d){ //translates and rotates entity; get rid of this its an unnecessary method call
 		
 		translate(d);
 	//	rotate(d);
 	
 	}	
 	
-	public void translate(double d){ //moves entity for a time increment of d seconds
+	public void translate(double d){ //moves entity for a time increment of d seconds //probably another needless method call
 		
 		V3 dpos=velocity.scale2(d);
 		position.add(dpos);
@@ -138,7 +138,7 @@ public class Entity {
 						
 	}
 	
-	public void rotate(double d){ //rotates the entity for a time increment of d seconds
+	public void rotate(double d){ //rotates the entity for a time increment of d seconds //get rid of this its an extra method call
 		
 		orientation.add(rotation.scale2(d)); //update polyhedron's orientation, doesn't work
 		//Math_methods.rotatepoint(orientation, rotation);
@@ -150,12 +150,14 @@ public class Entity {
 		
 		V3[] rootvals = new V3[2];
 		
-		if(indexbuffer == -1) {
+		if(indexbuffer == -1) { //if entity is already in barycentric coordinates
 					
 			rootvals[0] = new V3(position);
 			rootvals[1] = new V3(velocity);						
 			
-		}else {
+		}else{ 
+			//recursively goes down the primary tree, adding up coordinates in different reference frames
+			//and eventually the barycentric frame to get the correct barycentric values
 			
 			rootvals = primary.getabsolutevectors();
 			rootvals[0].add(position);

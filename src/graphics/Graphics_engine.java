@@ -194,9 +194,9 @@ public class Graphics_engine {
 			}
 
 			for(Line l : e.t.links){
-			//	if(l.arcshort){
+				if(l.p1.arcshort && l.p2.arcshort){
 					order2.add(new Render_obj(l));
-			//	}
+				}
 			}
 		}
 
@@ -342,19 +342,21 @@ public class Graphics_engine {
 		}	
 	}
 	
-	public static int[] planarprojection(V3 v) {
-		
-		int[] xy = new int[2];
-		
+	public static void planarprojection(Point p, V3 v) {
+				
 		if(v.x > 0) {
-			xy[0] = (int) (Math.round(windowscale*v.y/v.x)+Frame_functions.ctrw);
-			xy[1] =	(int) (Math.round(windowscale*v.z/v.x)+Frame_functions.ctrh);	
+			
+			p.projectx = (int) (Math.round(windowscale*v.y/v.x)+Frame_functions.ctrw);
+			p.projecty = (int) (Math.round(windowscale*v.z/v.x)+Frame_functions.ctrh);	
+			p.arcshort = true;
+			
 		}else {
-			xy[0] = (int) (Math.round(9999*v.y));
-			xy[1] = (int) (Math.round(9999*v.z));
-		}
-		
-		return xy;
+			
+			p.arcshort = false;
+			p.projectx = (int) (Math.round(9999*v.y));
+			p.projecty = (int) (Math.round(9999*v.z));
+			
+		}		
 		
 	}
 	
