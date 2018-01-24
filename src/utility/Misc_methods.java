@@ -6,6 +6,7 @@ import java.util.Collections;
 
 import objects.Entity;
 import objects.Render_obj;
+import objects.Test_mass_2;
 
 public class Misc_methods {
 		
@@ -49,7 +50,7 @@ public class Misc_methods {
 		
 	}
 
-	//sorts arraylist for interval c-d with a quicksort
+	//sorts arraylist for interval c-d with a quicksort; lower values end up at lower indices
 	public static void sort2(int c, int d, ArrayList<Render_obj> array){
 		//	d is the upper end of the range, c is the lower one (inclusive)
 		if(d > c){
@@ -81,6 +82,42 @@ public class Misc_methods {
 
 			sort2(c,n-1,array);
 			sort2(n+1,d,array);		
+
+		}
+
+	}
+	
+	public static void sort3(int c, int d, ArrayList<Test_mass_2> array){
+		//	d is the upper end of the range, c is the lower one (inclusive)
+		if(d > c){
+			
+			double pivot = array.get(d).mindistance;
+		
+			int n = d;
+
+			for(int x = c; x<n;){
+
+				if(array.get(x).mindistance > pivot){
+				
+					Collections.swap(array, n, n-1);
+									
+					if(x+1<n){
+						//keeps certain switches of adjacent elements from being undone
+						Collections.swap(array, n, x);
+					}	
+
+					n--;
+
+				}else{
+
+					x++;
+
+				}
+
+			}
+
+			sort3(c,n-1,array);
+			sort3(n+1,d,array);		
 
 		}
 

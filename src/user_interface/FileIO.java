@@ -96,7 +96,7 @@ public class FileIO {
 		Graphics_engine.focusindex = Integer.parseInt(inputdata[2]); //make optional
 
 		Motion.increment = Double.parseDouble(inputdata[3]); //make optional
-		Motion.incbuff = Motion.increment; //make optional
+		//Motion.incbuff = Motion.increment; //make optional
 
 		Key_control.phys_rep_inc = Integer.parseInt(inputdata[4]); //make optional
 		Key_control.tsensitivity = Double.parseDouble(inputdata[5]); //make optional
@@ -241,15 +241,24 @@ public class FileIO {
 		
 		Entity e = Main_class.elist.get(i);
 		
+		V3[] state;
+		
+		if(e.primary.mass != 0) {
+			state = e.primary.getabsolutevectors();
+			
+		}else {
+			state = new V3[] {new V3(0), new V3(0)};
+		}
+		
 		writer.print(e.mass);	
 		writer.print(",");
 		writer.print(e.radius);
 		writer.print(",");
 		writer.print(e.luminosity.tostring());
 		writer.print(",");
-		writer.print(e.position.tostring());
+		writer.print(e.position.sub2(state[0]).tostring());
 		writer.print(",");
-		writer.print(e.velocity.tostring());
+		writer.print(e.velocity.sub2(state[1]).tostring());
 		writer.print(",");
 		writer.print(e.orientation.tostring());
 		writer.print(",");
@@ -273,7 +282,7 @@ public class FileIO {
 		writer.print(",");
 		writer.print(Main_class.elist.indexOf(e.primary));
 		writer.print(",");
-		writer.print(e.iskeplerian);
+		writer.print(false);
 		
 		writer.println();
 

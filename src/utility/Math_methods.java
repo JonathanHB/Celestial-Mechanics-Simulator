@@ -116,12 +116,12 @@ public class Math_methods {
 	
 	public static double mlototra(double mlo, double ecc, double lan, double arg) { //converts mean longitude to true anomaly
 		
-		double man = mlo-lan-arg;
+		double man = mlo-lan-arg; //finds mean anomaly, the phase angle wrt the ellipse center rather than the focus
 		
 		double lasteccanom = 0;
-		double lasterr = 999999999;
+		double lasterr = Double.MAX_VALUE;
 		
-		for(double x = -1; x <= 1; x += .000001) {
+		for(double x = -1; x <= 1; x += .000001) { //numerically approximates tra from man since the relationship is transcendental
 			double esteccanom = man+x;
 			double err = Math.abs(man-esteccanom+ecc*Math.sin(esteccanom));
 
@@ -132,8 +132,7 @@ public class Math_methods {
 			
 		}
 		
-		
-		
+				
 		double tra = 2*Math.atan2(Math.sqrt(1+ecc)*Math.sin(lasteccanom/2), Math.sqrt(1-ecc)*Math.cos(lasteccanom/2));
 		return tra;		
 		
@@ -142,38 +141,71 @@ public class Math_methods {
 	//sma = semimajor axis, ecc = eccentricity, mlo = mean longitude
 	//arg = argument of periapsis, inc = inclination, lan = longitude of ascending node
 	//mpr = mass of primary 
-	//tra = true anomaly
+	//tra = true anomaly (phase angle wrt primary)
 	//angles in radians
+	
+	//mlo_tra is mlo if mlo_or_tra is true and tra if it's false
+	//mlo = phase angle wrt primary for an equivalent body in a circular orbit of equal period; used to find true anomaly
 	
 	public static V3[] kepleriantocartesian(double sma, double ecc, double mlo_tra, double arg, double inc, double lan, double mpr, boolean mlo_or_tra){
 		
 		double tra;
 		
 		if (mlo_or_tra) {		
-			tra = mlototra(mlo_tra, ecc, lan, arg);
-		}else {
+			tra = mlototra(mlo_tra, ecc, lan, arg); //converts mlo to tra if mlo is given
+		}else{
 			tra = mlo_tra;
 		}
+		
+		//constructs orbit in the xy plane based on sma, ecc, tra, and mpr 
 	
-		double r = sma*(1-ecc*ecc)/(1-ecc*Math.cos(tra));
+		double c1 = 1-ecc*Math.cos(tra);
+		double c2 = 1-ecc*ecc;
+		
+		double r = sma*(c2)/(c1);
 
 		double v = Math.sqrt(physics.Motion.G*mpr*(2/r-1/sma));
 
-		double dr = sma*ecc*(1-ecc*ecc)*Math.sin(tra);
-		double dth = (1-ecc*Math.cos(tra))*(1-ecc*Math.cos(tra));
+		double dr = sma*ecc*(c2)*Math.sin(tra);
+		double dth = c1*c1;
 				
 		double x = r*Math.cos(tra);
 		double y = r*Math.sin(tra);
 		
-		V3 pos = new V3(x,y,0);
+		V3 pos = new V3(x,y,0); //position in xy plane
 		
 		double tanangle = tra - Math.atan2(r*dth, dr);
 		
 		double vx = Math.cos(tanangle)*v;
 		double vy = Math.sin(tanangle)*v;
 		
-		V3 vel = new V3(vx,vy,0);
+		V3 vel = new V3(vx,vy,0); //velocity vector in xy plane
 		
+		//rotates
+		
+		pos.set(Math_methods.rotatepoint(pos, new V3(0,0,arg)));		
+		vel.set(Math_methods.rotatepoint(vel, new V3(0,0,arg)));
+		pos.set(Math_methods.rotatepoint(pos, new V3(0,inc,lan)));		
+		vel.set(Math_methods.rotatepoint(vel, new V3(0,inc,lan)));
+		
+		
+		V3[] cartesian = new V3[2]; 
+		cartesian[0] = pos;
+		cartesian[1] = vel;
+		
+		//System.out.println(pos.tostring() + ", " + vel.tostring());
+		//System.out.println("done");
+
+		return cartesian;
+	}
+	
+	//computationally efficient version of kepleriantocartesian to handle escape trajectories with known velocity and no phase
+	public static V3[] esctrajectory(double r0, double v0, double arg, double inc, double lan){
+		
+		V3 pos = new V3(r0,0,0); //position in xy plane	
+		
+		V3 vel = new V3(0,v0,0); //velocity vector in xy plane
+	
 		pos.set(Math_methods.rotatepoint(pos, new V3(0,0,arg)));		
 		vel.set(Math_methods.rotatepoint(vel, new V3(0,0,arg)));
 		pos.set(Math_methods.rotatepoint(pos, new V3(0,inc,lan)));		

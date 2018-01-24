@@ -211,7 +211,7 @@ public class Object_manager {
 			}
 		
 	}
-	
+	/*
 	public static void updatetrailfoci(){
 		
 		if(Main_class.fixedreferences == false){
@@ -225,7 +225,7 @@ public class Object_manager {
 		
 		}
 		
-	}
+	}*/
 	
 	public static void check_refents(Entity a, Entity b){
 		//Updates the refents of objects orbiting colliding entities to the product of the collision

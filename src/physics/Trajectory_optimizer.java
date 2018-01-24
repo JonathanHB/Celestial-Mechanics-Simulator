@@ -247,7 +247,7 @@ public class Trajectory_optimizer {
 	}
 
 	public static Test_mass closest(ArrayList<Test_mass> t){
-		//finds each probe's closest approach to the target
+		//finds the probe with the closest approach to the target
 		
 		Test_mass current_min = new Test_mass(); 
 

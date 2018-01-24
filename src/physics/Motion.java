@@ -15,7 +15,7 @@ public class Motion {
 	//simulation asymptotically approaches reality as increment->0, 
 	//long increments relative to system size lead to issues like precession of periapsis in two body systems
 			
-	public static double incbuff = increment; //buffers used to prevent problematic variable updates as the method runs
+	//public static double incbuff = increment; //buffers used to prevent problematic variable updates as the method runs
 	public static int repbuff = repetition;
 		
 	public static double G = .00000000006674; //gravitational constant
@@ -43,7 +43,7 @@ public class Motion {
 				
 		for(int x = 0; x<Main_class.elist.size(); x++){ 
 			
-			Main_class.elist.get(x).accbuff.set(0);
+			//Main_class.elist.get(x).accbuff.set(0);
 			
 			for(int y = x+1; y<Main_class.elist.size(); y++){ 
 				
@@ -57,6 +57,7 @@ public class Motion {
 				invrad = tsign/(squdistance*distance); 
 				//g_invrad is the the G/r^2 value used to calculate the acceleration of both objects, 
 				//divided by distance for use in calculating the final acceleration vector
+				//distance is stored to check for collisions
 												
 			//	e1.velocity.sub(dpos.scale2(e2.mass*g_invrad));  //computes acceleration of each body and updates their velocities accordingly
 			//	e2.velocity.add(dpos.scale2(e1.mass*g_invrad));
@@ -70,7 +71,14 @@ public class Motion {
 					
 					Object_manager.add(e1, e2, true);
 				}
-
+				
+				//System.out.println(e1.position.tostring());
+				//System.out.println(Main_class.time/(Motion.increment*100000));
+				//if(Main_class.time/(Motion.increment*100000.0) == Math.round(Main_class.time/(Motion.increment*100000.0))) {
+				//	System.out.println(Main_class.elist.get(x).position.tostring());
+					//System.out.println(Main_class.time/(Motion.increment*100000.0));
+				//}
+				
 			}
 	
 		}
@@ -112,13 +120,21 @@ public class Motion {
 		
 			for(int i=0; i<repetition; i++){ 
 					
+				if(Main_class.ticks/5000.0 == Math.round(Main_class.ticks/5000)) {
+					System.out.println(Main_class.elist.get(3).position.tostring_short());
+					//System.out.println(Main_class.ticks/10000.0);
+				}
+				
+				Main_class.ticks ++;
+				
+				
 				movement(increment);
 				cablemove(increment);
 				
-				Object_manager.updatetrailfoci();
+				//Object_manager.updatetrailfoci();
 				
 				cableforces(increment);
-				gravitation((byte) 1);					
+				gravitation((byte) 1);
 
 			}
 		
@@ -129,17 +145,19 @@ public class Motion {
 				gravitation((byte) -1);
 				cableforces(-increment);	
 								
-				Object_manager.updatetrailfoci();
+				//Object_manager.updatetrailfoci();
 				
 				cablemove(-increment);
 				movement(-increment);
 
 			}
 			
+			
+			
 		}
 	
 		repetition=repbuff;  //updates increment and repetition variables from buffers
-		increment=incbuff;
+		//increment=incbuff;
 		
 	}
 	

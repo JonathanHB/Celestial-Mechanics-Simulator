@@ -10,6 +10,7 @@ import objects.Entity;
 import objects.Point;
 import objects.Poly_library;
 import physics.Object_manager;
+import physics.Trajectory_opt_2;
 import physics.Motion;
 import physics.Trajectory_optimizer;
 import graphics.Equipotential_viz;
@@ -24,8 +25,9 @@ import user_interface.Mouse_control;
 public class Main_class extends JPanel{
 		
 	public static double time = 0; //net number of seconds simulated; physical time in simulation
-	public static double runtime = 0; //total number of seconds simulated; positive and negative time are added
+	public static double runtime = 0; //total number of seconds simulated; positive and |negative| time are added
 	//time variables reset when the simulation restarts	
+	public static int ticks = 0; //number of ticks simulated
 	
 	static int siginc; 
 	//the number of significant digits of the physics simulation's time increment,
@@ -41,9 +43,9 @@ public class Main_class extends JPanel{
 	//must be at least ~20ms or various nasty graphics issues occur; an exact value hasn't been determined and likely isn't fixed 
 	
 	public static boolean stressvisualization = false;
-	public static boolean fixedreferences = true;
+	public static boolean fixedreferences = false;
 	public static boolean equipotentialviz = false;
-	public static boolean traject_opt = false;
+	public static boolean traject_opt = true;
 	public static boolean edges = true;
 	
 	public static boolean running; 
@@ -126,8 +128,8 @@ public class Main_class extends JPanel{
 			Graphics_engine.camtofocus();
 			
 			if(traject_opt){ //runs trajectory optimizer	
-				Trajectory_optimizer.maketables();
-				Trajectory_optimizer.optimize();
+				//Trajectory_optimizer.maketables();
+				Trajectory_opt_2.optimize();
 			}	
 
 			siginc = Misc_methods.sigdigs(Motion.increment); 
@@ -157,7 +159,7 @@ public class Main_class extends JPanel{
 
 
 		if(Motion.increment !=0 && Motion.repetition !=0){ //checks that simulation isn't paused
-			time += Motion.increment*Math.abs(Motion.repetition);      //update time and runtime
+			time += Motion.increment*Motion.repetition;      //update time and runtime
 			runtime += Math.abs(Motion.increment*Motion.repetition); 
 			Frame_functions.timefield.setText(Misc_methods.roundto(time, siginc) + " seconds"); //display the time
 		}

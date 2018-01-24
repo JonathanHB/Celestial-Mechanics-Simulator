@@ -9,7 +9,7 @@ import utility.V3;
 
 public class Entity {
 	
-	public double mass; //kilograms
+	public double mass; //kilograms //0 mass is a flag indicating the entity exists as a dummy primary for something in barycentric coordinates
 	public double GMt; //G*mass*tstep
 	public double radius; //meters
 	public double moi; //kilogram-square meters
@@ -41,13 +41,14 @@ public class Entity {
 	public Line velvector = new Line();
 	public Line rvector = new Line();
 	
-	public V3 accbuff;
+	//public V3 accbuff;
 	
 	public Entity(){} //empty constructor
 	
 	public Entity(boolean b){ //boolean for overloading
 		position = new V3(0,0,0);
 		velocity = new V3(0,0,0);
+		mass = 0;
 	}
 	
 	public Entity( //full constructor with 17 arguments
@@ -59,7 +60,7 @@ public class Entity {
 		mass=m;
 		GMt = .00000000006674*m*Motion.increment;
 		radius=r;
-		accbuff = new V3();
+		//accbuff = new V3();
 		
 		moi = .4*mass*radius*radius;
 		
@@ -117,17 +118,21 @@ public class Entity {
 		
 	}
 	
-	public void move(double d){ //translates and rotates entity; get rid of this its an unnecessary method call
+	public void move(double d){ //translates and rotates entity; get rid of this since it's an unnecessary method call
 		
 		translate(d);
+		
+		if(Main_class.fixedreferences == false){
+			maxforceproxy = 0;
+		}
 	//	rotate(d);
 	
 	}	
 	
-	public void translate(double d){ //moves entity for a time increment of d seconds //probably another needless method call
+	public void translate(double d){ //moves entity for a time increment of d seconds //maybe another needless method call
 		
-		V3 dpos=velocity.scale2(d);
-		position.add(dpos);
+		//V3 dpos=velocity.scale2(d);
+		position.add(velocity.scale2(d));
 				
 		t.shiftby(primary.velocity.scale2(d)); 
 
