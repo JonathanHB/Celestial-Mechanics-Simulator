@@ -119,13 +119,14 @@ public class Motion {
 		if(repetition>0){
 		
 			for(int i=0; i<repetition; i++){ 
-					
-				if(Main_class.ticks/5000.0 == Math.round(Main_class.ticks/5000)) {
-					System.out.println(Main_class.elist.get(3).position.tostring_short());
+				//System.out.println(Main_class.elist.get(3).position.tostring_short() + ";;" + Main_class.elist.get(3).velocity.tostring_short());
+				//if(Main_class.ticks < 100) {
+				//if(Main_class.ticks/5000.0 == Math.round(Main_class.ticks/5000)) {
+					//System.out.println(Main_class.elist.get(2).position.tostring_short() + ";;" + Main_class.elist.get(2).velocity.tostring_short());
 					//System.out.println(Main_class.ticks/10000.0);
-				}
+				//}
 				
-				Main_class.ticks ++;
+				//Main_class.ticks ++;
 				
 				
 				movement(increment);

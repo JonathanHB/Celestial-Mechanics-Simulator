@@ -45,7 +45,7 @@ public class Main_class extends JPanel{
 	public static boolean stressvisualization = false;
 	public static boolean fixedreferences = false;
 	public static boolean equipotentialviz = false;
-	public static boolean traject_opt = true;
+	public static boolean traject_opt = false;
 	public static boolean edges = true;
 	
 	public static boolean running; 
