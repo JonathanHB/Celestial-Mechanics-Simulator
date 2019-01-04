@@ -87,7 +87,7 @@ public class Misc_methods {
 
 	}
 	
-	public static void sort3(int c, int d, ArrayList<Test_mass_2> array){
+	public static void sort3(int c, int d, ArrayList<Test_mass_2> array){ //used for trajectory optimizer
 		//	d is the upper end of the range, c is the lower one (inclusive)
 		if(d > c){
 			

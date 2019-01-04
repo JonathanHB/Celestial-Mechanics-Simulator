@@ -45,7 +45,7 @@ public class Main_class extends JPanel{
 	public static boolean stressvisualization = false;
 	public static boolean fixedreferences = false;
 	public static boolean equipotentialviz = false;
-	public static boolean traject_opt = false;
+	public static boolean traject_opt = true;
 	public static boolean edges = true;
 	
 	public static boolean running; 
@@ -177,13 +177,13 @@ public class Main_class extends JPanel{
 
 //TODO:
 /*
+ * improve trajectory optimizer
  * 
- * 
- * 
+ * implement rotation
  * port tidal forces (these should account for & influence rotation)
  * 
  * 
- * improve movement and axis angle controls(base axis angle on location relative to barycenter, or eliminate it)
+ * improve movement and axis angle controls(base axis angle on location relative to barycenter)
  * 
  * port piloting simulation?
  * add heating simulation(via lighting engine) and lighting engine shadows

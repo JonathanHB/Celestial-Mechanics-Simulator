@@ -30,10 +30,21 @@ public class Line {
 		center = (p1.position.add2(p2.position)).scale2(.5);		
 	}
 	
-	public void project(V3 campos, V3 camori){ //camori isn't currently used
+	public void project(V3 campos, V3 camori){ 
 		//computes angle to a line from its 3d position, used for culling of objects outside of visual field
 		
 		V3 v = new V3(Math_methods.rotatepoint(center.sub2(campos), camori));
+
+		squdistance = v.squmagnitude();
+
+	}
+	
+	//-------------------------------------------------
+	
+	public void project2(V3 campos, V3 camori, V3 axisori){ //project with a second rotation
+		//computes angle to a line from its 3d position, used for culling of objects outside of visual field
+		
+		V3 v = new V3(Math_methods.rotatepoint(Math_methods.reverserotatepoint(center.sub2(campos), axisori), camori));
 
 		squdistance = v.squmagnitude();
 

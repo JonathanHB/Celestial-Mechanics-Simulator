@@ -174,7 +174,7 @@ public class Object_manager {
 						));
 				
 		Main_class.elist.get(Main_class.elist.size()-1).getreference();
-		Main_class.elist.get(Main_class.elist.size()-1).t.shiftby(Main_class.elist.get(Main_class.elist.size()-1).getabsolutevectors()[0]);
+		Main_class.elist.get(Main_class.elist.size()-1).t.shiftby(Main_class.elist.get(Main_class.elist.size()-1).position);
 		
 		check_refents(a,b);
 		

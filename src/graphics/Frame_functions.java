@@ -143,7 +143,7 @@ public class Frame_functions extends JPanel{
 				
 				g.setColor(illuminate(robject.l.illumination, robject.l.c));				
 				
-				if(Main_class.traject_opt){
+				if(Graphics_engine.colorbyage){
 					g.setColor(
 							new Color(
 							(int) Math.round(155*robject.l.time/Main_class.runtime),

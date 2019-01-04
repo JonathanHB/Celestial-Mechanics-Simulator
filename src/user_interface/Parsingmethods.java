@@ -8,6 +8,19 @@ import utility.V3;
 public class Parsingmethods {
 	//this class contains the type conversion methods used by FileIO
 	
+	public static boolean parsetf(String s){
+		//System.out.println(s);
+		//System.out.println(s.equals("f"));
+		if(s.equals("f")) {
+			return false;
+		}else if (s.equals("t")) {
+			return true;
+		}else {		
+			System.out.println("unrecognizable input, defaulting to variable focus");
+			return false;
+		}
+	}
+	
 	public static Color parsecolor(String s){ //converts String to Color
 		
 		String values[] = s.substring(1,s.length()-1).split(";");

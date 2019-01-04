@@ -2,6 +2,28 @@ package utility;
 
 public class Math_methods {
 
+	public static V3 rotatex(V3 v, double theta) {
+		
+		return new V3(v.x, v.y*Math.cos(theta)+v.z*Math.sin(theta), v.z*Math.cos(theta)-v.y*Math.sin(theta));
+		
+	}
+	
+	public static V3 rotatey(V3 v, double theta) {
+		
+		return new V3(v.x*Math.cos(theta)-v.z*Math.sin(theta), v.y, v.z*Math.cos(theta)+v.x*Math.sin(theta));
+		
+	}
+	
+	public static V3 rotatez(V3 v, double theta) {
+		
+		return new V3(v.x*Math.cos(theta)+v.y*Math.sin(theta), v.y*Math.cos(theta)-v.x*Math.sin(theta), v.z);
+		
+	}
+	
+	public static V3 reverserotatepoint(V3 v, V3 r) {
+		return new V3(rotatez(rotatey(rotatex(v,r.x),r.y),r.z));
+	}
+	
 	public static V3 rotatepoint(V3 v, V3 r){ //rotates V3 v around the origin by the angle r
 		
 		double sinro=Math.sin(r.x);

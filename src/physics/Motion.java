@@ -4,6 +4,7 @@ import objects.Cable;
 import objects.Entity;
 import graphics.Graphics_engine;
 import utility.Main_class;
+import utility.Math_methods;
 import utility.V3;
 
 public class Motion {
@@ -117,7 +118,9 @@ public class Motion {
 		//so that the physics will run in an exactly equal and opposite way, preserving determinism
 		
 		if(repetition>0){
-		
+				
+			//	Graphics_engine.focus.lastvelocity.set(Graphics_engine.focus.velocity); //crashes on null focus!!
+			
 			for(int i=0; i<repetition; i++){ 
 				//System.out.println(Main_class.elist.get(3).position.tostring_short() + ";;" + Main_class.elist.get(3).velocity.tostring_short());
 				//if(Main_class.ticks < 100) {
@@ -138,9 +141,19 @@ public class Motion {
 				gravitation((byte) 1);
 
 			}
+						
+		//	Graphics_engine.focus.acceleration.set(Graphics_engine.focus.velocity.sub2(Graphics_engine.focus.lastvelocity));
 		
 		}else{
-						
+			
+		//	Graphics_engine.focus.lastvelocity.set(Graphics_engine.focus.velocity);
+			
+			//V3 testrand = Math_methods.randomangle();
+			//System.out.println(testrand.tostring());
+			//System.out.println(testrand.tostring());
+
+			//System.out.println(Math_methods.rotatepoint(Math_methods.reverserotatepoint(new V3(1.8175897,4.19837891,2.91387176), testrand), testrand).tostring());
+			
 			for(int i=0; i<Math.abs(repetition); i++){
 					
 				gravitation((byte) -1);
@@ -153,7 +166,7 @@ public class Motion {
 
 			}
 			
-			
+		//	Graphics_engine.focus.acceleration.set(Graphics_engine.focus.velocity.sub2(Graphics_engine.focus.lastvelocity));
 			
 		}
 	

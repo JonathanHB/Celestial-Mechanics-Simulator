@@ -17,6 +17,8 @@ public class Entity {
 	public V3 luminosity; //watts
 	public V3 position; //meters
 	public V3 velocity; //meters per second
+	public V3 lastvelocity; //meters per second
+	public V3 acceleration; //meters per second^2
 	public V3 orientation; //radians; x=azimuth, y=polar, z=roll
 	public V3 rotation; //radians per second; x=azimuth, y=polar, z=roll
 	
@@ -69,6 +71,8 @@ public class Entity {
 		luminosity=new V3(lum);
 		position=new V3(pos);
 		velocity=new V3(vel);
+		lastvelocity=new V3(vel);
+		acceleration=new V3(0,0,1);
 		orientation=new V3(ori);
 		rotation=new V3(rot);
 		
@@ -109,7 +113,7 @@ public class Entity {
 		
 		velocity.add(dpos.scale2(a));
 		
-		if(Math.abs(a)>maxforceproxy && potential_ref.mass>mass && Main_class.fixedreferences == false){
+		if(Main_class.fixedreferences == false && Math.abs(a)>maxforceproxy && potential_ref.mass>mass){
 			maxforceproxy = Math.abs(a);
 			primary = potential_ref;
 			
@@ -173,6 +177,17 @@ public class Entity {
 		return rootvals;
 		
 	}	
-				
+	
+	public V3 getangles() {
+		//double a = Math.atan2(velocity.y, velocity.z);
+		//V3 binorm = [cross product]
+		//double b = Math.atan2(velocity.x, Math.sqrt(velocity.z*velocity.z+velocity.y*velocity.y));		
+		//V3 accrot = new V3(Math_methods.rotatey(Math_methods.rotatex(acceleration, a), b));
+		//double c = Math.atan2(accrot.x, accrot.y);
+		//System.out.println(c);
+		
+		return new V3(0,0,0); //want to rotate around same axes in reverse order
+	}
+	
 	
 }

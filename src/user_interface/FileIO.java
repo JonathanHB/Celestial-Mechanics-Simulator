@@ -94,16 +94,20 @@ public class FileIO {
 		Frame_functions.background = Parsingmethods.parsecolor(inputdata[1]);//make optional
 
 		Graphics_engine.focusindex = Integer.parseInt(inputdata[2]); //make optional
+		//System.out.println(inputdata[3]);
+		//Parsingmethods.parsetf("t");
+		
+		Graphics_engine.fixedfocus = Parsingmethods.parsetf(inputdata[3]); //make optional
 
-		Motion.increment = Double.parseDouble(inputdata[3]); //make optional
+		Motion.increment = Double.parseDouble(inputdata[4]); //make optional
 		//Motion.incbuff = Motion.increment; //make optional
 
-		Key_control.phys_rep_inc = Integer.parseInt(inputdata[4]); //make optional
-		Key_control.tsensitivity = Double.parseDouble(inputdata[5]); //make optional
+		Key_control.phys_rep_inc = Integer.parseInt(inputdata[5]); //make optional
+		Key_control.tsensitivity = Double.parseDouble(inputdata[6]); //make optional
 
 		boolean ents = true;
 
-		for(int x = 6; x<inputdata.length; x++){	//reads in entities, then cables	
+		for(int x = 7; x<inputdata.length; x++){	//reads in entities, then cables	
 
 			if(ents){	
 				if(inputdata[x].equals("cables")){

@@ -23,9 +23,12 @@ public class Graphics_engine {
 
 	public static V3 viewposition = new V3(0,0,0);
 	public static V3 orientation = new V3(0,0,0); //x=azimuth, y=polar, z=roll
-
+	public static V3 axisorientation = new V3(0,0,0); //x=azimuth (changes polar axis orientation), y=polar (rolls view [rotates image around its center] weird; don't use it), z=azimuth (rotation around polar axis)
+	
 	public static Entity focus;
+	public static boolean fixedfocus; //does focus entity stay the same regardless of location wrt camera?
 	public static int focusindex;
+	public static boolean colorbyage = false; //whether to color entity trail segments by their age or use dynamic lighting
 	
 	static double windowscale = 800;
 	//static double visualrange = 6; //used in stereographic projections
@@ -38,23 +41,25 @@ public class Graphics_engine {
 
 		rvectors.clear();
 		
+		axisorientation = focus.getangles();
+		
 		for(Entity e : Main_class.elist){
 			//System.out.println(e.position.tostring());
-
+			
 			for(Point p:e.p.vertices){
-				p.project3(e.position, viewposition, orientation);
+				p.project2(e.position, viewposition, orientation, axisorientation);
 			}
 
 			for(Point p:e.t.nodes){
-				p.projectabs(viewposition, orientation);
+				p.projectabs2(viewposition, orientation, axisorientation);
 			}
 			//----------------------------------------------------------
 			for(Plane p:e.p.faces){
-				p.project3(e.position, viewposition, orientation);
+				p.project2(e.position, viewposition, orientation, axisorientation);
 			}
 
 			for(Line l:e.t.links){
-				l.project(viewposition, orientation);		
+				l.project2(viewposition, orientation, axisorientation);		
 			}
 			/*
 			e.rvector.p1.position.set(Math_methods.rotationaxis(e.rotation).scale2(5));
@@ -308,7 +313,7 @@ public class Graphics_engine {
 
 	public static void getfocus(){
 		
-		if(!Main_class.fixedreferences){
+		if(!fixedfocus){
 			
 			Entity potentialref = new Entity();
 			double maxforce = 0;
