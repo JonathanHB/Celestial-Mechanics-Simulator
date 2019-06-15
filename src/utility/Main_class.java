@@ -134,7 +134,7 @@ public class Main_class extends JPanel{
 
 			siginc = Misc_methods.sigdigs(Motion.increment); 
 
-			Frame_functions.timefield.setText("0.0 seconds");
+			Frame_functions.timefield.setText(Misc_methods.roundto(time, siginc) + "seconds");
 
 		}
 		

@@ -137,8 +137,9 @@ public class Entity {
 		
 		//V3 dpos=velocity.scale2(d);
 		position.add(velocity.scale2(d));
-				
-		t.shiftby(primary.velocity.scale2(d)); 
+		if(!Main_class.fixedreferences) {
+			t.shiftby(primary.velocity.scale2(d));
+		}		
 
 		//order of elist subtly influences trail generation but not physics here; 
 		//put this code in a separate for loop to fix the above problem
