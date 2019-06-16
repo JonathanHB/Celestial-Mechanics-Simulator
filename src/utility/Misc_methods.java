@@ -91,13 +91,13 @@ public class Misc_methods {
 		//	d is the upper end of the range, c is the lower one (inclusive)
 		if(d > c){
 			
-			double pivot = array.get(d).mindistance;
+			double pivot = array.get(d).minmetric;
 		
 			int n = d;
 
 			for(int x = c; x<n;){
 
-				if(array.get(x).mindistance > pivot){
+				if(array.get(x).minmetric > pivot){
 				
 					Collections.swap(array, n, n-1);
 									

@@ -83,7 +83,7 @@ public class Trajectory_opt_2 {
 		init_pointer = Main_class.elist.get(init_index);
 		target_index = 2;
 		target_mass = Main_class.elist.get(target_index).GMt/(Motion.increment*Motion.G);
-		metric = 0; //distance is the current 0th metric, energy is metric 1
+		metric = 0; //distance is currently metric 0, energy is metric 1
 		
 		pnum = Main_class.elist.size(); //number of planets/moons/other massive bodies
 		
@@ -92,7 +92,6 @@ public class Trajectory_opt_2 {
 		for(int x = 0; x < pnum; x++) {
 			
 			planets[x] = new Test_mass_2(Main_class.elist.get(x));
-			//System.out.println(planets[x].position.tostring());
 			
 		}
 		
@@ -100,10 +99,10 @@ public class Trajectory_opt_2 {
 		//the first three parameters are phase/inclination/major axis, the fourth through sixth are orbital angles, and the seventh parameter is launch time
 		//launch time is probably redundant with phase where it's very small but not in general; phase may not be useful or realistic
 		
-		ranges = new double[] {0, 0, 0, 2*Math.PI, Math.PI, 2*Math.PI, 2147376};//220//2147376};	//one of the values only needs to be Pi, not 2Pi, since the coordinate system has an extra half-degree of freedom.	
-		orbitparams = new V3(6571000,11000, 0); //.3,.63,0//6571000, 11000, 0);
+		ranges = new double[] {0, 0, 0, 2*Math.PI, Math.PI, 2*Math.PI, 2147376}; //one of the values only needs to be Pi, not 2Pi, since the coordinate system has an extra half-degree of freedom.	
+		orbitparams = new V3(6571000,11000, 0); 
 		planeparams = new V3(0);
-		startparam = 0;//ranges[6]/2;
+		startparam = 0;
 		
 		initprobes = 4000;
 		repeatprobes = 1000;
@@ -134,7 +133,7 @@ public class Trajectory_opt_2 {
 		}
 	
 		iteration();
-		System.out.println(i + "; " + best.mindistance);
+		System.out.println("Round " + i + "; Closest approach: " + best.minmetric);
 		
 		//main optimizer loop
 		for(i = i; i < repetitions; i++) { //i is defined as a global variable for use outside the loop
@@ -145,42 +144,30 @@ public class Trajectory_opt_2 {
 			}
 
 			iteration();
-			System.out.println(i + "; " + best.mindistance);
+			System.out.println("Round " + i + "; Closest approach: " + best.minmetric);
 		}
 		
-		//if(!hit) {
-			//int buffer = Motion.repetition;
-			Motion.repetition=best.launchtick;
-			Motion.repbuff=Motion.repetition;
-			Motion.physexec();
-			Motion.repetition=0;
-			Motion.repbuff=0;
-			
-			Main_class.time = best.launchtick*Motion.increment;
-			Main_class.runtime = Math.abs(Main_class.time);
-			
-			add_best(best);
-		//}
 
-		
-		System.out.println(Main_class.elist.get(2).position.tostring());
-		System.out.println(Main_class.elist.get(2).velocity.tostring());
-		
-		//Test_mass_2 b = new Test_mass_2(best, new boolean[] {false, false, false, false, false, false, false}, new double[] {0,0,0,0,0,0,0}, init_pointer);
-		//probes2.add(b);
-		
-		System.out.println("-------------------------");
-		
-		System.out.println(best.initorbit.tostring());
-		System.out.println(best.initplane.tostring());
-		System.out.println(best.launchtick);
-		System.out.println(best.mindistance);
+		Motion.repetition=best.launchtick;
+		Motion.repbuff=Motion.repetition;
+		Motion.physexec();
+		Motion.repetition=0;
+		Motion.repbuff=0;
+			
+		Main_class.time = best.launchtick*Motion.increment;
+		Main_class.runtime = Math.abs(Main_class.time);
+			
+		add_best(best);
 		
 		System.out.println("-------------------------");
-		//bb = true;
-		//iteration();
 		
+		System.out.println("Orbit dimensions (): " + best.initorbit.tostring());
+		System.out.println("Orbital plane: " + best.initplane.tostring());
+		System.out.println("Intercept time (s): " + best.launchtick*Motion.increment);
+		System.out.println("Closest approach (m): " + best.minmetric);
 		
+		System.out.println("-------------------------");
+
 		System.out.println("done");
 		
 	}
@@ -204,14 +191,10 @@ public class Trajectory_opt_2 {
 						probes.get(probes.size()-1).velocity.add(planets[init_index].velocity); //corrects for movement of planets since simulation start
 						probes2.remove(x); //removes the launched probe from the buffer arraylist
 						probes2.trimToSize();
-						x--;						
-						System.out.println(planets[2].position.tostring() + ", " + T);
-						//System.out.println(planets[2].velocity.tostring());
+						x--;
+
 					}
 			}	
-			//System.out.println(planets[2].position.tostring_short() + ";;" + planets[2].velocity.tostring_short());		
-			//System.out.println(probes.get(0).position.tostring_short() + ";;" + probes.get(0).velocity.tostring_short());
-			
 			
 			optgrav();			
 
@@ -219,15 +202,7 @@ public class Trajectory_opt_2 {
 
 		//run the rest of the simulation, beginning at T=tickrange where the probe-adding initialization loop left off
 		for(T = T; T < ticknum; T++){ 
-			//System.out.println(T + " ticks");
-			//if(bb && T < 100) {		
-			//if(T/5000.0 == Math.round(T/5000)) {
-				//System.out.println(T);
-				//System.out.println(probes.get(0).position.tostring_short() + ";;" + probes.get(0).velocity.tostring_short());
-				//System.out.println(planets[2].position.tostring_short() + ";;" + planets[2].velocity.tostring_short());
-				//	System.out.println(T/100000.0);
-			//}
-			
+
 			optgrav();
 			
 		}
@@ -261,8 +236,7 @@ public class Trajectory_opt_2 {
 		double squdistance; //r^2
 		V3 dpos;
 		
-		//calculate inter-planet interactions
-		
+		//calculate inter-planet interactions		
 		for(int x=0; x < pnum; x++){
 			for(int y=x+1; y < pnum; y++){
 				
@@ -275,13 +249,7 @@ public class Trajectory_opt_2 {
 				//divided by distance for use in calculating the final acceleration vector
 												
 				planets[x].velocity.add(dpos.scale2(Main_class.elist.get(y).GMt/cuberad));  //computes acceleration of each body and updates their velocities accordingly
-				planets[y].velocity.sub(dpos.scale2(Main_class.elist.get(x).GMt/cuberad));
-				
-				//if(T/100000.0 == Math.round(T/100000)) {
-				//	System.out.println(planets[x].position.tostring());
-					//System.out.println(T/100000.0);
-				//}
-				
+				planets[y].velocity.sub(dpos.scale2(Main_class.elist.get(x).GMt/cuberad));				
 				
 			}
 			
@@ -310,8 +278,7 @@ public class Trajectory_opt_2 {
 		double squdistance; //r^2
 		V3 dpos;
 		
-		//calculate inter-planet interactions
-		
+		//calculate inter-planet interactions		
 		for(int x=0; x < pnum; x++){
 			for(int y=x+1; y < pnum; y++){
 				
@@ -325,12 +292,6 @@ public class Trajectory_opt_2 {
 												
 				planets[x].velocity.sub(dpos.scale2(Main_class.elist.get(y).GMt/cuberad));  //computes acceleration of each body and updates their velocities accordingly
 				planets[y].velocity.add(dpos.scale2(Main_class.elist.get(x).GMt/cuberad));
-				
-				//if(T/100000.0 == Math.round(T/100000)) {
-				//	System.out.println(planets[x].position.tostring());
-					//System.out.println(T/100000.0);
-				//}
-				
 				
 			}
 			
@@ -355,7 +316,6 @@ public class Trajectory_opt_2 {
 
 						probes.remove(y);
 						probes.trimToSize();
-						//System.out.println("splat; " + x);
 
 					}
 					
@@ -372,11 +332,8 @@ public class Trajectory_opt_2 {
 
 					probes.get(y).velocity.sub(dpos.scale2(Main_class.elist.get(x).GMt/cuberad));
 
-					//probes.get(y).update_distance(squdistance);
-
 					//immediately terminates optimizer if a probe hits the target
 					if(distance <= Main_class.elist.get(x).radius && metric == 0){					
-						System.out.println(Main_class.elist.get(x).radius + ", " + distance);
 						
 						best = new Test_mass_2(probes.get(y));
 						hit=true;						
@@ -420,7 +377,7 @@ public class Trajectory_opt_2 {
 		Test_mass_2 current_min = new Test_mass_2(); 
 
 		for(Test_mass_2 m:t){
-			if(m.mindistance < current_min.mindistance){		
+			if(m.minmetric < current_min.minmetric){		
 				current_min = m;	//shallowcopying is okay here			
 			}
 
@@ -434,8 +391,7 @@ public class Trajectory_opt_2 {
 		
 		V3[] cartparams = Math_methods.esctrajectory(t.initorbit.x, t.initorbit.y, t.initplane.x, t.initplane.y, t.initplane.z);
 		
-	//	System.out.println(cartparams[0].tostring() + "," + cartparams[1].tostring());
-		
+		//System.out.println(cartparams[0].tostring() + "," + cartparams[1].tostring());		
 		//System.out.println(init_index);
 		
 		Main_class.elist.add(
@@ -451,23 +407,11 @@ public class Trajectory_opt_2 {
 		Entity e = Main_class.elist.get(pnum); //pointer to the new entity representing the most successful probe
 		
 		e.primary = Main_class.elist.get(init_index);
-		
-		//
-		//System.out.println(e.getabsolutevectors()[0].tostring() + ", " + e.getabsolutevectors()[1].tostring());
-		//System.out.println(Main_class.elist.get(2).position.tostring() + ", " + Main_class.elist.get(2).velocity.tostring());
 		e.position.set(e.getabsolutevectors()[0]);
 		e.velocity.set(e.getabsolutevectors()[1]);
-		
-		//System.out.println(e.position.tostring() + ", " + e.velocity.tostring());
-		
 		e.indexbuffer = -1;			
-		
-		//System.out.println(e.position.tostring() + ", " + e.velocity.tostring());
-		
 		e.t.shiftby(e.getabsolutevectors()[0]);
-		
-		//System.out.println((T-t.launchtick)*Motion.increment + " seconds");
-		
+				
 		hit = true;
 		
 	}

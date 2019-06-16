@@ -16,13 +16,10 @@ public class Test_mass_2 {
 	public V3 position; //values for simulation
 	public V3 velocity;
 	
-	public double mindistance = Double.MAX_VALUE; //actually the minimum metric value
-	//tracks this object's closest approach to the target
-	//distance is already calculated instead of squared distance as part of gravitational calculation, so there is no reason to use the squared distance instead
-	
-	//public double minenergy = Double.MAX_VALUE; 
-	//tracks this object's minimum energy wrt target
-	//squaring it doesn't improve computational efficiency due to the kinetic energy term
+	public double minmetric = Double.MAX_VALUE; //actually the minimum metric value
+	//tracks this object's closest approach to the target value of the metric
+	//Distance: distance is already calculated instead of squared distance as part of gravitational calculation, so there is no reason to use the squared distance instead
+	//Energy: tracks this object's minimum energy wrt target. Squaring it doesn't improve computational efficiency due to the kinetic energy term
 	
 	public Test_mass_2(Entity e){ //used for planet initialization
 
@@ -41,7 +38,7 @@ public class Test_mass_2 {
 		launchtime = t.launchtime;
 		launchtick = t.launchtick;
 		
-		mindistance = t.mindistance;
+		minmetric = t.minmetric;
 		
 	}
 	
@@ -55,79 +52,6 @@ public class Test_mass_2 {
 	
 	}
 	
-	/*public double minmetric(int i) { //TODO find a data structure that acts as a list of methods which return the same data type
-		
-		if(i==0) {
-			return mindistance;
-		}else if(i==1) {
-			return minenergy;
-		}else {
-			return 0;
-		}
-	}*/
-	
-/*	public double minsquaredistance() { //the name is inaccurate because it has to match method names in other classes for use in the sorting algorithm
-		
-		return mindistance;
-		
-	}*/
-	
-	/*
-	public Test_mass_2(V3 orbit, V3 plane, boolean[] whichparams, double[] params, double[] ranges, double mprimary){ //generates a test mass in a weighted random orbit
-		
-		double variations[] = new double[7]; //how much to permute each initial value
-		
-		for(int i = 0; i<7; i++) {			
-			if(whichparams[i]) {
-				
-				variations[i] = (Math.random()-0.5)*ranges[i]; //generates permutations to add to values
-			
-			}else {
-				
-				variations[i] = 0; //sets non-optimized values
-				
-			}
-			
-		}
-		
-		initorbit = new V3(orbit.add2(variations[0], variations[1], variations[2]));
-		initplane = new V3(plane.add2(variations[3], variations[4], variations[5]));
-		
-		V3[] cartparams = Math_methods.kepleriantocartesian(initorbit.x, initorbit.y, initorbit.z, initplane.x, initplane.y, initplane.z, mprimary, false);
-		
-		position = cartparams[0];
-		velocity = cartparams[1];
-		
-	}
-	
-	public Test_mass_2(V3 orbit, V3 plane, boolean[] whichparams, double[] params, double[] ranges){ //generates a test mass in a weighted random orbit
-		
-		double variations[] = new double[7]; //how much to permute each initial value
-		
-		for(int i = 0; i<7; i++) {			
-			if(whichparams[i]) {
-				
-				variations[i] = (Math.random()-0.5)*ranges[i]; //generates permutations to add to values
-			
-			}else {
-				
-				variations[i] = 0; //sets non-optimized values
-				
-			}
-		}
-		
-		initorbit = new V3(orbit.add2(variations[0], variations[1], variations[2]));
-		initplane = new V3(plane.add2(variations[3], variations[4], variations[5]));
-		
-		V3[] cartparams = Math_methods.esctrajectory(initorbit.x, initorbit.y, initplane.x, initplane.y, initplane.z);
-		
-		position = cartparams[0];
-		velocity = cartparams[1];
-		
-	}
-	
-	*/
-	
 	public Test_mass_2(V3 orbit, V3 plane, double t0, boolean[] whichparams, double[] ranges, Entity primary){ //generates a test mass in a weighted random orbit
 		
 		double variations[] = new double[] {0,0,0,0,0,0,0}; //how much to permute each initial value
@@ -137,25 +61,18 @@ public class Test_mass_2 {
 				variations[i] = (Math.random()-0.5)*ranges[i]; //generates permutations to add to values			
 			}
 		}		
-		
-				
+						
 		initorbit = new V3(orbit.add2(variations[0], variations[1], variations[2]));
 		initplane = new V3(plane.add2(variations[3], variations[4], variations[5]));
 		
 		launchtime = t0 + variations[6];
 		
 		launchtick = (int) Math.round(launchtime/Motion.increment);
-		//System.out.println(launchtick);
 		
 		V3[] cartparams = Math_methods.esctrajectory(initorbit.x, initorbit.y, initplane.x, initplane.y, initplane.z);
 		
-		//V3[] base = primary.getabsolutevectors();
-		
-		position = (cartparams[0]);//.add2(base[0]));
-		velocity = (cartparams[1]);//.add2(base[1]));
-		
-		//position = cartparams[0].add2(primary.position);
-		//velocity = cartparams[1].add2(primary.velocity);
+		position = cartparams[0];
+		velocity = cartparams[1];
 		
 	}
 	
@@ -179,10 +96,9 @@ public class Test_mass_2 {
 		
 		V3[] cartparams = Math_methods.esctrajectory(initorbit.x, initorbit.y, initplane.x, initplane.y, initplane.z);
 		
-		//V3[] base = primary.getabsolutevectors();
 				
-		position = (cartparams[0]);//.add2(base[0]));
-		velocity = (cartparams[1]);//.add2(base[1]));
+		position = cartparams[0];
+		velocity = cartparams[1];
 		
 	}
 	
@@ -191,8 +107,8 @@ public class Test_mass_2 {
 	}
 	
 	public void update(double d){ //updates mindistance
-		if(d<mindistance){
-			mindistance = d;
+		if(d<minmetric){
+			minmetric = d;
 		}
 
 	}
